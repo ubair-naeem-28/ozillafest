@@ -1,0 +1,9 @@
+File: C:\Users\Muhammad Uzair Naeem\OneDrive\Desktop\Prism-event-and-tour\OZilla Professional.pdf
+Pages: 2
+
+--- Page 1 ---
+OZILLA FESTIVAL WEBSITE BRIEF 2026 A complete digital platform designed for festival discovery, audience engagement, restaurant & hotel partnerships, discount access and brand collaborations. Website Objective To build a premium experience platform where users can explore OZilla Festival, discover partner restaurants & hotels, claim discounts, and connect with event experiences. About OZilla OZilla Festival is a youth-focused entertainment experience combining music, food, culture, creators, brands and communities into one powerful lifestyle platform. Festival Experience • Live Concerts • DJ Nights • Food Experiences • Brand Activation Zones • Content & Photo Moments • Community Engagement Website Main Pages Home | About OZilla | Festival Experience | Restaurants | Hotels | Discounts | Become a Partner | Contact Restaurant Partner Module Restaurants onboarded with OZilla will have dedicated profiles including logo, cuisine type, location, exclusive discount percentage, offer details and claim discount option. Hotel Partner Module
+
+--- Page 2 ---
+Hotel partners will showcase rooms, location, facilities, OZilla special rates, discount offers and booking options. User Journey Discover OZilla   →   Explore Partners   →   Select Discount   →   Use Promo Code   →   Enjoy Experience Partner Benefits • Digital Visibility • Customer Reach • Influencer Promotion • Event Audience Access • Brand Awareness Website Features Required • Partner Listings • Discount Management • Search & Filters • Promo Code System • Mobile Responsive Design • Contact Forms Admin Panel Requirements Admin should manage restaurants, hotels, discounts, images, offers, partner details and website content easily. Call To Actions Explore Festival | Claim Discount | Become A Partner | Book Your Stay
+
