@@ -1,0 +1,8 @@
+
+> prism-event-and-tour-server@1.0.0 dev
+> node src/server.js
+
+------------------------------------------------------------
+Demo mode enabled. MongoDB is not required for this local run.
+Server running on http://localhost:5000 (no-db mode)
+------------------------------------------------------------
