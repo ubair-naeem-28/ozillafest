@@ -1,0 +1,21 @@
+export const ROUTES = {
+  HOME: '/',
+  LOGIN: '/login',
+  REGISTER: '/register',
+  DASHBOARD: '/dashboard',
+  ABOUT: '/about',
+  COLLABORATION: '/collaboration',
+  PRISMFEST: '/prismfest',
+  PRISMFEST_2023: '/prismfest/2023',
+  PRISMFEST_2024: '/prismfest/2024',
+  CELEBRITY_SINGERS: '/prismfest/celebrities',
+  EVENTS: '/prismfest/events',
+  FUTURE_EVENTS: '/prismfest/future',
+  SPONSORSHIP: '/sponsorship',
+  CONTACT: '/contact',
+  FACILITIES: '/facilities',
+  TICKETS: '/tickets',
+  MY_TICKETS: '/tickets/my-tickets',
+  TICKET_VIEW: '/tickets/view/:ticketId',
+  TICKET_VERIFICATION: '/verification/:ticketId'
+}
