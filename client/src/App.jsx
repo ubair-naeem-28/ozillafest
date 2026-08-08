@@ -4,8 +4,13 @@ import { AuthProvider } from './context/AuthContext'
 import AppRouter from './routes/AppRouter'
 
 function App() {
+  const basename = import.meta.env.BASE_URL.replace(/\/$/, '')
+
   return (
-    <BrowserRouter future={{ v7_startTransition: true, v7_relativeSplatPath: true }}>
+    <BrowserRouter
+      basename={basename || undefined}
+      future={{ v7_startTransition: true, v7_relativeSplatPath: true }}
+    >
       <AuthProvider>
         <AppRouter />
       </AuthProvider>
