@@ -119,15 +119,22 @@ function DockNavbar() {
     <>
       <header className={`dock-site-header ${scrolled ? 'scrolled' : ''}`}>
         <div className="dock-site-header-inner">
-          <Link to="/" className="dock-site-brand" aria-label="Prism Event and Tour home">
+          <Link to="/" className="dock-site-brand" aria-label="Ozilla Festival home">
             <span className="dock-site-brand-logo">
-              <img src={assetUrl('/assets/company-logo.jpeg')} alt="" />
-            </span>
-            <span className="dock-site-brand-text">
-              <strong>Prism Event & Tour</strong>
-              <small>Ozilla Festival</small>
+              <img src={assetUrl('/assets/company-logo.jpeg')} alt="Ozilla Festival" />
             </span>
           </Link>
+
+          <div className="dock-header-center">
+            <Dock
+              items={dockItems}
+              className="dock-nav"
+              magnification={52}
+              distance={120}
+              panelHeight={44}
+              baseItemSize={36}
+            />
+          </div>
 
           <div className="dock-site-header-actions">
             {user ? (
@@ -173,7 +180,6 @@ function DockNavbar() {
         <div className={`dock-mobile-panel ${mobileOpen ? 'open' : ''}`} onClick={(event) => event.stopPropagation()}>
           <div className="dock-mobile-header">
             <div>
-              <p>Prism Event & Tour</p>
               <h2>Menu</h2>
             </div>
             <button type="button" className="dock-mobile-close" onClick={() => setMobileOpen(false)} aria-label="Close menu">
@@ -202,14 +208,6 @@ function DockNavbar() {
           </div>
         </div>
       </div>
-
-      <Dock
-        items={dockItems}
-        className="dock-nav"
-        magnification={70}
-        distance={200}
-        panelHeight={68}
-      />
     </>
   )
 }

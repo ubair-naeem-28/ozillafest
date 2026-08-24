@@ -1,5 +1,5 @@
-import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'motion/react';
-import { Children, cloneElement, useEffect, useMemo, useRef, useState } from 'react';
+import { motion, useMotionValue, useSpring, useTransform, AnimatePresence } from 'framer-motion';
+import { Children, cloneElement, useEffect, useRef, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import './Dock.css';
@@ -9,15 +9,19 @@ function DockItem({ children, className = '', onClick, mouseX, spring, distance,
   const isHovered = useMotionValue(0);
 
   const mouseDistance = useTransform(mouseX, val => {
-    const rect = ref.current?.getBoundingClientRect() ?? {
-      x: 0,
-      width: baseItemSize
-    };
-    return val - rect.x - baseItemSize / 2;
+    if (!ref.current || val === Infinity) return distance;
+    const rect = ref.current.getBoundingClientRect();
+    const itemCenter = rect.left + rect.width / 2;
+    return val - itemCenter;
   });
 
-  const targetSize = useTransform(mouseDistance, [-distance, 0, distance], [baseItemSize, magnification, baseItemSize]);
-  const size = useSpring(targetSize, spring);
+  const targetScale = useTransform(
+    mouseDistance,
+    [-distance, 0, distance],
+    [1, magnification / baseItemSize, 1]
+  );
+  
+  const scale = useSpring(targetScale, spring);
 
   const handleKeyDown = e => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -30,8 +34,9 @@ function DockItem({ children, className = '', onClick, mouseX, spring, distance,
     <motion.div
       ref={ref}
       style={{
-        width: size,
-        height: size
+        width: baseItemSize,
+        height: baseItemSize,
+        scale
       }}
       onHoverStart={() => isHovered.set(1)}
       onHoverEnd={() => isHovered.set(0)}
@@ -55,6 +60,7 @@ function DockLabel({ children, className = '', ...rest }) {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
+    if (!isHovered) return;
     const unsubscribe = isHovered.on('change', latest => {
       setIsVisible(latest === 1);
     });
@@ -65,10 +71,10 @@ function DockLabel({ children, className = '', ...rest }) {
     <AnimatePresence>
       {isVisible && (
         <motion.div
-          initial={{ opacity: 0, y: 0 }}
-          animate={{ opacity: 1, y: -10 }}
-          exit={{ opacity: 0, y: 0 }}
-          transition={{ duration: 0.2 }}
+          initial={{ opacity: 0, y: -4, scale: 0.85 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -4, scale: 0.85 }}
+          transition={{ duration: 0.15 }}
           className={`dock-label ${className}`}
           role="tooltip"
           style={{ x: '-50%' }}
@@ -87,36 +93,21 @@ function DockIcon({ children, className = '' }) {
 export default function Dock({
   items,
   className = '',
-  spring = { mass: 0.1, stiffness: 150, damping: 12 },
-  magnification = 70,
-  distance = 200,
-  panelHeight = 68,
-  dockHeight = 256,
-  baseItemSize = 50
+  spring = { mass: 0.1, stiffness: 220, damping: 18 },
+  magnification = 52,
+  distance = 120,
+  panelHeight = 44,
+  baseItemSize = 36
 }) {
   const mouseX = useMotionValue(Infinity);
-  const isHovered = useMotionValue(0);
   const location = useLocation();
   const navigate = useNavigate();
 
-  const maxHeight = useMemo(
-    () => Math.max(dockHeight, magnification + magnification / 2 + 4),
-    [magnification, dockHeight]
-  );
-  const heightRow = useTransform(isHovered, [0, 1], [panelHeight, maxHeight]);
-  const height = useSpring(heightRow, spring);
-
   return (
-    <motion.div style={{ height, scrollbarWidth: 'none' }} className="dock-outer">
+    <div className="dock-outer">
       <motion.div
-        onMouseMove={({ pageX }) => {
-          isHovered.set(1);
-          mouseX.set(pageX);
-        }}
-        onMouseLeave={() => {
-          isHovered.set(0);
-          mouseX.set(Infinity);
-        }}
+        onMouseMove={(e) => mouseX.set(e.clientX)}
+        onMouseLeave={() => mouseX.set(Infinity)}
         className={`dock-panel ${className}`}
         style={{ height: panelHeight }}
         role="toolbar"
@@ -148,6 +139,6 @@ export default function Dock({
           );
         })}
       </motion.div>
-    </motion.div>
+    </div>
   );
 }

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion'
 import { ozillaProfessionalContent } from '../../data/ozillaProfessionalContent'
 import { assetUrl } from '../../utils/assetUrl.util'
+import Lightfall from '../../components/common/Lightfall'
 
 const heroImage = assetUrl('/assets/logo.jpeg')
 
@@ -453,6 +454,20 @@ function DashboardPage() {
     <main className={`home-premium preset-${stagePreset}`}>
       {/* Hero Section with Live Canvas & Sound Visualizer */}
       <section className="home-hero" aria-label="Ozilla Festival 2026">
+        <div style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 0.75, pointerEvents: 'none' }}>
+          <Lightfall
+            colors={['#ffb000', '#ff6b1a', '#00f2fe', '#ff007f']}
+            backgroundColor="#020b0d"
+            speed={beatMode ? 1.1 : 0.55}
+            streakCount={beatMode ? 5 : 3}
+            streakWidth={1.2}
+            streakLength={1.5}
+            glow={1.4}
+            zoom={2.8}
+            mouseInteraction={true}
+            mouseStrength={0.7}
+          />
+        </div>
         <HeroStageCanvas currentPreset={stagePreset} beatMode={beatMode} />
 
         <motion.img
@@ -773,7 +788,7 @@ function DashboardPage() {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: clamp(13rem, 20vw, 16rem) 1.25rem 5rem;
+          padding: clamp(7.5rem, 12vw, 10rem) 1.25rem 4rem;
           isolation: isolate;
           background:
             radial-gradient(circle at 50% 40%, rgba(255, 176, 0, 0.2), transparent 22rem),

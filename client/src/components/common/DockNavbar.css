@@ -1,18 +1,21 @@
 .dock-site-header {
   position: fixed;
-  top: 5.5rem;
+  top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
-  padding: 0.85rem 1rem 0.5rem;
+  padding: 0.65rem 1.5rem;
+  background: rgba(4, 23, 25, 0.9);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.12);
   transition: background 0.3s ease, box-shadow 0.3s ease, padding 0.3s ease;
 }
 
 .dock-site-header.scrolled {
-  background: rgba(4, 23, 25, 0.85);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  box-shadow: 0 8px 30px rgba(2, 11, 13, 0.25);
+  background: rgba(2, 12, 13, 0.96);
+  padding: 0.5rem 1.5rem;
+  box-shadow: 0 8px 32px rgba(2, 11, 13, 0.4);
 }
 
 .dock-site-header-inner {
@@ -81,11 +84,11 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-height: 44px;
-  padding: 0 1.2rem;
+  min-height: 40px;
+  padding: 0 1.25rem;
   border-radius: 999px;
-  font-size: 0.9rem;
-  font-weight: 600;
+  font-size: 0.88rem;
+  font-weight: 700;
   text-decoration: none;
   transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
@@ -360,43 +363,55 @@
   border: none;
 }
 
-/* Dock outer becomes a full-width fixed container pinned to the very top,
-   the absolutely-positioned panel centers itself inside it. */
-.dock-outer {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+/* Inline header center dock styling */
+.dock-header-center {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1rem;
+}
+
+.dock-header-center .dock-outer {
+  position: relative;
+  top: auto;
+  left: auto;
+  right: auto;
+  bottom: auto;
   margin: 0;
   max-width: none;
-  pointer-events: none;
-  z-index: 900;
-}
-
-.dock-panel.dock-nav {
   pointer-events: auto;
-  top: 0.5rem;
-  bottom: auto;
-  align-items: flex-start;
+  z-index: 1;
 }
 
-/* Tooltips appear below the items when the dock sits at the top */
+.dock-header-center .dock-panel.dock-nav {
+  position: relative;
+  top: auto;
+  left: auto;
+  bottom: auto;
+  transform: none;
+  display: flex;
+  align-items: center;
+  background: rgba(18, 15, 23, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.4);
+  padding: 0.2rem 0.5rem;
+  border-radius: 999px;
+}
+
+/* Tooltips appear below the items */
 .dock-panel.dock-nav .dock-label {
   top: auto;
-  bottom: -2rem;
+  bottom: -2.2rem;
 }
 
-/* Hide dock item icons sizing */
 .dock-item-cta .dock-icon svg {
   color: #ffbd59;
 }
 
 /* ---- Dock layout overrides for global app shell ---- */
-
-/* Override the old navbar top offset: dock pages use the slim header
-   plus the dock nav pinned at the very top. */
 .dock-app-shell {
-  --site-nav-offset: clamp(10.5rem, 13vw, 12rem);
+  --site-nav-offset: 5.5rem;
 }
 
 .dock-app-shell .app-content,
@@ -405,18 +420,22 @@
 }
 
 @media (max-width: 920px) {
+  .dock-header-center {
+    display: none;
+  }
+
   .dock-app-shell {
-    --site-nav-offset: 10rem;
+    --site-nav-offset: 4.5rem;
   }
 }
 
 @media (max-width: 575.98px) {
   .dock-app-shell {
-    --site-nav-offset: 9rem;
+    --site-nav-offset: 4.25rem;
   }
 
   .dock-site-header {
-    top: 5rem;
+    top: 0;
   }
 }
 
