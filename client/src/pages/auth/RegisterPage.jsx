@@ -1,12 +1,13 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import RegisterForm from '../../components/auth/RegisterForm'
+import { assetUrl } from '../../utils/assetUrl.util'
 
 function RegisterPage() {
   return (
     <div className="register-premium-panel">
       <div className="register-brand-lockup">
-        <img src="/assets/logo.jpeg" alt="Ozilla Festival" className="register-brand-logo" />
+        <img src={assetUrl('/assets/logo.jpeg')} alt="Ozilla Festival" className="register-brand-logo" />
         <div>
           <p className="auth-brand">Ozilla Festival 2026</p>
           <h2 className="auth-title">Join Ozilla Festival</h2>

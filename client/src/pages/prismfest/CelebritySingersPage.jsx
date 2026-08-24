@@ -1,27 +1,28 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { assetUrl } from '../../utils/assetUrl.util'
 
 const performers = [
   {
     name: 'TALWINDER',
     isHeadliner: true,
     genre: 'Indie Pop / Punjabi Fusion',
-    image: '/assets/ozilla/talwinder.jpg'
+    image: assetUrl('/assets/ozilla/talwinder.jpg')
   },
   {
     name: 'IMRAN KHAN',
     genre: 'Punjabi Pop / Urban',
-    image: '/assets/ozilla/Imran-Khan.jpg'
+    image: assetUrl('/assets/ozilla/Imran-Khan.jpg')
   },
   {
     name: 'BOHEMIA',
     genre: 'Punjabi Rap',
-    image: '/assets/ozilla/Bohemia.jpg'
+    image: assetUrl('/assets/ozilla/Bohemia.jpg')
   },
   {
     name: 'HASSAN RAHEEM',
     genre: 'Pop / R&B',
-    image: '/assets/ozilla/hassan-raheem.jpg'
+    image: assetUrl('/assets/ozilla/hassan-raheem.jpg')
   }
 ]
 
@@ -162,7 +163,7 @@ function CelebritySingersPage() {
                   loading="lazy"
                   onError={(event) => {
                     event.currentTarget.onerror = null
-                    event.currentTarget.src = '/assets/prism-auth-visual.jpg'
+                    event.currentTarget.src = assetUrl('/assets/prism-auth-visual.jpg')
                   }}
                 />
                 <div className="celebrity-card-overlay">

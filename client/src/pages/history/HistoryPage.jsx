@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link } from 'react-router-dom'
+import { assetUrl } from '../../utils/assetUrl.util'
 
 const historyEvents = [
   {
@@ -129,7 +130,7 @@ function HistoryPage() {
       </div>
 
       <section className="history-hero history-reveal" aria-label="Ozilla Festival history">
-        <img className="history-hero-logo" src="/assets/ozilla/logo.png" alt="" loading="eager" />
+        <img className="history-hero-logo" src={assetUrl('/assets/ozilla/logo.png')} alt="" loading="eager" />
         <div className="history-hero-rays" aria-hidden="true">
           <span />
           <span />

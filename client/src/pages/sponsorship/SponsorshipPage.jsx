@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { assetUrl } from '../../utils/assetUrl.util'
 
 const packages = [
   {
@@ -163,7 +164,7 @@ function SponsorshipPage() {
             >
               <div className="sponsor-proposal-image">
                 <img
-                  src={image}
+                  src={assetUrl(image)}
                   alt={`${title} sponsorship visual`}
                   loading={index === 0 ? 'eager' : 'lazy'}
                   decoding="async"

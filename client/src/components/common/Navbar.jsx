@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
+import { assetUrl } from '../../utils/assetUrl.util'
 
 const navGroups = [
   { label: 'Home', to: '/dashboard' },
@@ -121,7 +122,7 @@ function Navbar() {
       <div className="site-nav-main-shell navbar-repair-shell">
         <Link to="/" className="site-brand-cluster navbar-repair-brand" aria-label="Ozilla Festival home">
           <span className="site-brand-logo-shell">
-            <img src="/assets/ozilla/logo.png" alt="" className="site-brand-logo-img" />
+            <img src={assetUrl('/assets/ozilla/logo.png')} alt="" className="site-brand-logo-img" />
           </span>
           <span className="site-brand-title">Ozilla Festival</span>
         </Link>

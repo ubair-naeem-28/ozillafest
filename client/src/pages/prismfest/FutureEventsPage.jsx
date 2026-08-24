@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
+import { assetUrl } from '../../utils/assetUrl.util'
 
 const futureEvents = [
   {
@@ -64,7 +65,7 @@ function FutureEventsPage() {
       </div>
 
       <section className="future-hero future-reveal" aria-label="Upcoming Events">
-        <img className="future-hero-image" src="/assets/ozilla/logo.png" alt="" loading="eager" />
+        <img className="future-hero-image" src={assetUrl('/assets/ozilla/logo.png')} alt="" loading="eager" />
         <div className="future-hero-lights" aria-hidden="true">
           <span />
           <span />

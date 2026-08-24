@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { assetUrl } from '../../utils/assetUrl.util'
 
 const exploreLinks = [
   ['Home', '/dashboard'],
@@ -56,7 +57,7 @@ function Footer() {
           <section className="festival-footer-brand-panel">
             <Link to="/" className="festival-footer-logo" aria-label="Ozilla Festival home">
               <span>
-                <img src="/assets/ozilla/logo.png" alt="" loading="lazy" />
+                <img src={assetUrl('/assets/ozilla/logo.png')} alt="" loading="lazy" />
               </span>
               <strong>Ozilla Festival</strong>
             </Link>

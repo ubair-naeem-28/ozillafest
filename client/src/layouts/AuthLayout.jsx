@@ -1,5 +1,6 @@
 import React from 'react'
 import { Outlet, useLocation } from 'react-router-dom'
+import { assetUrl } from '../utils/assetUrl.util'
 
 function AuthLayout({ children }) {
   const location = useLocation()
@@ -13,7 +14,7 @@ function AuthLayout({ children }) {
           <div className="auth-side-copy">
             <div className="auth-side-logo-wrap">
               <img
-                src="/assets/company-logo.jpeg"
+                src={assetUrl('/assets/company-logo.jpeg')}
                 alt="Ozilla Festival"
                 className="auth-side-logo"
               />

@@ -1,7 +1,8 @@
 import { build } from 'vite'
 import react from '@vitejs/plugin-react'
 
-const base = process.env.GITHUB_PAGES === 'true' ? '/ozillafest/' : '/'
+const repoName = process.env.GITHUB_REPOSITORY ? process.env.GITHUB_REPOSITORY.split('/')[1] : null
+const base = process.env.VITE_BASE || (repoName ? `/${repoName}/` : '/ozillafest/')
 
 await build({
   configFile: false,

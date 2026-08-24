@@ -1,14 +1,17 @@
 import React, { useEffect } from 'react'
 import { ozillaProfessionalContent } from '../../data/ozillaProfessionalContent'
+import { assetUrl } from '../../utils/assetUrl.util'
 
 const HOTEL_IMAGE_FALLBACKS = {
-  'Pearl Continental Hotel (PC)': '/assets/hotels/Pearl-Continental-Lahore.jpg',
-  'Ramada by Wyndham Lahore': '/assets/hotels/Ramada-by-Wyndham-Lahore-Gulberg-II.jpg',
-  'Hotel Indigo Lahore': '/assets/hotels/Hotel-Indigo.jpg',
-  'Hotel One Gulberg Lahore': '/assets/hotels/Hotel-One-Gulberg-Lahore.jpg',
-  'Luxus Grand Hotel (LC)': '/assets/hotels/Luxus-Grand-Hotel.jpg',
-  'Nishat Hotel Lahore': '/assets/hotels/Nishat.jpg'
+  'Pearl Continental Hotel (PC)': assetUrl('/assets/hotels/Pearl-Continental-Lahore.jpg'),
+  'Ramada by Wyndham Lahore': assetUrl('/assets/hotels/Ramada-by-Wyndham-Lahore-Gulberg-II.jpg'),
+  'Hotel Indigo Lahore': assetUrl('/assets/hotels/Hotel-Indigo.jpg'),
+  'Hotel One Gulberg Lahore': assetUrl('/assets/hotels/Hotel-One-Gulberg-Lahore.jpg'),
+  'Luxus Grand Hotel (LC)': assetUrl('/assets/hotels/Luxus-Grand-Hotel.jpg'),
+  'Nishat Hotel Lahore': assetUrl('/assets/hotels/Nishat.jpg')
 }
+
+const HERO_BACKGROUND_IMAGE = assetUrl('/assets/hotels/Nishat.jpg')
 
 const HOTEL_TAGLINES = {
   'Pearl Continental Hotel (PC)': 'Iconic five-star city hospitality',
@@ -39,8 +42,8 @@ function HotelsPage() {
     contact: hotel.contact || 'Contact via Ozilla partner desk',
     facilities: hotel.facilities || ['Rooms and Suites', 'On-site Facilities', 'Event Access Support', 'Partner Booking Assistance'],
     booking: hotel.offer,
-    image: hotel.image || HOTEL_IMAGE_FALLBACKS[hotel.name] || '/assets/prism-auth-visual.jpg',
-    fallbackImage: HOTEL_IMAGE_FALLBACKS[hotel.name] || '/assets/prism-auth-visual.jpg',
+    image: assetUrl(hotel.image) || HOTEL_IMAGE_FALLBACKS[hotel.name] || assetUrl('/assets/prism-auth-visual.jpg'),
+    fallbackImage: HOTEL_IMAGE_FALLBACKS[hotel.name] || assetUrl('/assets/prism-auth-visual.jpg'),
     tagline: HOTEL_TAGLINES[hotel.name] || 'Premium Ozilla partner hospitality',
     featured: index === 0
   }))
@@ -60,8 +63,8 @@ function HotelsPage() {
     return () => observer.disconnect()
   }, [])
 
-  return (
-    <main className="hotel-booking-page">
+    return (
+    <main className="hotel-booking-page" style={{ '--hotel-hero-image': `url("${HERO_BACKGROUND_IMAGE}")` }}>
       <section className="hotel-booking-hero hotel-reveal">
         <div className="hotel-hero-glow hotel-hero-glow-a" />
         <div className="hotel-hero-glow hotel-hero-glow-b" />
@@ -266,9 +269,9 @@ function HotelsPage() {
           margin-bottom: clamp(1.15rem, 2.8vw, 1.85rem);
           padding: clamp(1.9rem, 4.4vw, 3.65rem);
           color: #fff;
-          background:
+            background:
             linear-gradient(135deg, rgba(3, 38, 36, 0.9), rgba(54, 18, 21, 0.86)),
-            url('/assets/hotels/Nishat.jpg') center / cover;
+            var(--hotel-hero-image, url('${HERO_BACKGROUND_IMAGE}')) center / cover;
           box-shadow: 0 34px 90px rgba(8, 47, 47, 0.28), inset 0 0 0 1px rgba(255, 221, 152, 0.18);
         }
 

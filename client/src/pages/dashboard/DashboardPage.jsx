@@ -1,81 +1,92 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react'
 import { Link } from 'react-router-dom'
+import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion'
 import { ozillaProfessionalContent } from '../../data/ozillaProfessionalContent'
+import { assetUrl } from '../../utils/assetUrl.util'
 
-const heroImage = '/assets/logo.jpeg'
+const heroImage = assetUrl('/assets/logo.jpeg')
 
 const highlights = [
   {
-    icon: 'LM',
+    icon: '⚡',
     title: 'Live Music',
-    description: 'High-energy stage nights with immersive sound, lights, and crowd moments.'
+    description: 'High-energy stage nights with immersive sound, lights, and crowd moments.',
+    accent: '#ffb000'
   },
   {
-    icon: 'CS',
+    icon: '🎤',
     title: 'Celebrity Singers',
-    description: 'A curated lineup of crowd-favorite artists for a premium festival experience.'
+    description: 'A curated lineup of crowd-favorite artists for a premium festival experience.',
+    accent: '#ff4d2e'
   },
   {
-    icon: 'EN',
+    icon: '🎪',
     title: 'Entertainment',
-    description: 'Brand zones, creators, food streets, games, activations, and social experiences.'
+    description: 'Brand zones, creators, food streets, games, activations, and social experiences.',
+    accent: '#00f2fe'
   },
   {
-    icon: 'LH',
+    icon: '🏨',
     title: 'Luxury Hotels',
-    description: 'Recommended Lahore stays for visitors, partners, performers, and teams.'
+    description: 'Recommended Lahore stays for visitors, partners, performers, and teams.',
+    accent: '#9b51e0'
   },
   {
-    icon: 'TB',
+    icon: '🎟️',
     title: 'Easy Ticket Booking',
-    description: 'A simple ticket portal with user details, payment proof, QR tickets, and history.'
+    description: 'A simple ticket portal with user details, payment proof, QR tickets, and history.',
+    accent: '#00f5a0'
   },
   {
-    icon: 'BP',
+    icon: '🤝',
     title: 'Brand Partners',
-    description: 'High-visibility sponsorship and collaboration opportunities for premium brands.'
+    description: 'High-visibility sponsorship and collaboration opportunities for premium brands.',
+    accent: '#ff007f'
   }
 ]
 
 const stats = [
-  { value: 5000, suffix: '+', label: 'Visitors' },
-  { value: 50, suffix: '+', label: 'Artists' },
-  { value: 100, suffix: '+', label: 'Partners' },
-  { value: 2, suffix: '', label: 'Festival Days' }
+  { value: 5000, suffix: '+', label: 'Visitors', icon: '👥' },
+  { value: 50, suffix: '+', label: 'Artists', icon: '🎸' },
+  { value: 100, suffix: '+', label: 'Partners', icon: '💎' },
+  { value: 2, suffix: '', label: 'Festival Days', icon: '🔥' }
 ]
 
 const reasons = [
-  'Amazing Performances',
-  'International Stage Energy',
-  'Food Festival Culture',
-  'Safe Family Environment',
-  'Premium Guest Experience',
-  'Exclusive Partner Discounts'
+  { title: 'Amazing Performances', subtitle: 'Live stage magic', icon: '🎶' },
+  { title: 'International Stage Energy', subtitle: 'World-class production', icon: '✨' },
+  { title: 'Food Festival Culture', subtitle: 'Gourmet street eats', icon: '🍔' },
+  { title: 'Safe Family Environment', subtitle: 'Secure & curated space', icon: '🛡️' },
+  { title: 'Premium Guest Experience', subtitle: 'VIP hospitality', icon: '👑' },
+  { title: 'Exclusive Partner Discounts', subtitle: 'Perks across Lahore', icon: '🏷️' }
 ]
 
 const upcomingEvents = [
   {
     title: 'Ozilla Festival 2026',
     date: '2026',
+    tag: 'Flagship Event',
     description: 'A premium Lahore festival experience built around music, food, creators, and partners.'
   },
   {
     title: 'Future Events',
     date: 'Coming Soon',
+    tag: 'Announcing Soon',
     description: 'Upcoming brand activations, entertainment nights, and community experiences.'
   },
   {
     title: 'Celebrity Night',
     date: 'Live Stage',
+    tag: 'Exclusive Night',
     description: 'A powerful stage experience featuring celebrity performers and crowd moments.'
   }
 ]
 
 const celebrityPreview = [
-  { name: 'Talwinder', image: '/assets/ozilla/talwinder.jpg' },
-  { name: 'Bohemia', image: '/assets/ozilla/Bohemia.jpg' },
-  { name: 'Hassan Raheem', image: '/assets/ozilla/hassan-raheem.jpg' },
-  { name: 'Imran Khan', image: '/assets/ozilla/Imran-Khan.jpg' }
+  { name: 'Talwinder', role: 'Headliner', genre: 'Indie Fusion', image: assetUrl('/assets/ozilla/talwinder.jpg') },
+  { name: 'Bohemia', role: 'Rap Icon', genre: 'Punjabi Rap', image: assetUrl('/assets/ozilla/Bohemia.jpg') },
+  { name: 'Hassan Raheem', role: 'Pop Sensation', genre: 'R&B / Pop', image: assetUrl('/assets/ozilla/hassan-raheem.jpg') },
+  { name: 'Imran Khan', role: 'Urban Pop', genre: 'Punjabi Urban', image: assetUrl('/assets/ozilla/Imran-Khan.jpg') }
 ]
 
 const partnerItems = [
@@ -89,6 +100,235 @@ const partnerItems = [
   'Venue Partners'
 ]
 
+// Light Presets for Interactive Stage Background
+const LIGHT_PRESETS = {
+  gold: { name: 'Golden Flame', primary: '#ffb000', secondary: '#ff6b1a', accent: '#ffe066', laser: 'rgba(255, 176, 0, ' },
+  cyber: { name: 'Cyber Neon', primary: '#00f2fe', secondary: '#7928ca', accent: '#4facfe', laser: 'rgba(0, 242, 254, ' },
+  sunset: { name: 'Sunset Violet', primary: '#ff007f', secondary: '#7928ca', accent: '#ff007f', laser: 'rgba(255, 0, 127, ' },
+  aurora: { name: 'Cosmic Aurora', primary: '#00f5a0', secondary: '#00d2ff', accent: '#00f5a0', laser: 'rgba(0, 245, 160, ' }
+}
+
+/**
+ * 60FPS Canvas Stage Lighting & Particle System
+ */
+function HeroStageCanvas({ currentPreset, beatMode }) {
+  const canvasRef = useRef(null)
+  const mouseRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 })
+
+  useEffect(() => {
+    const canvas = canvasRef.current
+    if (!canvas) return
+
+    const ctx = canvas.getContext('2d')
+    let animationFrameId
+    let width = (canvas.width = window.innerWidth)
+    let height = (canvas.height = window.innerHeight)
+
+    const handleResize = () => {
+      width = canvas.width = window.innerWidth
+      height = canvas.height = window.innerHeight
+    }
+    window.addEventListener('resize', handleResize)
+
+    const handleMouseMove = (e) => {
+      mouseRef.current.targetX = e.clientX
+      mouseRef.current.targetY = e.clientY
+    }
+    window.addEventListener('mousemove', handleMouseMove)
+
+    // Create Stage Energy Particles
+    const numParticles = beatMode ? 75 : 45
+    const particles = Array.from({ length: numParticles }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      vx: (Math.random() - 0.5) * (beatMode ? 2.5 : 1.2),
+      vy: (Math.random() - 0.5) * (beatMode ? 2.5 : 1.2),
+      radius: Math.random() * 3 + 1.5,
+      alpha: Math.random() * 0.7 + 0.3,
+      color: Math.random() > 0.5 ? LIGHT_PRESETS[currentPreset].primary : LIGHT_PRESETS[currentPreset].secondary,
+      pulseSpeed: Math.random() * 0.05 + 0.02
+    }))
+
+    // Laser Light Beam angles
+    let laserAngle = 0
+
+    const render = () => {
+      ctx.clearRect(0, 0, width, height)
+
+      // Smooth Mouse Position Damping
+      mouseRef.current.x += (mouseRef.current.targetX - mouseRef.current.x) * 0.08
+      mouseRef.current.y += (mouseRef.current.targetY - mouseRef.current.y) * 0.08
+
+      const preset = LIGHT_PRESETS[currentPreset]
+
+      // Draw Cursor Ambient Spotlight
+      const gradient = ctx.createRadialGradient(
+        mouseRef.current.x,
+        mouseRef.current.y,
+        0,
+        mouseRef.current.x,
+        mouseRef.current.y,
+        beatMode ? 360 : 260
+      )
+      gradient.addColorStop(0, preset.laser + '0.22)')
+      gradient.addColorStop(0.5, preset.laser + '0.06)')
+      gradient.addColorStop(1, 'transparent')
+      ctx.fillStyle = gradient
+      ctx.beginPath()
+      ctx.arc(mouseRef.current.x, mouseRef.current.y, beatMode ? 360 : 260, 0, Math.PI * 2)
+      ctx.fill()
+
+      // Draw Stage Sweeping Laser Beams
+      laserAngle += beatMode ? 0.025 : 0.012
+      const beamCount = beatMode ? 6 : 4
+      const stageTopY = 0
+
+      for (let i = 0; i < beamCount; i++) {
+        const offsetAngle = laserAngle + (i * Math.PI) / (beamCount / 2)
+        const beamStartX = (width / (beamCount + 1)) * (i + 1)
+        const beamEndX = beamStartX + Math.sin(offsetAngle) * (width * 0.35)
+
+        const laserGrad = ctx.createLinearGradient(beamStartX, stageTopY, beamEndX, height)
+        laserGrad.addColorStop(0, preset.laser + '0.45)')
+        laserGrad.addColorStop(0.7, preset.laser + '0.08)')
+        laserGrad.addColorStop(1, 'transparent')
+
+        ctx.strokeStyle = laserGrad
+        ctx.lineWidth = beatMode ? 3.5 : 2
+        ctx.shadowBlur = beatMode ? 20 : 10
+        ctx.shadowColor = preset.primary
+
+        ctx.beginPath()
+        ctx.moveTo(beamStartX, stageTopY)
+        ctx.lineTo(beamEndX, height)
+        ctx.stroke()
+        ctx.shadowBlur = 0
+      }
+
+      // Draw Particles & Cursor Physics
+      particles.forEach((p) => {
+        p.x += p.vx
+        p.y += p.vy
+
+        if (p.x < 0 || p.x > width) p.vx *= -1
+        if (p.y < 0 || p.y > height) p.vy *= -1
+
+        // Mouse attraction/repulsion physics
+        const dx = mouseRef.current.x - p.x
+        const dy = mouseRef.current.y - p.y
+        const dist = Math.sqrt(dx * dx + dy * dy)
+        if (dist < 180) {
+          const force = (180 - dist) / 180
+          p.x -= (dx / dist) * force * (beatMode ? 5 : 2.5)
+          p.y -= (dy / dist) * force * (beatMode ? 5 : 2.5)
+        }
+
+        p.alpha += Math.sin(Date.now() * p.pulseSpeed) * 0.015
+
+        ctx.save()
+        ctx.globalAlpha = Math.max(0.1, Math.min(1, p.alpha))
+        ctx.fillStyle = p.color
+        ctx.shadowBlur = 12
+        ctx.shadowColor = p.color
+        ctx.beginPath()
+        ctx.arc(p.x, p.y, p.radius * (beatMode ? 1.4 : 1), 0, Math.PI * 2)
+        ctx.fill()
+        ctx.restore()
+      })
+
+      animationFrameId = requestAnimationFrame(render)
+    }
+
+    render()
+
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('mousemove', handleMouseMove)
+      cancelAnimationFrame(animationFrameId)
+    }
+  }, [currentPreset, beatMode])
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'absolute',
+        inset: 0,
+        pointerEvents: 'none',
+        zIndex: 0
+      }}
+    />
+  )
+}
+
+/**
+ * 3D Tilt Card Wrapper with Dynamic Spotlight Glare
+ */
+function TiltCard({ children, className = '', maxTilt = 14, style = {} }) {
+  const cardRef = useRef(null)
+  const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0, glareX: 50, glareY: 50, opacity: 0 })
+
+  const handleMouseMove = useCallback((e) => {
+    if (!cardRef.current) return
+    const rect = cardRef.current.getBoundingClientRect()
+    const x = e.clientX - rect.left
+    const y = e.clientY - rect.top
+    const centerX = rect.width / 2
+    const centerY = rect.height / 2
+
+    const rotateX = -((y - centerY) / centerY) * maxTilt
+    const rotateY = ((x - centerX) / centerX) * maxTilt
+
+    const glareX = (x / rect.width) * 100
+    const glareY = (y / rect.height) * 100
+
+    setTilt({ rotateX, rotateY, glareX, glareY, opacity: 1 })
+  }, [maxTilt])
+
+  const handleMouseLeave = useCallback(() => {
+    setTilt((prev) => ({ ...prev, rotateX: 0, rotateY: 0, opacity: 0 }))
+  }, [])
+
+  return (
+    <motion.div
+      ref={cardRef}
+      className={`tilt-card-container ${className}`}
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      animate={{
+        rotateX: tilt.rotateX,
+        rotateY: tilt.rotateY
+      }}
+      transition={{ type: 'spring', stiffness: 280, damping: 20 }}
+      style={{
+        transformStyle: 'preserve-3d',
+        perspective: 1000,
+        position: 'relative',
+        ...style
+      }}
+    >
+      {children}
+      {/* Dynamic Glare Overlay */}
+      <div
+        className="tilt-glare-overlay"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          borderRadius: 'inherit',
+          pointerEvents: 'none',
+          opacity: tilt.opacity,
+          background: `radial-gradient(circle at ${tilt.glareX}% ${tilt.glareY}%, rgba(255, 255, 255, 0.28), transparent 60%)`,
+          transition: 'opacity 250ms ease',
+          zIndex: 10
+        }}
+      />
+    </motion.div>
+  )
+}
+
+/**
+ * Animated Number Counter
+ */
 function CountUp({ value, suffix }) {
   const [count, setCount] = useState(0)
   const ref = useRef(null)
@@ -102,7 +342,7 @@ function CountUp({ value, suffix }) {
       ([entry]) => {
         if (!entry.isIntersecting) return
 
-        const duration = 1200
+        const duration = 1400
         const start = performance.now()
 
         const animate = (now) => {
@@ -137,38 +377,173 @@ function CountUp({ value, suffix }) {
   )
 }
 
-function DashboardPage() {
+/**
+ * Kinetic Word-by-Word Title Reveal
+ */
+function KineticTitle({ text }) {
+  const words = text.split(' ')
+
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.15, delayChildren: 0.1 }
+    }
+  }
+
+  const wordVariants = {
+    hidden: { opacity: 0, y: 40, rotateX: -60 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      rotateX: 0,
+      transition: { type: 'spring', stiffness: 180, damping: 14 }
+    }
+  }
+
   return (
-    <main className="home-premium">
+    <motion.h1
+      className="home-kinetic-title"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
+      {words.map((word, idx) => (
+        <motion.span
+          key={idx}
+          variants={wordVariants}
+          whileHover={{ scale: 1.06, y: -4, transition: { duration: 0.2 } }}
+          className="kinetic-word"
+        >
+          {word}{' '}
+        </motion.span>
+      ))}
+    </motion.h1>
+  )
+}
+
+/**
+ * Main Dashboard Page Component
+ */
+function DashboardPage() {
+  const [stagePreset, setStagePreset] = useState('gold')
+  const [beatMode, setBeatMode] = useState(false)
+
+  // Motion Container Variants
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1], staggerChildren: 0.12 }
+    }
+  }
+
+  const itemVariants = {
+    hidden: { opacity: 0, y: 30, scale: 0.95 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      scale: 1,
+      transition: { type: 'spring', stiffness: 200, damping: 16 }
+    }
+  }
+
+  return (
+    <main className={`home-premium preset-${stagePreset}`}>
+      {/* Hero Section with Live Canvas & Sound Visualizer */}
       <section className="home-hero" aria-label="Ozilla Festival 2026">
-        <img className="home-hero-media" src={heroImage} alt="Ozilla Festival stage" />
+        <HeroStageCanvas currentPreset={stagePreset} beatMode={beatMode} />
+
+        <motion.img
+          className="home-hero-media"
+          src={heroImage}
+          alt="Ozilla Festival stage"
+          initial={{ scale: 0.85, opacity: 0 }}
+          animate={{ scale: 1, opacity: 0.58 }}
+          transition={{ duration: 1.2, ease: 'easeOut' }}
+          onError={(e) => {
+            e.currentTarget.src = assetUrl('/assets/ozilla/logo.png')
+          }}
+        />
         <div className="home-hero-overlay" />
-        <div className="home-particles" aria-hidden="true">
-          <span />
-          <span />
-          <span />
-          <span />
+
+        {/* Floating Interactive Stage Controls */}
+        <div className="home-stage-controls" title="Custom Stage Controls">
+          <button
+            className={`beat-toggle-btn ${beatMode ? 'active' : ''}`}
+            onClick={() => setBeatMode(!beatMode)}
+            aria-label="Toggle Beat Mode"
+          >
+            <span className="equalizer-bars">
+              <i />
+              <i />
+              <i />
+            </span>
+            {beatMode ? 'BEAT MODE ON' : 'PULSE BEAT'}
+          </button>
+
+          <div className="preset-selector">
+            {Object.keys(LIGHT_PRESETS).map((key) => (
+              <button
+                key={key}
+                className={`preset-pill ${stagePreset === key ? 'active' : ''}`}
+                style={{ '--accent': LIGHT_PRESETS[key].primary }}
+                onClick={() => setStagePreset(key)}
+              >
+                {LIGHT_PRESETS[key].name}
+              </button>
+            ))}
+          </div>
         </div>
 
         <div className="home-hero-content">
-          <p className="home-kicker">LAHORE PUNJAB</p>
-          <h1>OZILLA FESTIVAL 2026</h1>
-          <p className="home-hero-copy">
+          <motion.p
+            className="home-kicker"
+            initial={{ opacity: 0, x: -25 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            LAHORE PUNJAB
+          </motion.p>
+
+          <KineticTitle text="OZILLA FESTIVAL 2026" />
+
+          <motion.p
+            className="home-hero-copy"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.4 }}
+          >
             Experience music, entertainment, culture and unforgettable moments.
-          </p>
-          <div className="home-hero-actions">
+          </motion.p>
+
+          <motion.div
+            className="home-hero-actions"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.55 }}
+          >
             <Link className="home-btn home-btn-primary" to="/events">
-              Explore Events
+              <span>Explore Events</span>
+              <span className="btn-glow-spark" />
             </Link>
             <Link className="home-btn home-btn-secondary" to="/tickets">
               Purchase Tickets
             </Link>
-          </div>
-          <div className="home-hero-badges" aria-label="Festival highlights">
+          </motion.div>
+
+          <motion.div
+            className="home-hero-badges"
+            aria-label="Festival highlights"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.7, duration: 0.8 }}
+          >
             <span>2026 Lahore</span>
             <span>Live Music</span>
             <span>Family Experience</span>
-          </div>
+          </motion.div>
         </div>
 
         <div className="home-scroll-indicator" aria-hidden="true">
@@ -179,44 +554,79 @@ function DashboardPage() {
 
       <div className="home-hero-divider" aria-hidden="true" />
 
-      <section className="home-section home-intro-section">
+      {/* Intro Section */}
+      <motion.section
+        className="home-section home-intro-section"
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <div className="home-section-heading home-center-heading">
           <p className="home-eyebrow">Festival Details</p>
           <h2>Future of <span>Entertainment</span></h2>
-          <p>
-            {ozillaProfessionalContent.objective}
-          </p>
+          <p>{ozillaProfessionalContent.objective}</p>
         </div>
-      </section>
+      </motion.section>
 
-      <section className="home-section">
+      {/* Highlights Grid with 3D Tilt Cards */}
+      <motion.section
+        className="home-section"
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.15 }}
+      >
         <div className="home-section-heading">
           <p className="home-eyebrow">Highlights</p>
           <h2>Everything visitors expect from a premium festival.</h2>
         </div>
+
         <div className="home-highlight-grid">
           {highlights.map((item) => (
-            <article key={item.title} className="home-highlight-card">
-              <div className="home-card-icon">{item.icon}</div>
-              <h3>{item.title}</h3>
-              <p>{item.description}</p>
-            </article>
+            <motion.div key={item.title} variants={itemVariants}>
+              <TiltCard className="home-highlight-card" maxTilt={12}>
+                <div className="home-card-icon" style={{ '--accent-color': item.accent }}>
+                  {item.icon}
+                </div>
+                <h3>{item.title}</h3>
+                <p>{item.description}</p>
+                <div className="card-ambient-glow" style={{ background: item.accent }} />
+              </TiltCard>
+            </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
-      <section className="home-stats-section">
+      {/* Animated Stats Section */}
+      <motion.section
+        className="home-stats-section"
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <div className="home-stats-grid">
           {stats.map((item) => (
-            <div key={item.label} className="home-stat-card">
-              <strong><CountUp value={item.value} suffix={item.suffix} /></strong>
+            <TiltCard key={item.label} className="home-stat-card" maxTilt={10}>
+              <span className="stat-icon-badge">{item.icon}</span>
+              <strong>
+                <CountUp value={item.value} suffix={item.suffix} />
+              </strong>
               <span>{item.label}</span>
-            </div>
+            </TiltCard>
           ))}
         </div>
-      </section>
+      </motion.section>
 
-      <section className="home-section home-split-section">
+      {/* Why Choose Ozilla */}
+      <motion.section
+        className="home-section home-split-section"
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <div className="home-section-heading">
           <p className="home-eyebrow">Why Choose Ozilla</p>
           <h2>Designed for music lovers, families, creators and brands.</h2>
@@ -225,80 +635,134 @@ function DashboardPage() {
             food culture, partner discounts and powerful brand moments.
           </p>
         </div>
+
         <div className="home-reason-grid">
           {reasons.map((reason) => (
-            <div key={reason} className="home-reason-card">
-              <span>Explore</span>
-              {reason}
-            </div>
+            <motion.div key={reason.title} variants={itemVariants}>
+              <TiltCard className="home-reason-card" maxTilt={12}>
+                <span className="reason-icon">{reason.icon}</span>
+                <div className="reason-info">
+                  <h4>{reason.title}</h4>
+                  <p>{reason.subtitle}</p>
+                </div>
+              </TiltCard>
+            </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
-      <section className="home-section">
+      {/* Upcoming Events */}
+      <motion.section
+        className="home-section"
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <div className="home-section-heading">
           <p className="home-eyebrow">Upcoming Events</p>
           <h2>Festival moments coming next.</h2>
         </div>
+
         <div className="home-event-grid">
           {upcomingEvents.map((event) => (
-            <article key={event.title} className="home-event-card">
-              <div>
-                <span>{event.date}</span>
-                <h3>{event.title}</h3>
-                <p>{event.description}</p>
-                <Link to="/events">View Details</Link>
-              </div>
-            </article>
+            <motion.div key={event.title} variants={itemVariants}>
+              <TiltCard className="home-event-card" maxTilt={12}>
+                <div className="event-card-inner">
+                  <div className="event-tag-badge">{event.tag}</div>
+                  <span>{event.date}</span>
+                  <h3>{event.title}</h3>
+                  <p>{event.description}</p>
+                  <Link to="/events" className="event-link-btn">
+                    View Details →
+                  </Link>
+                </div>
+              </TiltCard>
+            </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
-      <section className="home-section">
+      {/* Celebrity Preview with Soundwave Hover Effect */}
+      <motion.section
+        className="home-section"
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <div className="home-section-heading">
           <p className="home-eyebrow">Celebrity Preview</p>
           <h2>Featured voices for the Ozilla stage.</h2>
         </div>
+
         <div className="home-celebrity-grid">
           {celebrityPreview.map((artist) => (
-            <article key={artist.name} className="home-celebrity-card">
-              <img src={artist.image} alt={artist.name} loading="lazy" />
-              <div className="home-celebrity-overlay">
-                <h3>{artist.name}</h3>
-              </div>
-            </article>
+            <motion.div key={artist.name} variants={itemVariants}>
+              <TiltCard className="home-celebrity-card" maxTilt={16}>
+                <img
+                  src={artist.image}
+                  alt={artist.name}
+                  loading="lazy"
+                  onError={(e) => {
+                    e.currentTarget.src = assetUrl('/assets/prism-auth-visual.jpg')
+                  }}
+                />
+                <div className="artist-soundwave-ring">
+                  <span />
+                  <span />
+                  <span />
+                </div>
+                <div className="home-celebrity-overlay">
+                  <span className="celebrity-role-badge">{artist.role}</span>
+                  <h3>{artist.name}</h3>
+                  <p className="celebrity-genre">{artist.genre}</p>
+                </div>
+              </TiltCard>
+            </motion.div>
           ))}
         </div>
-      </section>
+      </motion.section>
 
-      <section className="home-partner-section">
+      {/* Partner Marquee */}
+      <motion.section
+        className="home-partner-section"
+        variants={sectionVariants}
+        initial="hidden"
+        whileInView="visible"
+        viewport={{ once: true, amount: 0.2 }}
+      >
         <div className="home-section-heading home-center-heading">
           <p className="home-eyebrow">Partners</p>
           <h2>Built for brands that want real audience attention.</h2>
         </div>
+
         <div className="home-partner-marquee">
           <div className="home-partner-track">
-            {[...partnerItems, ...partnerItems].map((partner, index) => (
-              <span key={`${partner}-${index}`}>{partner}</span>
+            {[...partnerItems, ...partnerItems, ...partnerItems].map((partner, index) => (
+              <span key={`${partner}-${index}`} className="partner-chip">
+                {partner}
+              </span>
             ))}
           </div>
         </div>
-      </section>
+      </motion.section>
 
+      {/* Dynamic CSS Styles */}
       <style>{`
         .home-premium {
           --home-deep: #041719;
           --home-ink: #101819;
           --home-muted: #55706f;
-          --home-card: rgba(255, 250, 242, 0.86);
+          --home-card: rgba(255, 250, 242, 0.88);
           --home-gold: #ffb000;
           --home-wine: #39132f;
           color: var(--home-ink);
           position: relative;
           overflow: hidden;
           background:
-            radial-gradient(circle at 10% 18%, rgba(255, 176, 0, 0.08), transparent 22rem),
-            radial-gradient(circle at 90% 42%, rgba(7, 51, 50, 0.12), transparent 24rem),
+            radial-gradient(circle at 10% 18%, rgba(255, 176, 0, 0.09), transparent 24rem),
+            radial-gradient(circle at 90% 42%, rgba(7, 51, 50, 0.14), transparent 26rem),
             linear-gradient(180deg, #fffaf4 0%, #f7eee8 48%, #fffaf4 100%);
         }
 
@@ -312,38 +776,10 @@ function DashboardPage() {
           padding: clamp(13rem, 20vw, 16rem) 1.25rem 5rem;
           isolation: isolate;
           background:
-            radial-gradient(circle at 50% 40%, rgba(255, 176, 0, 0.2), transparent 18rem),
-            radial-gradient(circle at 18% 78%, rgba(255, 77, 46, 0.18), transparent 18rem),
-            radial-gradient(circle at 82% 18%, rgba(11, 79, 76, 0.72), transparent 24rem),
+            radial-gradient(circle at 50% 40%, rgba(255, 176, 0, 0.2), transparent 22rem),
+            radial-gradient(circle at 18% 78%, rgba(255, 77, 46, 0.18), transparent 20rem),
+            radial-gradient(circle at 82% 18%, rgba(11, 79, 76, 0.72), transparent 26rem),
             linear-gradient(135deg, #020b0d, #041719 48%, #39132f);
-        }
-
-        .home-hero::before,
-        .home-hero::after {
-          content: '';
-          position: absolute;
-          pointer-events: none;
-          z-index: -1;
-        }
-
-        .home-hero::before {
-          inset: 9%;
-          border-radius: 999px;
-          background:
-            radial-gradient(circle, rgba(255, 176, 0, 0.28), transparent 48%),
-            radial-gradient(circle, rgba(255, 255, 255, 0.08), transparent 60%);
-          filter: blur(46px);
-          animation: homeAuraDrift 10s ease-in-out infinite;
-        }
-
-        .home-hero::after {
-          inset: 0;
-          background:
-            linear-gradient(115deg, transparent 0%, rgba(255, 255, 255, 0.1) 42%, transparent 57%),
-            radial-gradient(ellipse at center, transparent 34%, rgba(0, 0, 0, 0.78) 100%);
-          mix-blend-mode: screen;
-          opacity: 0.32;
-          animation: homeLightSweep 9s ease-in-out infinite;
         }
 
         .home-hero-media {
@@ -354,10 +790,10 @@ function DashboardPage() {
           height: min(70vh, 680px);
           object-fit: contain;
           opacity: 0.54;
-          filter: saturate(1.2) contrast(1.08) drop-shadow(0 0 42px rgba(255, 176, 0, 0.22));
-          transform: translate(-50%, -50%) scale(1);
-          animation: homeLogoKenBurns 16s ease-in-out infinite alternate;
-          z-index: -3;
+          filter: saturate(1.25) contrast(1.1) drop-shadow(0 0 45px rgba(255, 176, 0, 0.28));
+          transform: translate(-50%, -50%);
+          z-index: 1;
+          pointer-events: none;
         }
 
         .home-hero-overlay {
@@ -365,76 +801,137 @@ function DashboardPage() {
           inset: 0;
           background:
             radial-gradient(circle at 50% 38%, rgba(255, 176, 0, 0.08), transparent 20rem),
-            linear-gradient(90deg, rgba(2, 12, 12, 0.94), rgba(2, 12, 12, 0.44), rgba(2, 12, 12, 0.88)),
-            linear-gradient(180deg, rgba(2, 12, 12, 0.26), rgba(2, 12, 12, 0.9));
-          z-index: -2;
+            linear-gradient(90deg, rgba(2, 12, 12, 0.92), rgba(2, 12, 12, 0.44), rgba(2, 12, 12, 0.88)),
+            linear-gradient(180deg, rgba(2, 12, 12, 0.26), rgba(2, 12, 12, 0.92));
+          z-index: 1;
         }
 
-        .home-particles span {
+        /* Interactive Stage Controls Widget */
+        .home-stage-controls {
           position: absolute;
-          width: clamp(8px, 1vw, 14px);
-          height: clamp(8px, 1vw, 14px);
-          border-radius: 999px;
-          background: rgba(255, 176, 0, 0.86);
-          box-shadow: 0 0 32px rgba(255, 176, 0, 0.82);
-          animation: homeFloat 8s ease-in-out infinite;
-          z-index: -1;
+          right: 2rem;
+          bottom: 2rem;
+          z-index: 10;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 0.75rem;
         }
 
-        .home-particles span:nth-child(1) { left: 12%; top: 24%; }
-        .home-particles span:nth-child(2) { right: 18%; top: 20%; animation-delay: 1.5s; }
-        .home-particles span:nth-child(3) { left: 24%; bottom: 22%; animation-delay: 3s; }
-        .home-particles span:nth-child(4) { right: 14%; bottom: 18%; animation-delay: 4.5s; }
+        .beat-toggle-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.6rem;
+          padding: 0.6rem 1.1rem;
+          border-radius: 999px;
+          border: 1px solid rgba(255, 255, 255, 0.25);
+          background: rgba(4, 23, 25, 0.75);
+          color: #fff;
+          font-size: 0.78rem;
+          font-weight: 800;
+          letter-spacing: 0.08em;
+          cursor: pointer;
+          backdrop-filter: blur(16px);
+          transition: all 220ms ease;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .beat-toggle-btn.active {
+          background: linear-gradient(135deg, #ff007f, #7928ca);
+          border-color: #ff007f;
+          box-shadow: 0 0 25px rgba(255, 0, 127, 0.5);
+        }
+
+        .equalizer-bars {
+          display: inline-flex;
+          align-items: flex-end;
+          gap: 3px;
+          height: 14px;
+        }
+
+        .equalizer-bars i {
+          width: 3px;
+          background: var(--home-gold);
+          border-radius: 2px;
+          height: 100%;
+          animation: eqPulse 800ms ease-in-out infinite alternate;
+        }
+
+        .equalizer-bars i:nth-child(2) { animation-delay: 200ms; }
+        .equalizer-bars i:nth-child(3) { animation-delay: 400ms; }
+
+        @keyframes eqPulse {
+          0% { height: 30%; }
+          100% { height: 100%; }
+        }
+
+        .preset-selector {
+          display: flex;
+          gap: 0.4rem;
+          padding: 0.4rem;
+          border-radius: 999px;
+          background: rgba(0, 0, 0, 0.5);
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          backdrop-filter: blur(12px);
+        }
+
+        .preset-pill {
+          padding: 0.35rem 0.8rem;
+          border-radius: 999px;
+          border: none;
+          background: transparent;
+          color: rgba(255, 255, 255, 0.7);
+          font-size: 0.72rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 200ms ease;
+        }
+
+        .preset-pill.active,
+        .preset-pill:hover {
+          color: #fff;
+          background: var(--accent, #ffb000);
+          box-shadow: 0 0 14px var(--accent, #ffb000);
+        }
 
         .home-hero-content {
           width: min(1120px, 100%);
           color: #fff;
           position: relative;
           z-index: 2;
-          animation: homeRise 900ms ease both;
-        }
-
-        .home-hero-content::before {
-          content: '';
-          position: absolute;
-          left: -4%;
-          top: 11%;
-          width: min(54vw, 680px);
-          height: 52%;
-          border-radius: 999px;
-          background:
-            radial-gradient(circle, rgba(255, 176, 0, 0.18), transparent 62%),
-            radial-gradient(circle, rgba(255, 255, 255, 0.08), transparent 55%);
-          filter: blur(42px);
-          pointer-events: none;
-          z-index: -1;
         }
 
         .home-kicker,
         .home-eyebrow {
           color: var(--home-gold);
-          font-size: 0.85rem;
+          font-size: 0.88rem;
           font-weight: 900;
           letter-spacing: 0.18em;
           text-transform: uppercase;
         }
 
-        .home-hero h1 {
+        .home-kinetic-title {
           max-width: 920px;
           margin: 0.7rem 0 1rem;
-          font-size: clamp(3.4rem, 10vw, 9rem);
+          font-size: clamp(3.4rem, 9.5vw, 8.5rem);
           line-height: 0.88;
           letter-spacing: -0.055em;
           text-transform: uppercase;
           text-wrap: balance;
-          text-shadow:
-            0 1px 0 rgba(255, 255, 255, 0.1),
-            0 28px 80px rgba(0, 0, 0, 0.42);
+        }
+
+        .kinetic-word {
+          display: inline-block;
+          background: linear-gradient(135deg, #ffffff 30%, #ffd36a 70%, #ff6b1a 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+          filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.5));
+          cursor: default;
         }
 
         .home-hero-copy {
           max-width: 620px;
-          color: rgba(255, 255, 255, 0.82);
+          color: rgba(255, 255, 255, 0.86);
           font-size: clamp(1.08rem, 2vw, 1.45rem);
           line-height: 1.65;
         }
@@ -442,69 +939,33 @@ function DashboardPage() {
         .home-hero-actions {
           display: flex;
           flex-wrap: wrap;
-          gap: 0.9rem;
+          gap: 1rem;
           margin-top: 2rem;
-        }
-
-        .home-hero-badges {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.7rem;
-          margin-top: 1.25rem;
-        }
-
-        .home-hero-badges span {
-          display: inline-flex;
-          align-items: center;
-          min-height: 2.2rem;
-          padding: 0 0.95rem;
-          border: 1px solid rgba(255, 255, 255, 0.18);
-          border-radius: 999px;
-          background: rgba(255, 255, 255, 0.08);
-          color: rgba(255, 255, 255, 0.78);
-          font-size: 0.78rem;
-          font-weight: 900;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          backdrop-filter: blur(16px);
         }
 
         .home-btn {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          min-height: 3.25rem;
-          padding: 0 1.45rem;
+          min-height: 3.4rem;
+          padding: 0 1.6rem;
           border-radius: 999px;
           font-weight: 900;
           position: relative;
           overflow: hidden;
           isolation: isolate;
-          transition: transform 220ms ease, box-shadow 220ms ease, background 220ms ease;
-        }
-
-        .home-btn::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(110deg, transparent 0%, rgba(255, 255, 255, 0.34) 45%, transparent 72%);
-          transform: translateX(-120%);
-          transition: transform 520ms ease;
-          z-index: -1;
-        }
-
-        .home-btn:hover {
-          transform: translateY(-3px);
-        }
-
-        .home-btn:hover::before {
-          transform: translateX(120%);
+          transition: transform 220ms ease, box-shadow 220ms ease;
         }
 
         .home-btn-primary {
           background: linear-gradient(135deg, #ffb000, #ff6b1a 58%, #ff4d2e);
           color: #111;
-          box-shadow: 0 18px 35px rgba(255, 126, 0, 0.25);
+          box-shadow: 0 18px 38px rgba(255, 126, 0, 0.35);
+        }
+
+        .home-btn-primary:hover {
+          transform: translateY(-3px) scale(1.02);
+          box-shadow: 0 24px 48px rgba(255, 126, 0, 0.5);
         }
 
         .home-btn-secondary {
@@ -512,6 +973,34 @@ function DashboardPage() {
           color: #fff;
           background: rgba(255, 255, 255, 0.08);
           backdrop-filter: blur(14px);
+        }
+
+        .home-btn-secondary:hover {
+          transform: translateY(-3px);
+          background: rgba(255, 255, 255, 0.16);
+        }
+
+        .home-hero-badges {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.75rem;
+          margin-top: 1.4rem;
+        }
+
+        .home-hero-badges span {
+          display: inline-flex;
+          align-items: center;
+          min-height: 2.3rem;
+          padding: 0 1rem;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.09);
+          color: rgba(255, 255, 255, 0.85);
+          font-size: 0.78rem;
+          font-weight: 900;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          backdrop-filter: blur(16px);
         }
 
         .home-scroll-indicator {
@@ -526,6 +1015,7 @@ function DashboardPage() {
           font-size: 0.76rem;
           text-transform: uppercase;
           letter-spacing: 0.16em;
+          z-index: 2;
         }
 
         .home-scroll-indicator span {
@@ -533,6 +1023,11 @@ function DashboardPage() {
           height: 2.8rem;
           background: linear-gradient(180deg, transparent, #ffb000, transparent);
           animation: homePulse 1.7s ease-in-out infinite;
+        }
+
+        @keyframes homePulse {
+          0%, 100% { opacity: 0.35; transform: scaleY(0.75); }
+          50% { opacity: 1; transform: scaleY(1); }
         }
 
         .home-hero-divider {
@@ -544,23 +1039,9 @@ function DashboardPage() {
           z-index: 3;
         }
 
-        .home-hero-divider::before {
-          content: '';
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          width: min(62vw, 680px);
-          height: 5.5rem;
-          border-radius: 999px;
-          background: radial-gradient(circle, rgba(255, 176, 0, 0.16), transparent 68%);
-          filter: blur(22px);
-          transform: translate(-50%, -50%);
-        }
-
         .home-section,
         .home-stats-section,
-        .home-partner-section,
-        .home-cta-section {
+        .home-partner-section {
           width: min(1180px, calc(100% - 2rem));
           margin: 0 auto;
           padding: clamp(4rem, 8vw, 7rem) 0;
@@ -568,39 +1049,9 @@ function DashboardPage() {
           isolation: isolate;
         }
 
-        .home-section::before,
-        .home-partner-section::before {
-          content: '';
-          position: absolute;
-          left: 50%;
-          top: 0;
-          width: min(70vw, 820px);
-          height: 1px;
-          transform: translateX(-50%);
-          background: linear-gradient(90deg, transparent, rgba(11, 79, 76, 0.18), rgba(255, 176, 0, 0.28), transparent);
-        }
-
-        .home-section::after {
-          content: '';
-          position: absolute;
-          inset: 12% auto auto 50%;
-          width: min(72vw, 860px);
-          height: 18rem;
-          border-radius: 999px;
-          background: radial-gradient(circle, rgba(255, 176, 0, 0.055), transparent 68%);
-          filter: blur(28px);
-          transform: translateX(-50%);
-          pointer-events: none;
-          z-index: -1;
-        }
-
-        .home-intro-section {
-          padding-bottom: 2rem;
-        }
-
         .home-section-heading {
           max-width: 760px;
-          margin-bottom: 2rem;
+          margin-bottom: 2.2rem;
         }
 
         .home-center-heading {
@@ -609,15 +1060,13 @@ function DashboardPage() {
           text-align: center;
         }
 
-        .home-section-heading h2,
-        .home-cta-section h2 {
+        .home-section-heading h2 {
           margin-top: 0.45rem;
           color: var(--home-ink);
-          font-size: clamp(2.2rem, 5.5vw, 5rem);
+          font-size: clamp(2.2rem, 5.5vw, 4.8rem);
           line-height: 0.98;
           letter-spacing: -0.05em;
           text-transform: uppercase;
-          text-wrap: balance;
         }
 
         .home-section-heading h2 span {
@@ -627,167 +1076,113 @@ function DashboardPage() {
         .home-section-heading p:not(.home-eyebrow) {
           margin-top: 1rem;
           color: var(--home-muted);
-          font-size: 1.02rem;
+          font-size: 1.05rem;
           line-height: 1.75;
         }
 
-        .home-highlight-grid,
-        .home-reason-grid,
-        .home-event-grid,
-        .home-celebrity-grid {
-          display: grid;
-          gap: 1rem;
-        }
-
+        /* Highlight Cards Grid */
         .home-highlight-grid {
-          grid-template-columns: repeat(4, minmax(0, 1fr));
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 1.25rem;
         }
 
         .home-highlight-card {
-          grid-column: span 1;
           min-height: 240px;
-          padding: 1.25rem;
-          border: 1px solid rgba(11, 79, 76, 0.14);
-          border-radius: 24px;
-          background: linear-gradient(145deg, rgba(255, 250, 245, 0.92), rgba(246, 238, 232, 0.74));
+          padding: 1.5rem;
+          border: 1px solid rgba(11, 79, 76, 0.15);
+          border-radius: 26px;
+          background: linear-gradient(145deg, rgba(255, 250, 245, 0.94), rgba(246, 238, 232, 0.8));
           box-shadow: 0 20px 55px rgba(18, 34, 34, 0.08);
-          position: relative;
           overflow: hidden;
-          isolation: isolate;
-          transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
-        }
-
-        .home-highlight-card::before,
-        .home-event-card::before,
-        .home-reason-card::before,
-        .home-stat-card::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          border-radius: inherit;
-          padding: 1px;
-          background: linear-gradient(135deg, rgba(255, 176, 0, 0.44), transparent 34%, rgba(11, 79, 76, 0.2));
-          mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-          -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
-          mask-composite: exclude;
-          -webkit-mask-composite: xor;
-          pointer-events: none;
-          opacity: 0;
-          transition: opacity 220ms ease;
-          z-index: 2;
-        }
-
-        .home-highlight-card::after {
-          content: '';
-          position: absolute;
-          inset: -40% -20% auto;
-          height: 7rem;
-          background: linear-gradient(110deg, transparent, rgba(255, 255, 255, 0.48), transparent);
-          transform: translateX(-120%) rotate(8deg);
-          transition: transform 620ms ease;
-          pointer-events: none;
+          transition: box-shadow 300ms ease, border-color 300ms ease;
         }
 
         .home-highlight-card:hover {
-          transform: translateY(-8px);
-          border-color: rgba(255, 176, 0, 0.55);
-          box-shadow: 0 28px 65px rgba(18, 34, 34, 0.14);
-        }
-
-        .home-highlight-card:hover::before,
-        .home-event-card:hover::before,
-        .home-reason-card:hover::before,
-        .home-stat-card:hover::before {
-          opacity: 1;
-        }
-
-        .home-highlight-card:hover::after {
-          transform: translateX(130%) rotate(8deg);
+          border-color: rgba(255, 176, 0, 0.6);
+          box-shadow: 0 30px 70px rgba(18, 34, 34, 0.16);
         }
 
         .home-card-icon {
-          width: 3.25rem;
-          height: 3.25rem;
+          width: 3.4rem;
+          height: 3.4rem;
           display: grid;
           place-items: center;
-          margin-bottom: 1.6rem;
+          font-size: 1.6rem;
+          margin-bottom: 1.4rem;
           border-radius: 18px;
           background: linear-gradient(135deg, #041719, #0b4f4c);
           color: #ffd36a;
-          font-weight: 900;
+          box-shadow: 0 10px 24px rgba(4, 23, 25, 0.25);
         }
 
-        .home-highlight-card h3,
-        .home-event-card h3 {
-          color: var(--home-ink);
+        .home-highlight-card h3 {
           font-size: 1.35rem;
-          margin-bottom: 0.65rem;
+          font-weight: 800;
+          color: var(--home-ink);
+          margin-bottom: 0.6rem;
         }
 
-        .home-highlight-card p,
-        .home-event-card p {
+        .home-highlight-card p {
           color: var(--home-muted);
+          font-size: 0.96rem;
           line-height: 1.65;
         }
 
-        .home-stats-section {
-          padding-top: 1rem;
-          padding-bottom: 2rem;
-        }
-
+        /* Stats Grid */
         .home-stats-grid {
           display: grid;
           grid-template-columns: repeat(4, minmax(0, 1fr));
-          gap: 1rem;
-          padding: 1rem;
-          border-radius: 30px;
+          gap: 1.2rem;
+          padding: 1.2rem;
+          border-radius: 32px;
           background: linear-gradient(135deg, #041719, #073332 58%, #39132f);
-          box-shadow: 0 24px 70px rgba(2, 11, 13, 0.22);
-          position: relative;
-          overflow: hidden;
-        }
-
-        .home-stats-grid::before {
-          content: '';
-          position: absolute;
-          inset: -55% auto auto -12%;
-          width: 45%;
-          height: 140%;
-          background: linear-gradient(110deg, transparent, rgba(255, 255, 255, 0.12), transparent);
-          transform: rotate(16deg);
-          animation: homeStatsShine 8s ease-in-out infinite;
+          box-shadow: 0 28px 75px rgba(2, 11, 13, 0.28);
+          border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .home-stat-card {
-          min-height: 150px;
-          display: grid;
-          place-items: center;
+          min-height: 155px;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
           text-align: center;
+          padding: 1.2rem;
           border-radius: 22px;
           background: rgba(255, 255, 255, 0.08);
           color: #fff;
-          position: relative;
-          overflow: hidden;
-          transition: transform 220ms ease, background 220ms ease;
+          backdrop-filter: blur(12px);
+          transition: background 220ms ease;
         }
 
         .home-stat-card:hover {
-          transform: translateY(-4px);
-          background: rgba(255, 255, 255, 0.12);
+          background: rgba(255, 255, 255, 0.15);
+        }
+
+        .stat-icon-badge {
+          font-size: 1.4rem;
+          margin-bottom: 0.4rem;
         }
 
         .home-stat-card strong {
           display: block;
           color: #ffd36a;
-          font-size: clamp(2rem, 5vw, 4rem);
+          font-size: clamp(2.2rem, 5vw, 4rem);
+          font-weight: 900;
           line-height: 1;
         }
 
-        .home-stat-card span {
-          color: rgba(255, 255, 255, 0.75);
-          font-weight: 700;
+        .home-stat-card span:not(.stat-icon-badge) {
+          color: rgba(255, 255, 255, 0.8);
+          font-weight: 800;
+          font-size: 0.9rem;
+          margin-top: 0.35rem;
+          text-transform: uppercase;
+          letter-spacing: 0.06em;
         }
 
+        /* Reasons Grid */
         .home-split-section {
           display: grid;
           grid-template-columns: 0.9fr 1.1fr;
@@ -796,147 +1191,116 @@ function DashboardPage() {
         }
 
         .home-reason-grid {
+          display: grid;
           grid-template-columns: repeat(2, minmax(0, 1fr));
+          gap: 1rem;
         }
 
         .home-reason-card {
-          min-height: 120px;
+          min-height: 110px;
           display: flex;
           align-items: center;
-          gap: 0.9rem;
-          padding: 1.2rem;
-          border-radius: 22px;
-          background: rgba(255, 255, 255, 0.76);
+          gap: 1rem;
+          padding: 1.25rem;
+          border-radius: 24px;
+          background: rgba(255, 255, 255, 0.85);
           border: 1px solid rgba(11, 79, 76, 0.12);
           box-shadow: 0 16px 45px rgba(18, 34, 34, 0.08);
-          font-weight: 900;
-          position: relative;
-          overflow: hidden;
-          transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+          backdrop-filter: blur(12px);
         }
 
-        .home-reason-card:hover {
-          transform: translateY(-5px);
-          border-color: rgba(255, 176, 0, 0.28);
-          box-shadow: 0 24px 58px rgba(18, 34, 34, 0.13);
+        .reason-icon {
+          font-size: 1.8rem;
+          flex-shrink: 0;
         }
 
-        .home-reason-card span {
-          min-width: 5.7rem;
-          height: 2.45rem;
-          flex: 0 0 auto;
-          display: grid;
-          place-items: center;
-          border-radius: 999px;
-          background: linear-gradient(135deg, #ffb000, #ff6b1a);
-          color: #111;
-          font-size: 0.76rem;
-          box-shadow: 0 12px 26px rgba(255, 176, 0, 0.22);
-          transition: transform 220ms ease, box-shadow 220ms ease;
+        .reason-info h4 {
+          font-size: 1.05rem;
+          font-weight: 800;
+          color: var(--home-ink);
+          margin-bottom: 0.2rem;
         }
 
-        .home-reason-card:hover span {
-          transform: translateY(-2px);
-          box-shadow: 0 18px 34px rgba(255, 176, 0, 0.34);
+        .reason-info p {
+          font-size: 0.85rem;
+          color: var(--home-muted);
         }
 
+        /* Upcoming Events */
         .home-event-grid {
+          display: grid;
           grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 1.2rem;
         }
 
         .home-event-card {
-          overflow: hidden;
           border-radius: 28px;
           background: #fffaf5;
           box-shadow: 0 22px 58px rgba(18, 34, 34, 0.1);
-          position: relative;
-          isolation: isolate;
-          transition: transform 220ms ease, box-shadow 220ms ease;
+          padding: 1.6rem;
+          border: 1px solid rgba(11, 79, 76, 0.12);
         }
 
-        .home-event-card:hover {
-          transform: translateY(-8px);
-          box-shadow: 0 32px 72px rgba(18, 34, 34, 0.16);
-        }
-
-        .home-event-card img {
-          width: 100%;
-          height: 230px;
-          object-fit: cover;
-          display: block;
-          transition: transform 520ms ease, filter 520ms ease;
-        }
-
-        .home-event-card:hover img {
-          transform: scale(1.06);
-          filter: saturate(1.12) contrast(1.06);
-        }
-
-        .home-event-card div {
-          padding: 1.25rem;
-        }
-
-        .home-event-card span {
-          display: inline-flex;
-          margin-bottom: 0.75rem;
-          color: #9a3b0b;
+        .event-tag-badge {
+          display: inline-block;
+          padding: 0.3rem 0.8rem;
+          border-radius: 999px;
+          background: linear-gradient(135deg, #ffb000, #ff6b1a);
+          color: #111;
+          font-size: 0.72rem;
           font-weight: 900;
           text-transform: uppercase;
-          letter-spacing: 0.08em;
-          font-size: 0.76rem;
+          margin-bottom: 1rem;
         }
 
-        .home-event-card a {
-          display: inline-flex;
-          margin-top: 1.1rem;
-          color: #39132f;
+        .home-event-card span:not(.event-tag-badge) {
+          display: block;
+          color: #9a3b0b;
           font-weight: 900;
-          position: relative;
+          font-size: 0.8rem;
+          margin-bottom: 0.4rem;
         }
 
-        .home-event-card a::after {
-          content: '';
-          position: absolute;
-          left: 0;
-          right: 0;
-          bottom: -4px;
-          height: 2px;
-          border-radius: 999px;
-          background: linear-gradient(90deg, #ffb000, #ff6b1a);
-          transform: scaleX(0.3);
-          transform-origin: left;
-          transition: transform 220ms ease;
+        .home-event-card h3 {
+          font-size: 1.4rem;
+          font-weight: 800;
+          color: var(--home-ink);
+          margin-bottom: 0.6rem;
         }
 
-        .home-event-card a:hover::after {
-          transform: scaleX(1);
+        .home-event-card p {
+          color: var(--home-muted);
+          font-size: 0.95rem;
+          line-height: 1.6;
+          margin-bottom: 1.2rem;
         }
 
+        .event-link-btn {
+          font-weight: 800;
+          color: #39132f;
+          text-decoration: none;
+          transition: color 200ms ease;
+        }
+
+        .event-link-btn:hover {
+          color: #ff6b1a;
+        }
+
+        /* Celebrity Grid */
         .home-celebrity-grid {
+          display: grid;
           grid-template-columns: repeat(4, minmax(0, 1fr));
+          gap: 1.2rem;
         }
 
         .home-celebrity-card {
           position: relative;
           overflow: hidden;
           min-height: 380px;
-          border-radius: 26px;
+          border-radius: 28px;
           background: #111;
           box-shadow: 0 25px 60px rgba(18, 34, 34, 0.16);
           isolation: isolate;
-          transition: transform 260ms ease, box-shadow 260ms ease;
-        }
-
-        .home-celebrity-card::after,
-        .home-gallery-item::after {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), transparent 42%);
-          opacity: 0;
-          transition: opacity 260ms ease;
-          pointer-events: none;
-          z-index: 2;
         }
 
         .home-celebrity-card img {
@@ -945,100 +1309,57 @@ function DashboardPage() {
           position: absolute;
           inset: 0;
           object-fit: cover;
-          transition: transform 420ms ease;
-        }
-
-        .home-celebrity-overlay {
-          position: absolute;
-          inset: 0;
-          display: flex;
-          align-items: flex-end;
-          padding: 1.25rem;
-          background: linear-gradient(180deg, transparent 36%, rgba(2, 10, 10, 0.92));
-          opacity: 0;
-          transition: opacity 260ms ease;
-        }
-
-        .home-celebrity-overlay h3 {
-          color: #fff;
-          font-size: 1.45rem;
-          text-transform: uppercase;
-          letter-spacing: -0.02em;
+          transition: transform 500ms ease;
         }
 
         .home-celebrity-card:hover img {
           transform: scale(1.08);
         }
 
-        .home-celebrity-card:hover .home-celebrity-overlay {
-          opacity: 1;
+        .home-celebrity-overlay {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          padding: 1.5rem;
+          background: linear-gradient(180deg, transparent 36%, rgba(2, 10, 10, 0.94));
+          z-index: 2;
         }
 
-        .home-celebrity-card:hover {
-          transform: translateY(-7px);
-          box-shadow: 0 34px 78px rgba(18, 34, 34, 0.22);
+        .celebrity-role-badge {
+          display: inline-block;
+          width: fit-content;
+          padding: 0.25rem 0.75rem;
+          border-radius: 999px;
+          background: rgba(255, 176, 0, 0.25);
+          border: 1px solid rgba(255, 176, 0, 0.5);
+          color: #ffd36a;
+          font-size: 0.72rem;
+          font-weight: 800;
+          text-transform: uppercase;
+          margin-bottom: 0.5rem;
+          backdrop-filter: blur(8px);
         }
 
-        .home-celebrity-card:hover::after,
-        .home-gallery-item:hover::after {
-          opacity: 1;
+        .home-celebrity-overlay h3 {
+          color: #fff;
+          font-size: 1.5rem;
+          font-weight: 900;
+          text-transform: uppercase;
         }
 
-        .home-gallery-grid {
-          display: grid;
-          grid-template-columns: repeat(6, 1fr);
-          grid-auto-rows: 170px;
-          gap: 1rem;
+        .celebrity-genre {
+          color: rgba(255, 255, 255, 0.7);
+          font-size: 0.85rem;
+          margin-top: 0.2rem;
         }
 
-        .home-gallery-item {
-          overflow: hidden;
-          border-radius: 24px;
-          box-shadow: 0 20px 55px rgba(18, 34, 34, 0.1);
-          position: relative;
-          isolation: isolate;
-          transition: transform 260ms ease, box-shadow 260ms ease;
-        }
-
-        .home-gallery-item img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          display: block;
-          transition: transform 420ms ease, filter 420ms ease;
-        }
-
-        .home-gallery-item:hover img {
-          transform: scale(1.08);
-          filter: saturate(1.12) contrast(1.08);
-        }
-
-        .home-gallery-item:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 30px 70px rgba(18, 34, 34, 0.16);
-        }
-
-        .home-gallery-item-1,
-        .home-gallery-item-4 {
-          grid-column: span 3;
-          grid-row: span 2;
-        }
-
-        .home-gallery-item-2,
-        .home-gallery-item-3,
-        .home-gallery-item-5,
-        .home-gallery-item-6 {
-          grid-column: span 3;
-        }
-
-        .home-partner-section {
-          overflow: hidden;
-        }
-
+        /* Partner Marquee */
         .home-partner-marquee {
           overflow: hidden;
-          padding: 1rem;
-          border-radius: 28px;
+          padding: 1.2rem;
+          border-radius: 30px;
           background: linear-gradient(135deg, #041719, #073332 58%, #39132f);
           box-shadow: 0 24px 65px rgba(2, 11, 13, 0.18);
           border: 1px solid rgba(255, 255, 255, 0.08);
@@ -1047,209 +1368,27 @@ function DashboardPage() {
         .home-partner-track {
           display: inline-flex;
           min-width: max-content;
-          gap: 1rem;
-          animation: homePartnerMove 24s linear infinite;
+          gap: 1.2rem;
+          animation: homePartnerMove 28s linear infinite;
         }
 
-        .home-partner-track span {
+        .partner-chip {
           min-width: 170px;
-          padding: 1rem 1.25rem;
-          border-radius: 18px;
+          padding: 1.1rem 1.4rem;
+          border-radius: 20px;
           background: rgba(255, 255, 255, 0.1);
           color: #fff;
           text-align: center;
           font-weight: 900;
           text-transform: uppercase;
-          border: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .home-cta-section {
-          position: relative;
-          overflow: hidden;
-          display: grid;
-          place-items: center;
-          min-height: 520px;
-          margin-bottom: clamp(3rem, 7vw, 5rem);
-          border-radius: 36px;
-          text-align: center;
-          color: #fff;
-          background: #051615;
-          box-shadow: 0 30px 80px rgba(18, 34, 34, 0.18);
-          isolation: isolate;
-        }
-
-        .home-cta-section img {
-          position: absolute;
-          left: 50%;
-          top: 50%;
-          width: min(82%, 760px);
-          height: 82%;
-          object-fit: contain;
-          opacity: 0.34;
-          filter: saturate(1.24) contrast(1.08) blur(0.2px) drop-shadow(0 0 48px rgba(255, 176, 0, 0.2));
-          transform: translate(-50%, -50%);
-          animation: homeCtaLogoFloat 14s ease-in-out infinite alternate;
-          z-index: -2;
-        }
-
-        .home-cta-section::before {
-          content: '';
-          position: absolute;
-          inset: 0;
-          background:
-            radial-gradient(circle at 50% 44%, rgba(255, 176, 0, 0.18), transparent 18rem),
-            linear-gradient(135deg, rgba(2, 11, 13, 0.92), rgba(7, 51, 50, 0.78), rgba(57, 19, 47, 0.84)),
-            radial-gradient(ellipse at center, transparent 36%, rgba(0, 0, 0, 0.72));
-          z-index: -1;
-        }
-
-        .home-cta-section::after {
-          content: '';
-          position: absolute;
-          inset: -30%;
-          background: linear-gradient(110deg, transparent 34%, rgba(255, 255, 255, 0.1) 48%, transparent 62%);
-          transform: translateX(-24%);
-          animation: homeLightSweep 11s ease-in-out infinite;
-          pointer-events: none;
-          z-index: -1;
-        }
-
-        .home-cta-section h2 {
-          color: #fff;
-          max-width: 860px;
-        }
-
-        .home-cta-section .home-btn-secondary {
-          border-color: rgba(255, 255, 255, 0.5);
-        }
-
-        @keyframes homeRise {
-          from {
-            opacity: 0;
-            transform: translateY(28px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes homeFloat {
-          0%, 100% {
-            transform: translateY(0) scale(1);
-            opacity: 0.55;
-          }
-          50% {
-            transform: translateY(-22px) scale(1.25);
-            opacity: 1;
-          }
-        }
-
-        @keyframes homePulse {
-          0%, 100% { opacity: 0.35; transform: scaleY(0.75); }
-          50% { opacity: 1; transform: scaleY(1); }
+          letter-spacing: 0.08em;
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          backdrop-filter: blur(10px);
         }
 
         @keyframes homePartnerMove {
           from { transform: translateX(0); }
-          to { transform: translateX(-50%); }
-        }
-
-        @keyframes homeLogoKenBurns {
-          from {
-            transform: translate(-50%, -50%) scale(0.98) rotate(-0.8deg);
-          }
-          to {
-            transform: translate(-50%, -50%) scale(1.08) rotate(0.8deg);
-          }
-        }
-
-        @keyframes homeAuraDrift {
-          0%, 100% {
-            transform: translate3d(-2%, 0, 0) scale(0.94);
-            opacity: 0.76;
-          }
-          50% {
-            transform: translate3d(3%, -2%, 0) scale(1.08);
-            opacity: 1;
-          }
-        }
-
-        @keyframes homeLightSweep {
-          0%, 100% {
-            opacity: 0.18;
-            transform: translateX(-18%) rotate(0.001deg);
-          }
-          50% {
-            opacity: 0.44;
-            transform: translateX(18%) rotate(0.001deg);
-          }
-        }
-
-        @keyframes homeCtaLogoFloat {
-          from {
-            transform: translate(-50%, -50%) scale(0.98);
-          }
-          to {
-            transform: translate(-50%, -52%) scale(1.05);
-          }
-        }
-
-        @keyframes homeStatsShine {
-          0%, 100% {
-            transform: translateX(-55%) rotate(16deg);
-            opacity: 0;
-          }
-          35%, 58% {
-            opacity: 0.9;
-          }
-          70% {
-            transform: translateX(290%) rotate(16deg);
-            opacity: 0;
-          }
-        }
-
-        @supports (animation-timeline: view()) {
-          .home-section,
-          .home-stats-section,
-          .home-partner-section,
-          .home-cta-section {
-            animation: homeViewRise 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
-            animation-timeline: view();
-            animation-range: entry 4% cover 26%;
-          }
-
-          .home-highlight-card,
-          .home-reason-card,
-          .home-event-card,
-          .home-celebrity-card,
-          .home-gallery-item {
-            animation: homeViewScale 640ms cubic-bezier(0.22, 1, 0.36, 1) both;
-            animation-timeline: view();
-            animation-range: entry 8% cover 22%;
-          }
-        }
-
-        @keyframes homeViewRise {
-          from {
-            opacity: 0.55;
-            transform: translateY(36px);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0);
-          }
-        }
-
-        @keyframes homeViewScale {
-          from {
-            opacity: 0.5;
-            transform: translateY(24px) scale(0.97);
-          }
-          to {
-            opacity: 1;
-            transform: translateY(0) scale(1);
-          }
+          to { transform: translateX(-33.33%); }
         }
 
         @media (max-width: 1024px) {
@@ -1265,38 +1404,7 @@ function DashboardPage() {
           }
         }
 
-        @media (max-width: 720px) {
-          .home-hero {
-            min-height: 92vh;
-            justify-content: flex-start;
-            padding-top: 12rem;
-          }
-
-          .home-hero-media {
-            width: min(94vw, 520px);
-            height: min(54vh, 460px);
-            top: 34%;
-            opacity: 0.46;
-          }
-
-          .home-hero-actions {
-            flex-direction: column;
-          }
-
-          .home-btn {
-            width: 100%;
-          }
-
-          .home-hero-badges {
-            gap: 0.5rem;
-          }
-
-          .home-hero-badges span {
-            min-height: 2rem;
-            font-size: 0.7rem;
-            padding: 0 0.75rem;
-          }
-
+        @media (max-width: 768px) {
           .home-highlight-grid,
           .home-stats-grid,
           .home-split-section,
@@ -1306,331 +1414,9 @@ function DashboardPage() {
             grid-template-columns: 1fr;
           }
 
-          .home-section,
-          .home-stats-section,
-          .home-partner-section,
-          .home-cta-section {
-            width: min(100% - 1rem, 1180px);
-          }
-
-          .home-celebrity-card {
-            min-height: 340px;
-          }
-
-          .home-gallery-grid {
-            grid-template-columns: 1fr;
-            grid-auto-rows: 230px;
-          }
-
-          .home-gallery-item-1,
-          .home-gallery-item-2,
-          .home-gallery-item-3,
-          .home-gallery-item-4,
-          .home-gallery-item-5,
-          .home-gallery-item-6 {
-            grid-column: span 1;
-            grid-row: span 1;
-          }
-
-          .home-cta-section {
-            border-radius: 26px;
-            min-height: 430px;
-            padding: 2rem 1rem;
-          }
-
-          .home-cta-section img {
-            width: 94%;
-            height: 72%;
-            opacity: 0.28;
-          }
-        }
-
-        @media (min-width: 1440px) {
-          .home-section,
-          .home-stats-section,
-          .home-partner-section,
-          .home-cta-section {
-            width: min(1280px, calc(100% - 4rem));
-          }
-
-          .home-hero-content {
-            width: min(1240px, calc(100% - 4rem));
-          }
-
-          .home-highlight-card {
-            min-height: 260px;
-          }
-        }
-
-        @media (max-width: 1366px) {
-          .home-hero h1 {
-            font-size: clamp(3.2rem, 9vw, 7.8rem);
-          }
-
-          .home-hero-media {
-            width: min(76vw, 780px);
-          }
-        }
-
-        @media (max-width: 1024px) {
-          .home-hero {
-            min-height: 100svh;
-            padding: clamp(11rem, 17vw, 13rem) 1.15rem 4.5rem;
-          }
-
-          .home-hero-content {
-            width: min(920px, 100%);
-          }
-
-          .home-hero h1 {
-            max-width: 760px;
-            font-size: clamp(3rem, 10vw, 6.4rem);
-          }
-
-          .home-hero-copy {
-            max-width: 560px;
-            font-size: clamp(1rem, 2.4vw, 1.25rem);
-          }
-
-          .home-section,
-          .home-stats-section,
-          .home-partner-section,
-          .home-cta-section {
-            padding: clamp(3.5rem, 7vw, 5.25rem) 0;
-          }
-
-          .home-section-heading {
-            max-width: 680px;
-          }
-
-          .home-section-heading h2,
-          .home-cta-section h2 {
-            font-size: clamp(2rem, 6vw, 4rem);
-          }
-
-          .home-highlight-card,
-          .home-event-card,
-          .home-reason-card {
-            border-radius: 22px;
-          }
-
-          .home-event-card img {
-            height: clamp(210px, 28vw, 260px);
-          }
-
-          .home-celebrity-card {
-            min-height: clamp(320px, 46vw, 420px);
-          }
-        }
-
-        @media (max-width: 767px) {
-          .home-hero {
-            min-height: 100svh;
-            align-items: center;
-            justify-content: center;
-            padding: clamp(9rem, 30vw, 11.25rem) 1rem 3.75rem;
-          }
-
-          .home-hero-content {
-            text-align: left;
-          }
-
-          .home-hero-content::before {
-            left: 50%;
-            top: 16%;
-            width: 92vw;
-            height: 46%;
-            transform: translateX(-50%);
-          }
-
-          .home-hero h1 {
-            max-width: 100%;
-            font-size: clamp(3rem, 17vw, 5.4rem);
-            line-height: 0.88;
-            letter-spacing: -0.065em;
-          }
-
-          .home-hero-copy {
-            max-width: 36rem;
-            font-size: clamp(0.98rem, 4vw, 1.12rem);
-            line-height: 1.58;
-          }
-
-          .home-hero-media {
-            width: min(108vw, 560px);
-            height: min(52vh, 430px);
-            top: 38%;
-          }
-
-          .home-scroll-indicator {
-            bottom: 0.9rem;
-          }
-
-          .home-section-heading {
-            margin-bottom: 1.45rem;
-          }
-
-          .home-section-heading h2,
-          .home-cta-section h2 {
-            font-size: clamp(2.15rem, 12vw, 3.6rem);
-            line-height: 0.96;
-          }
-
-          .home-section-heading p:not(.home-eyebrow) {
-            font-size: 0.98rem;
-            line-height: 1.65;
-          }
-
-          .home-highlight-card {
-            min-height: 210px;
-            padding: 1.1rem;
-          }
-
-          .home-card-icon {
-            width: 3rem;
-            height: 3rem;
-            margin-bottom: 1.25rem;
-          }
-
-          .home-stats-grid {
-            gap: 0.75rem;
-            padding: 0.75rem;
-            border-radius: 24px;
-          }
-
-          .home-stat-card {
-            min-height: 132px;
-            border-radius: 18px;
-          }
-
-          .home-reason-card {
-            min-height: 104px;
-            padding: 1rem;
-          }
-
-          .home-event-card img {
-            height: clamp(210px, 58vw, 280px);
-          }
-
-          .home-celebrity-card {
-            min-height: clamp(330px, 92vw, 430px);
-            border-radius: 22px;
-          }
-
-          .home-gallery-grid {
-            gap: 0.75rem;
-          }
-
-          .home-partner-marquee {
-            border-radius: 22px;
-            padding: 0.75rem;
-          }
-
-          .home-partner-track span {
-            min-width: 145px;
-            padding: 0.85rem 1rem;
-          }
-        }
-
-        @media (max-width: 480px) {
-          .home-hero {
-            padding-left: 0.85rem;
-            padding-right: 0.85rem;
-          }
-
-          .home-hero h1 {
-            font-size: clamp(2.7rem, 16.5vw, 4.5rem);
-          }
-
-          .home-hero-actions {
-            gap: 0.7rem;
-            margin-top: 1.5rem;
-          }
-
-          .home-btn {
-            min-height: 3rem;
-            padding: 0 1.05rem;
-            font-size: 0.95rem;
-          }
-
-          .home-hero-badges {
-            display: grid;
-            grid-template-columns: 1fr;
-            width: min(100%, 18rem);
-          }
-
-          .home-hero-badges span {
-            justify-content: center;
-          }
-
-          .home-section,
-          .home-stats-section,
-          .home-partner-section,
-          .home-cta-section {
-            width: min(100% - 0.75rem, 1180px);
-            padding: 3rem 0;
-          }
-
-          .home-highlight-card h3,
-          .home-event-card h3 {
-            font-size: 1.2rem;
-          }
-
-          .home-highlight-card p,
-          .home-event-card p {
-            font-size: 0.94rem;
-          }
-
-          .home-stat-card strong {
-            font-size: clamp(2.1rem, 14vw, 3.2rem);
-          }
-
-          .home-reason-card {
-            align-items: flex-start;
-            flex-direction: column;
-            gap: 0.75rem;
-          }
-
-          .home-reason-card span {
-            min-width: 0;
-            width: fit-content;
-            padding: 0 0.95rem;
-          }
-
-          .home-cta-section {
-            min-height: 390px;
-          }
-        }
-
-        @media (max-width: 360px) {
-          .home-hero {
-            padding-top: 8.6rem;
-          }
-
-          .home-hero h1 {
-            font-size: clamp(2.45rem, 16vw, 3.55rem);
-          }
-
-          .home-section-heading h2,
-          .home-cta-section h2 {
-            font-size: clamp(1.9rem, 11.5vw, 2.8rem);
-          }
-
-          .home-stat-card {
-            min-height: 118px;
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .home-particles span,
-          .home-scroll-indicator span,
-          .home-partner-track,
-          .home-hero-media,
-          .home-hero::before,
-          .home-hero::after,
-          .home-cta-section img,
-          .home-cta-section::after {
-            animation: none;
+          .home-stage-controls {
+            right: 1rem;
+            bottom: 1rem;
           }
         }
       `}</style>
