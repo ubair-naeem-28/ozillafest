@@ -5,14 +5,10 @@ import Footer from '../components/common/Footer'
 
 function MainLayout({ children }) {
   return (
-    <div className="min-h-screen flex flex-col bg-gray-50 app-shell dock-app-shell">
+    <div className="min-h-screen flex flex-col bg-[#550e0e] text-white overflow-x-hidden w-full">
       <DockNavbar />
-      <div className="flex flex-1 app-layout-body">
-        <main className="flex-1 p-6 app-main app-content dock-app-content">
-          <div className="app-page-frame">
-            {children || <Outlet />}
-          </div>
-        </main>
+      <div className="flex-1 w-full overflow-x-hidden">
+        {children || <Outlet />}
       </div>
       <Footer />
     </div>

@@ -43,18 +43,18 @@ const icons = {
 }
 
 const navGroups = [
-  { label: 'Home', to: '/dashboard', icon: 'home' },
-  { label: 'Events', to: '/prismfest/events', icon: 'calendar' },
-  { label: 'Celebrity Singers', to: '/prismfest/celebrities', icon: 'mic' },
-  { label: 'Future Events', to: '/prismfest/future', icon: 'clock' },
-  { label: 'History', to: '/history', icon: 'history' },
-  { label: 'Hotels', to: '/hotels', icon: 'hotels' },
-  { label: 'Restaurants', to: '/restaurants', icon: 'restaurants' },
-  { label: 'Discounts', to: '/discounts', icon: 'discounts' },
-  { label: 'Facilities', to: '/facilities', icon: 'facilities' },
-  { label: 'Sponsorship', to: '/sponsorship', icon: 'sponsorship' },
+  { label: 'Home', to: '/#home', icon: 'home' },
+  { label: 'Events', to: '/#events', icon: 'calendar' },
+  { label: 'Celebrity Singers', to: '/#celebrities', icon: 'mic' },
+  { label: 'Future Events', to: '/#future-events', icon: 'clock' },
+  { label: 'History', to: '/#history', icon: 'history' },
+  { label: 'Hotels', to: '/#hotels', icon: 'hotels' },
+  { label: 'Restaurants', to: '/#restaurants', icon: 'restaurants' },
+  { label: 'Discounts', to: '/#discounts', icon: 'discounts' },
+  { label: 'Facilities', to: '/#facilities', icon: 'facilities' },
+  { label: 'Sponsorship', to: '/#sponsorship', icon: 'sponsorship' },
   { label: 'My Tickets', to: '/tickets/my-tickets', icon: 'ticket' },
-  { label: 'Contact', to: '/contact', icon: 'contact' },
+  { label: 'Contact', to: '/#contact', icon: 'contact' },
   { label: 'Ticket Portal', to: '/tickets', icon: 'ticket', cta: true }
 ]
 
@@ -129,10 +129,10 @@ function DockNavbar() {
             <Dock
               items={dockItems}
               className="dock-nav"
-              magnification={52}
-              distance={120}
-              panelHeight={44}
-              baseItemSize={36}
+              magnification={60}
+              distance={130}
+              panelHeight={50}
+              baseItemSize={42}
             />
           </div>
 

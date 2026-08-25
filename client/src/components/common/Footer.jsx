@@ -3,18 +3,18 @@ import { Link } from 'react-router-dom'
 import { assetUrl } from '../../utils/assetUrl.util'
 
 const exploreLinks = [
-  ['Home', '/dashboard'],
-  ['Artists', '/prismfest/celebrities'],
-  ['Future Events', '/prismfest/future'],
-  ['Hotels', '/hotels'],
-  ['Restaurants', '/restaurants'],
-  ['Discounts', '/discounts'],
-  ['Sponsors', '/sponsorship']
+  ['Home', '/#home'],
+  ['Artists', '/#celebrities'],
+  ['Future Events', '/#future-events'],
+  ['Hotels', '/#hotels'],
+  ['Restaurants', '/#restaurants'],
+  ['Discounts', '/#discounts'],
+  ['Sponsors', '/#sponsorship']
 ]
 
 const supportLinks = [
-  ['Contact', '/contact'],
-  ['FAQs', '/contact'],
+  ['Contact', '/#contact'],
+  ['Facilities', '/#facilities'],
   ['Privacy Policy', '/privacy'],
   ['Terms & Conditions', '/terms'],
   ['Ticket Portal', '/tickets'],

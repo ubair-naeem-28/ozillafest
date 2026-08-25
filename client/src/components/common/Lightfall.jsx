@@ -125,7 +125,7 @@ void mainImage(out vec4 o, vec2 C) {
   C = c0;
 
   vec2 P = vec2(2.0, 1.0) * uv0 - (r / r.x) * vec2(0.0, 1.0);
-  vec4 O = vec4(uBgColor * 90.0 * uBgGlow / (1e3 * dot(P, P) + 6.0), 0.0);
+  vec4 O = vec4(uBgColor * 3.0 * uBgGlow / (1e3 * dot(P, P) + 6.0), 0.0);
 
   float mGlow = 0.0;
   if (uMouseEnabled > 0.5) {
@@ -155,7 +155,7 @@ void mainImage(out vec4 o, vec2 C) {
     C.x += Y.x / 8.0;
   }
 
-  vec3 colr = sqrt(tanhv(max(O.rgb * uGlow - vec3(0.04, 0.08, 0.02), 0.0)));
+  vec3 colr = sqrt(tanhv(max(O.rgb * uGlow, 0.0)));
   o = vec4(colr, uOpacity);
 }
 

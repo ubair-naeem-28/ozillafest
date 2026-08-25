@@ -1,1438 +1,861 @@
-import React, { useEffect, useRef, useState, useMemo, useCallback } from 'react'
-import { Link } from 'react-router-dom'
-import { motion, AnimatePresence, useScroll, useTransform, useSpring } from 'framer-motion'
-import { ozillaProfessionalContent } from '../../data/ozillaProfessionalContent'
+import React, { useEffect, useRef, useState } from 'react'
+import { Link, useLocation } from 'react-router-dom'
+import { motion } from 'framer-motion'
 import { assetUrl } from '../../utils/assetUrl.util'
+import { ozillaProfessionalContent } from '../../data/ozillaProfessionalContent'
 import Lightfall from '../../components/common/Lightfall'
+import MaskedHeading from '../../components/common/MaskedHeading'
+import { contentService } from '../../services/contentService'
 
 const heroImage = assetUrl('/assets/logo.jpeg')
 
-const highlights = [
-  {
-    icon: '⚡',
-    title: 'Live Music',
-    description: 'High-energy stage nights with immersive sound, lights, and crowd moments.',
-    accent: '#ffb000'
-  },
-  {
-    icon: '🎤',
-    title: 'Celebrity Singers',
-    description: 'A curated lineup of crowd-favorite artists for a premium festival experience.',
-    accent: '#ff4d2e'
-  },
-  {
-    icon: '🎪',
-    title: 'Entertainment',
-    description: 'Brand zones, creators, food streets, games, activations, and social experiences.',
-    accent: '#00f2fe'
-  },
-  {
-    icon: '🏨',
-    title: 'Luxury Hotels',
-    description: 'Recommended Lahore stays for visitors, partners, performers, and teams.',
-    accent: '#9b51e0'
-  },
-  {
-    icon: '🎟️',
-    title: 'Easy Ticket Booking',
-    description: 'A simple ticket portal with user details, payment proof, QR tickets, and history.',
-    accent: '#00f5a0'
-  },
-  {
-    icon: '🤝',
-    title: 'Brand Partners',
-    description: 'High-visibility sponsorship and collaboration opportunities for premium brands.',
-    accent: '#ff007f'
-  }
+// ── Data ──────────────────────────────────────────────────────────────
+const performers = [
+  { name: 'TALWINDER',    isHeadliner: true, genre: 'Indie Pop / Punjabi Fusion', image: assetUrl('/assets/ozilla/talwinder.jpg') },
+  { name: 'IMRAN KHAN',   genre: 'Punjabi Pop / Urban',  image: assetUrl('/assets/ozilla/Imran-Khan.jpg') },
+  { name: 'BOHEMIA',      genre: 'Punjabi Rap',          image: assetUrl('/assets/ozilla/Bohemia.jpg') },
+  { name: 'HASSAN RAHEEM',genre: 'Pop / R&B',            image: assetUrl('/assets/ozilla/hassan-raheem.jpg') }
 ]
 
-const stats = [
-  { value: 5000, suffix: '+', label: 'Visitors', icon: '👥' },
-  { value: 50, suffix: '+', label: 'Artists', icon: '🎸' },
-  { value: 100, suffix: '+', label: 'Partners', icon: '💎' },
-  { value: 2, suffix: '', label: 'Festival Days', icon: '🔥' }
+const futureEvents = [
+  { name: 'Ozilla Festival 2026',  date: 'November 1, 2026', location: 'Lahore, Pakistan', status: 'FEATURED EVENT',  description: 'The flagship Ozilla experience with live music, food culture, partner activations, and premium crowd moments.' },
+  { name: 'Celebrity Night',       date: 'Coming Soon',      location: 'Lahore, Pakistan', status: 'LIVE EVENT',      description: 'A high-energy night built around headline artists, stage lights, social moments, and unforgettable performances.' },
+  { name: 'Brand Experience Zone', date: 'Coming Soon',      location: 'Lahore, Pakistan', status: 'LIMITED SEATS',   description: 'Immersive sponsor zones, creator content, giveaways, product trials, and interactive festival experiences.' }
 ]
 
-const reasons = [
-  { title: 'Amazing Performances', subtitle: 'Live stage magic', icon: '🎶' },
-  { title: 'International Stage Energy', subtitle: 'World-class production', icon: '✨' },
-  { title: 'Food Festival Culture', subtitle: 'Gourmet street eats', icon: '🍔' },
-  { title: 'Safe Family Environment', subtitle: 'Secure & curated space', icon: '🛡️' },
-  { title: 'Premium Guest Experience', subtitle: 'VIP hospitality', icon: '👑' },
-  { title: 'Exclusive Partner Discounts', subtitle: 'Perks across Lahore', icon: '🏷️' }
+const pastEvents = [
+  { name: 'Ozilla Strategy Module', status: 'Completed', detail: 'Audience journey and activation playbook finalized.' },
+  { name: 'Ozilla Scale Module',    status: 'Completed', detail: 'Multi-channel visibility model and sponsor packages benchmarked.' }
 ]
 
-const upcomingEvents = [
-  {
-    title: 'Ozilla Festival 2026',
-    date: '2026',
-    tag: 'Flagship Event',
-    description: 'A premium Lahore festival experience built around music, food, creators, and partners.'
-  },
-  {
-    title: 'Future Events',
-    date: 'Coming Soon',
-    tag: 'Announcing Soon',
-    description: 'Upcoming brand activations, entertainment nights, and community experiences.'
-  },
-  {
-    title: 'Celebrity Night',
-    date: 'Live Stage',
-    tag: 'Exclusive Night',
-    description: 'A powerful stage experience featuring celebrity performers and crowd moments.'
-  }
+const historyEvents = [
+  { name: 'Ozilla Strategy Module',                     year: '2023', icon: 'M', description: 'Campaign strategy foundation focused on brand positioning, audience mapping, and activation planning.',                                                    highlights: ['Brand Positioning', 'Audience Research', 'Partner Onboarding'],            venue: 'Lahore Expo Center',            date: 'December 12, 2023' },
+  { name: 'Ozilla Scale Module',                        year: '2024', icon: 'G', description: 'Scale phase with creator collaborations, sponsor visibility lanes, and larger audience engagement programs.',                                                 highlights: ['Creator Collaborations', 'Sponsor Visibility', 'Live Entertainment Blocks'], venue: 'DHA Sports Club, Lahore',        date: 'November 9, 2024' },
+  { name: 'Ozilla Festival Website Brief 2026',         year: '2025', icon: 'A', description: 'Pre-launch phase covering website content, ticketing workflow, and full experience readiness for the main festival.',                                          highlights: ['Ticketing Workflow', 'Experience Mapping', 'Marketing Readiness'],           venue: 'Gulberg Event District, Lahore', date: 'October 18, 2025' },
+  { name: 'Ozilla Basand Festival',                     year: '2026', icon: 'F', description: 'Seasonal cultural festival featuring live entertainment, color-themed experiences, and partner activations.',                                                    highlights: ['Cultural Performances', 'Live Music', 'Brand Activation Zones'],            venue: 'Lahore, Punjab',                date: 'March 07, 2026' },
+  { name: 'Ozilla Festival 2027 Season 2',              year: '2027', icon: 'C', description: 'Second season expansion with larger audience engagement, celebrity performances, and upgraded event production.',                                               highlights: ['Celebrity Performances', 'Expanded Audience Program', 'Premium Experience Zones'], venue: 'Lahore, Punjab', date: 'November 14, 2027' }
 ]
 
-const celebrityPreview = [
-  { name: 'Talwinder', role: 'Headliner', genre: 'Indie Fusion', image: assetUrl('/assets/ozilla/talwinder.jpg') },
-  { name: 'Bohemia', role: 'Rap Icon', genre: 'Punjabi Rap', image: assetUrl('/assets/ozilla/Bohemia.jpg') },
-  { name: 'Hassan Raheem', role: 'Pop Sensation', genre: 'R&B / Pop', image: assetUrl('/assets/ozilla/hassan-raheem.jpg') },
-  { name: 'Imran Khan', role: 'Urban Pop', genre: 'Punjabi Urban', image: assetUrl('/assets/ozilla/Imran-Khan.jpg') }
+const contactCards = [
+  { icon: 'EM', label: 'Email',        value: 'ozillafestival@gmail.com',     detail: 'For festival support, tickets, partners, and general inquiries.' },
+  { icon: 'PH', label: 'Phone',        value: '+92 322 6622221',              detail: 'Speak with the Ozilla Festival coordination team.' },
+  { icon: 'LC', label: 'Location',     value: 'Lahore, Punjab, Pakistan',     detail: 'Official visitor and event support location.' },
+  { icon: 'HR', label: 'Office Hours', value: '10:00 AM - 7:00 PM',          detail: 'Support availability during planning and event season.' },
+  { icon: 'IG', label: 'Instagram',    value: '@ozillafestival',             detail: 'Follow event updates, announcements, and festival moments.' },
+  { icon: 'EV', label: 'Event',        value: 'OZILLA FESTIVAL 2026',        detail: 'Music, entertainment, food, brands, and family experiences.' }
 ]
 
-const partnerItems = [
-  'Restaurants',
-  'Hotels',
-  'Creators',
-  'Sponsors',
-  'Media',
-  'Brands',
-  'Food Partners',
-  'Venue Partners'
+const sponsorshipTiers = [
+  { tier: 'Title Sponsor',    price: 'Premium',  perks: ['Exclusive brand naming rights', 'Stage backdrop placement', 'VIP zone branding', '30-second ad slot', 'Social media features'] },
+  { tier: 'Gold Sponsor',     price: 'High',     perks: ['Brand activation zone', 'Banner placements', 'Digital features', 'Influencer mentions', 'On-ground presence'] },
+  { tier: 'Silver Sponsor',   price: 'Mid',      perks: ['Logo on all materials', 'Social shoutout', 'Booth at festival', 'Feature in email campaigns'] },
+  { tier: 'Media Partner',    price: 'Custom',   perks: ['Media coverage rights', 'Press passes', 'Collaborative content', 'Announcement placement'] }
 ]
 
-// Light Presets for Interactive Stage Background
-const LIGHT_PRESETS = {
-  gold: { name: 'Golden Flame', primary: '#ffb000', secondary: '#ff6b1a', accent: '#ffe066', laser: 'rgba(255, 176, 0, ' },
-  cyber: { name: 'Cyber Neon', primary: '#00f2fe', secondary: '#7928ca', accent: '#4facfe', laser: 'rgba(0, 242, 254, ' },
-  sunset: { name: 'Sunset Violet', primary: '#ff007f', secondary: '#7928ca', accent: '#ff007f', laser: 'rgba(255, 0, 127, ' },
-  aurora: { name: 'Cosmic Aurora', primary: '#00f5a0', secondary: '#00d2ff', accent: '#00f5a0', laser: 'rgba(0, 245, 160, ' }
-}
+const facilitiesList = [
+  { icon: '🎤', title: 'Main Stage',        desc: 'World-class production stage with concert-grade lighting, sound, and crowd management.' },
+  { icon: '🍔', title: 'Food Street',       desc: 'Curated food zones featuring local and fusion cuisine, beverages, and desserts.' },
+  { icon: '🏥', title: 'Medical Support',   desc: 'On-site first aid, emergency response, and medical support for attendees.' },
+  { icon: '🚗', title: 'Parking Zones',     desc: 'Secure and managed parking areas for festival attendees, VIPs, and partners.' },
+  { icon: '📸', title: 'Photo Moments',     desc: 'Premium photo installation zones, creator-friendly setups, and branded backdrops.' },
+  { icon: '♿', title: 'Accessibility',     desc: 'Accessible pathways, facilities, and support for all visitors.' },
+  { icon: '🛡️', title: 'Security',          desc: 'Professional security deployment ensuring a safe event for all attendees.' },
+  { icon: '📡', title: 'WiFi Zones',        desc: 'High-speed connectivity zones across the festival grounds.' }
+]
 
-/**
- * 60FPS Canvas Stage Lighting & Particle System
- */
-function HeroStageCanvas({ currentPreset, beatMode }) {
-  const canvasRef = useRef(null)
-  const mouseRef = useRef({ x: 0, y: 0, targetX: 0, targetY: 0 })
+const discountItems = [
+  { brand: 'Street Grill Co.',  category: 'Restaurant', discount: '15% OFF', code: 'OZILLA15', desc: 'Festival combo meal with priority queue access.' },
+  { brand: 'Spice District',    category: 'Restaurant', discount: '20% OFF', code: 'SPICE20',  desc: 'Family platter offer for OZilla audience.' },
+  { brand: 'Urban Brew',        category: 'Cafe',       discount: 'Buy 1 Get 1', code: 'BREWBOGO', desc: 'Coffee and dessert pair for creators and attendees.' },
+  { brand: 'Partner Hotels',    category: 'Hotel',      discount: '10% OFF', code: 'OZHOTEL10', desc: 'Exclusive discount on festival weekend stays.' }
+]
 
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-
-    const ctx = canvas.getContext('2d')
-    let animationFrameId
-    let width = (canvas.width = window.innerWidth)
-    let height = (canvas.height = window.innerHeight)
-
-    const handleResize = () => {
-      width = canvas.width = window.innerWidth
-      height = canvas.height = window.innerHeight
-    }
-    window.addEventListener('resize', handleResize)
-
-    const handleMouseMove = (e) => {
-      mouseRef.current.targetX = e.clientX
-      mouseRef.current.targetY = e.clientY
-    }
-    window.addEventListener('mousemove', handleMouseMove)
-
-    // Create Stage Energy Particles
-    const numParticles = beatMode ? 75 : 45
-    const particles = Array.from({ length: numParticles }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      vx: (Math.random() - 0.5) * (beatMode ? 2.5 : 1.2),
-      vy: (Math.random() - 0.5) * (beatMode ? 2.5 : 1.2),
-      radius: Math.random() * 3 + 1.5,
-      alpha: Math.random() * 0.7 + 0.3,
-      color: Math.random() > 0.5 ? LIGHT_PRESETS[currentPreset].primary : LIGHT_PRESETS[currentPreset].secondary,
-      pulseSpeed: Math.random() * 0.05 + 0.02
-    }))
-
-    // Laser Light Beam angles
-    let laserAngle = 0
-
-    const render = () => {
-      ctx.clearRect(0, 0, width, height)
-
-      // Smooth Mouse Position Damping
-      mouseRef.current.x += (mouseRef.current.targetX - mouseRef.current.x) * 0.08
-      mouseRef.current.y += (mouseRef.current.targetY - mouseRef.current.y) * 0.08
-
-      const preset = LIGHT_PRESETS[currentPreset]
-
-      // Draw Cursor Ambient Spotlight
-      const gradient = ctx.createRadialGradient(
-        mouseRef.current.x,
-        mouseRef.current.y,
-        0,
-        mouseRef.current.x,
-        mouseRef.current.y,
-        beatMode ? 360 : 260
-      )
-      gradient.addColorStop(0, preset.laser + '0.22)')
-      gradient.addColorStop(0.5, preset.laser + '0.06)')
-      gradient.addColorStop(1, 'transparent')
-      ctx.fillStyle = gradient
-      ctx.beginPath()
-      ctx.arc(mouseRef.current.x, mouseRef.current.y, beatMode ? 360 : 260, 0, Math.PI * 2)
-      ctx.fill()
-
-      // Draw Stage Sweeping Laser Beams
-      laserAngle += beatMode ? 0.025 : 0.012
-      const beamCount = beatMode ? 6 : 4
-      const stageTopY = 0
-
-      for (let i = 0; i < beamCount; i++) {
-        const offsetAngle = laserAngle + (i * Math.PI) / (beamCount / 2)
-        const beamStartX = (width / (beamCount + 1)) * (i + 1)
-        const beamEndX = beamStartX + Math.sin(offsetAngle) * (width * 0.35)
-
-        const laserGrad = ctx.createLinearGradient(beamStartX, stageTopY, beamEndX, height)
-        laserGrad.addColorStop(0, preset.laser + '0.45)')
-        laserGrad.addColorStop(0.7, preset.laser + '0.08)')
-        laserGrad.addColorStop(1, 'transparent')
-
-        ctx.strokeStyle = laserGrad
-        ctx.lineWidth = beatMode ? 3.5 : 2
-        ctx.shadowBlur = beatMode ? 20 : 10
-        ctx.shadowColor = preset.primary
-
-        ctx.beginPath()
-        ctx.moveTo(beamStartX, stageTopY)
-        ctx.lineTo(beamEndX, height)
-        ctx.stroke()
-        ctx.shadowBlur = 0
-      }
-
-      // Draw Particles & Cursor Physics
-      particles.forEach((p) => {
-        p.x += p.vx
-        p.y += p.vy
-
-        if (p.x < 0 || p.x > width) p.vx *= -1
-        if (p.y < 0 || p.y > height) p.vy *= -1
-
-        // Mouse attraction/repulsion physics
-        const dx = mouseRef.current.x - p.x
-        const dy = mouseRef.current.y - p.y
-        const dist = Math.sqrt(dx * dx + dy * dy)
-        if (dist < 180) {
-          const force = (180 - dist) / 180
-          p.x -= (dx / dist) * force * (beatMode ? 5 : 2.5)
-          p.y -= (dy / dist) * force * (beatMode ? 5 : 2.5)
-        }
-
-        p.alpha += Math.sin(Date.now() * p.pulseSpeed) * 0.015
-
-        ctx.save()
-        ctx.globalAlpha = Math.max(0.1, Math.min(1, p.alpha))
-        ctx.fillStyle = p.color
-        ctx.shadowBlur = 12
-        ctx.shadowColor = p.color
-        ctx.beginPath()
-        ctx.arc(p.x, p.y, p.radius * (beatMode ? 1.4 : 1), 0, Math.PI * 2)
-        ctx.fill()
-        ctx.restore()
-      })
-
-      animationFrameId = requestAnimationFrame(render)
-    }
-
-    render()
-
-    return () => {
-      window.removeEventListener('resize', handleResize)
-      window.removeEventListener('mousemove', handleMouseMove)
-      cancelAnimationFrame(animationFrameId)
-    }
-  }, [currentPreset, beatMode])
-
+// ── Section Wrapper ───────────────────────────────────────────────────
+function Section({ id, title, eyebrow, children, centered = false }) {
   return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position: 'absolute',
-        inset: 0,
-        pointerEvents: 'none',
-        zIndex: 0
-      }}
-    />
-  )
-}
-
-/**
- * 3D Tilt Card Wrapper with Dynamic Spotlight Glare
- */
-function TiltCard({ children, className = '', maxTilt = 14, style = {} }) {
-  const cardRef = useRef(null)
-  const [tilt, setTilt] = useState({ rotateX: 0, rotateY: 0, glareX: 50, glareY: 50, opacity: 0 })
-
-  const handleMouseMove = useCallback((e) => {
-    if (!cardRef.current) return
-    const rect = cardRef.current.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-    const centerX = rect.width / 2
-    const centerY = rect.height / 2
-
-    const rotateX = -((y - centerY) / centerY) * maxTilt
-    const rotateY = ((x - centerX) / centerX) * maxTilt
-
-    const glareX = (x / rect.width) * 100
-    const glareY = (y / rect.height) * 100
-
-    setTilt({ rotateX, rotateY, glareX, glareY, opacity: 1 })
-  }, [maxTilt])
-
-  const handleMouseLeave = useCallback(() => {
-    setTilt((prev) => ({ ...prev, rotateX: 0, rotateY: 0, opacity: 0 }))
-  }, [])
-
-  return (
-    <motion.div
-      ref={cardRef}
-      className={`tilt-card-container ${className}`}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      animate={{
-        rotateX: tilt.rotateX,
-        rotateY: tilt.rotateY
-      }}
-      transition={{ type: 'spring', stiffness: 280, damping: 20 }}
-      style={{
-        transformStyle: 'preserve-3d',
-        perspective: 1000,
-        position: 'relative',
-        ...style
-      }}
+    <motion.section
+      id={id}
+      className="sp-section"
+      initial={{ opacity: 0, y: 40 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.1 }}
+      transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
     >
-      {children}
-      {/* Dynamic Glare Overlay */}
-      <div
-        className="tilt-glare-overlay"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          borderRadius: 'inherit',
-          pointerEvents: 'none',
-          opacity: tilt.opacity,
-          background: `radial-gradient(circle at ${tilt.glareX}% ${tilt.glareY}%, rgba(255, 255, 255, 0.28), transparent 60%)`,
-          transition: 'opacity 250ms ease',
-          zIndex: 10
-        }}
-      />
-    </motion.div>
+      <div className={`sp-section-inner ${centered ? 'sp-centered' : ''}`}>
+        {eyebrow && <p className="sp-eyebrow">{eyebrow}</p>}
+        {title && <h2 className="sp-section-title">{title}</h2>}
+        {children}
+      </div>
+    </motion.section>
   )
 }
 
-/**
- * Animated Number Counter
- */
-function CountUp({ value, suffix }) {
-  const [count, setCount] = useState(0)
-  const ref = useRef(null)
-
+// ── Countdown Hook ────────────────────────────────────────────────────
+function useCountdown(targetDate) {
+  const [time, setTime] = useState(() => {
+    const diff = Math.max(new Date(targetDate) - Date.now(), 0)
+    return { days: Math.floor(diff/86400000), hours: Math.floor(diff/3600000%24), minutes: Math.floor(diff/60000%60), seconds: Math.floor(diff/1000%60) }
+  })
   useEffect(() => {
-    const node = ref.current
-    if (!node) return undefined
-
-    let frameId = 0
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return
-
-        const duration = 1400
-        const start = performance.now()
-
-        const animate = (now) => {
-          const progress = Math.min((now - start) / duration, 1)
-          const eased = 1 - Math.pow(1 - progress, 3)
-          setCount(Math.round(value * eased))
-
-          if (progress < 1) {
-            frameId = requestAnimationFrame(animate)
-          }
-        }
-
-        frameId = requestAnimationFrame(animate)
-        observer.disconnect()
-      },
-      { threshold: 0.35 }
-    )
-
-    observer.observe(node)
-
-    return () => {
-      observer.disconnect()
-      cancelAnimationFrame(frameId)
-    }
-  }, [value])
-
-  return (
-    <span ref={ref}>
-      {count}
-      {suffix}
-    </span>
-  )
+    const id = setInterval(() => {
+      const diff = Math.max(new Date(targetDate) - Date.now(), 0)
+      setTime({ days: Math.floor(diff/86400000), hours: Math.floor(diff/3600000%24), minutes: Math.floor(diff/60000%60), seconds: Math.floor(diff/1000%60) })
+    }, 1000)
+    return () => clearInterval(id)
+  }, [targetDate])
+  return time
 }
 
-/**
- * Kinetic Word-by-Word Title Reveal
- */
-function KineticTitle({ text }) {
-  const words = text.split(' ')
+// ── Contact Form ──────────────────────────────────────────────────────
+function ContactForm() {
+  const [form, setForm] = useState({ fullName: '', email: '', phone: '', subject: '', message: '' })
+  const [status, setStatus] = useState(null)
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: { staggerChildren: 0.15, delayChildren: 0.1 }
-    }
-  }
+  const handleChange = (e) => setForm(f => ({ ...f, [e.target.name]: e.target.value }))
 
-  const wordVariants = {
-    hidden: { opacity: 0, y: 40, rotateX: -60 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      rotateX: 0,
-      transition: { type: 'spring', stiffness: 180, damping: 14 }
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    setStatus('sending')
+    try {
+      await contentService.submitContactForm(form)
+      setStatus('sent')
+      setForm({ fullName: '', email: '', phone: '', subject: '', message: '' })
+    } catch {
+      setStatus('error')
     }
   }
 
   return (
-    <motion.h1
-      className="home-kinetic-title"
-      variants={containerVariants}
-      initial="hidden"
-      animate="visible"
-    >
-      {words.map((word, idx) => (
-        <motion.span
-          key={idx}
-          variants={wordVariants}
-          whileHover={{ scale: 1.06, y: -4, transition: { duration: 0.2 } }}
-          className="kinetic-word"
-        >
-          {word}{' '}
-        </motion.span>
-      ))}
-    </motion.h1>
+    <form onSubmit={handleSubmit} className="sp-contact-form">
+      <div className="sp-form-row">
+        <div className="sp-field"><label>Full Name</label><input name="fullName" value={form.fullName} onChange={handleChange} placeholder="Your name" required /></div>
+        <div className="sp-field"><label>Email</label><input name="email" type="email" value={form.email} onChange={handleChange} placeholder="your@email.com" required /></div>
+      </div>
+      <div className="sp-form-row">
+        <div className="sp-field"><label>Phone</label><input name="phone" value={form.phone} onChange={handleChange} placeholder="+92 xxx xxxxxxx" /></div>
+        <div className="sp-field"><label>Subject</label><input name="subject" value={form.subject} onChange={handleChange} placeholder="Subject" required /></div>
+      </div>
+      <div className="sp-field"><label>Message</label><textarea name="message" rows={5} value={form.message} onChange={handleChange} placeholder="Your message..." required /></div>
+      {status === 'sent'   && <p className="sp-form-success">✓ Message sent! We will get back to you soon.</p>}
+      {status === 'error'  && <p className="sp-form-error">Something went wrong. Please try again.</p>}
+      <button type="submit" className="sp-btn-white" disabled={status === 'sending'}>
+        {status === 'sending' ? 'Sending…' : 'Send Message'}
+      </button>
+    </form>
   )
 }
 
-/**
- * Main Dashboard Page Component
- */
+// ── Main Dashboard Page ───────────────────────────────────────────────
 function DashboardPage() {
-  const [stagePreset, setStagePreset] = useState('gold')
-  const [beatMode, setBeatMode] = useState(false)
+  const location = useLocation()
+  const countdown = useCountdown('2026-11-01T18:00:00+05:00')
 
-  // Motion Container Variants
-  const sectionVariants = {
-    hidden: { opacity: 0, y: 50 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1], staggerChildren: 0.12 }
+  // Smooth scroll handler when hash changes or page loads with hash
+  useEffect(() => {
+    const hash = location.hash?.replace('#', '')
+    if (hash) {
+      setTimeout(() => {
+        const el = document.getElementById(hash)
+        if (el) el.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      }, 150)
+    } else {
+      window.scrollTo({ top: 0, behavior: 'smooth' })
     }
-  }
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 30, scale: 0.95 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      transition: { type: 'spring', stiffness: 200, damping: 16 }
-    }
-  }
+  }, [location.hash])
 
   return (
-    <main className={`home-premium preset-${stagePreset}`}>
-      {/* Hero Section with Live Canvas & Sound Visualizer */}
-      <section className="home-hero" aria-label="Ozilla Festival 2026">
-        <div style={{ position: 'absolute', inset: 0, zIndex: 0, opacity: 0.75, pointerEvents: 'none' }}>
+    <main className="sp-main">
+      {/* ══ HERO SECTION (React Bits Lightfall animation as in 1.mp4) ══ */}
+      <section id="home" className="sp-hero" aria-label="Ozilla Festival">
+        {/* Lightfall Canvas Shader */}
+        <div className="sp-lightfall-wrap">
           <Lightfall
-            colors={['#ffb000', '#ff6b1a', '#00f2fe', '#ff007f']}
-            backgroundColor="#020b0d"
-            speed={beatMode ? 1.1 : 0.55}
-            streakCount={beatMode ? 5 : 3}
-            streakWidth={1.2}
-            streakLength={1.5}
-            glow={1.4}
-            zoom={2.8}
+            colors={['#550e0e', '#ba5916', '#EC4899', '#cf5704']}
+            backgroundColor="#cf5704"
+            speed={0.8}
+            streakCount={5}
+            streakWidth={1.1}
+            streakLength={1}
+            density={0.7}
+            twinkle={1}
+            glow={1}
+            backgroundGlow={0.5}
+            zoom={1}
+            opacity={1}
             mouseInteraction={true}
-            mouseStrength={0.7}
+            mouseStrength={0.6}
+            mouseRadius={0.5}
           />
         </div>
-        <HeroStageCanvas currentPreset={stagePreset} beatMode={beatMode} />
 
-        <motion.img
-          className="home-hero-media"
-          src={heroImage}
-          alt="Ozilla Festival stage"
-          initial={{ scale: 0.85, opacity: 0 }}
-          animate={{ scale: 1, opacity: 0.58 }}
-          transition={{ duration: 1.2, ease: 'easeOut' }}
-          onError={(e) => {
-            e.currentTarget.src = assetUrl('/assets/ozilla/logo.png')
-          }}
-        />
-        <div className="home-hero-overlay" />
+        {/* Hero Central Content */}
+        <div className="sp-hero-content">
+          {/* Main Title — MaskedHeading media-clip animation */}
+          <MaskedHeading
+            tag="h1"
+            text="OZILLA FEST"
+            mediaType="image"
+            src="/assets/ozilla/cover.png"
+            fillScale={1.3}
+            parallax={28}
+            drift={16}
+            brightness={1.05}
+            saturation={1.2}
+            grayscale={false}
+            reveal="rise"
+            trigger="view"
+            duration={1.2}
+            stagger={0.1}
+            align="center"
+            weight={900}
+            tracking={-0.03}
+            lineHeight={1.0}
+            textScale={0.13}
+            className="sp-hero-masked"
+          />
 
-        {/* Floating Interactive Stage Controls */}
-        <div className="home-stage-controls" title="Custom Stage Controls">
-          <button
-            className={`beat-toggle-btn ${beatMode ? 'active' : ''}`}
-            onClick={() => setBeatMode(!beatMode)}
-            aria-label="Toggle Beat Mode"
-          >
-            <span className="equalizer-bars">
-              <i />
-              <i />
-              <i />
-            </span>
-            {beatMode ? 'BEAT MODE ON' : 'PULSE BEAT'}
-          </button>
-
-          <div className="preset-selector">
-            {Object.keys(LIGHT_PRESETS).map((key) => (
-              <button
-                key={key}
-                className={`preset-pill ${stagePreset === key ? 'active' : ''}`}
-                style={{ '--accent': LIGHT_PRESETS[key].primary }}
-                onClick={() => setStagePreset(key)}
-              >
-                {LIGHT_PRESETS[key].name}
-              </button>
-            ))}
+          {/* Action Buttons matching video */}
+          <div className="sp-hero-actions">
+            <a className="sp-btn-white" href="#events">
+              Get started
+            </a>
+            <Link className="sp-btn-glass" to="/tickets">
+              Learn more
+            </Link>
           </div>
-        </div>
-
-        <div className="home-hero-content">
-          <motion.p
-            className="home-kicker"
-            initial={{ opacity: 0, x: -25 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6 }}
-          >
-            LAHORE PUNJAB
-          </motion.p>
-
-          <KineticTitle text="OZILLA FESTIVAL 2026" />
-
-          <motion.p
-            className="home-hero-copy"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
-          >
-            Experience music, entertainment, culture and unforgettable moments.
-          </motion.p>
-
-          <motion.div
-            className="home-hero-actions"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.55 }}
-          >
-            <Link className="home-btn home-btn-primary" to="/events">
-              <span>Explore Events</span>
-              <span className="btn-glow-spark" />
-            </Link>
-            <Link className="home-btn home-btn-secondary" to="/tickets">
-              Purchase Tickets
-            </Link>
-          </motion.div>
-
-          <motion.div
-            className="home-hero-badges"
-            aria-label="Festival highlights"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7, duration: 0.8 }}
-          >
-            <span>2026 Lahore</span>
-            <span>Live Music</span>
-            <span>Family Experience</span>
-          </motion.div>
-        </div>
-
-        <div className="home-scroll-indicator" aria-hidden="true">
-          <span />
-          Scroll
         </div>
       </section>
 
-      <div className="home-hero-divider" aria-hidden="true" />
-
-      {/* Intro Section */}
-      <motion.section
-        className="home-section home-intro-section"
-        variants={sectionVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-      >
-        <div className="home-section-heading home-center-heading">
-          <p className="home-eyebrow">Festival Details</p>
-          <h2>Future of <span>Entertainment</span></h2>
-          <p>{ozillaProfessionalContent.objective}</p>
-        </div>
-      </motion.section>
-
-      {/* Highlights Grid with 3D Tilt Cards */}
-      <motion.section
-        className="home-section"
-        variants={sectionVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.15 }}
-      >
-        <div className="home-section-heading">
-          <p className="home-eyebrow">Highlights</p>
-          <h2>Everything visitors expect from a premium festival.</h2>
-        </div>
-
-        <div className="home-highlight-grid">
-          {highlights.map((item) => (
-            <motion.div key={item.title} variants={itemVariants}>
-              <TiltCard className="home-highlight-card" maxTilt={12}>
-                <div className="home-card-icon" style={{ '--accent-color': item.accent }}>
-                  {item.icon}
+      {/* ══ ABOUT ═════════════════════════════════════════════════════ */}
+      <Section id="about" eyebrow="About Us" title="Who We Are">
+        <div className="sp-about-grid">
+          <div className="sp-about-text">
+            <p className="sp-lead">{ozillaProfessionalContent.about}</p>
+            <p>The platform is designed around discovery, experiences, hospitality partnerships, discount access, and long-term brand collaborations.</p>
+            <div className="sp-journey-steps">
+              {ozillaProfessionalContent.journey.map((step, idx) => (
+                <div key={step} className="sp-journey-step">
+                  <span className="sp-step-num">{idx + 1}</span>
+                  <span>{step}</span>
                 </div>
-                <h3>{item.title}</h3>
-                <p>{item.description}</p>
-                <div className="card-ambient-glow" style={{ background: item.accent }} />
-              </TiltCard>
+              ))}
+            </div>
+          </div>
+          <div className="sp-about-features">
+            <h3>Festival Experience</h3>
+            <div className="sp-tag-cloud">
+              {ozillaProfessionalContent.festivalExperience.map(f => <span key={f} className="sp-tag">{f}</span>)}
+            </div>
+            <h3 style={{ marginTop: '1.8rem' }}>Partner Benefits</h3>
+            <div className="sp-tag-cloud">
+              {ozillaProfessionalContent.partnerBenefits.map(b => <span key={b} className="sp-tag sp-tag-accent">{b}</span>)}
+            </div>
+          </div>
+        </div>
+      </Section>
+
+      {/* ══ EVENTS ════════════════════════════════════════════════════ */}
+      <Section id="events" eyebrow="Past Events" title="Completed Modules">
+        <div className="sp-events-grid">
+          {pastEvents.map(event => (
+            <motion.div key={event.name} className="sp-glass-card"
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
+              <div className="sp-card-header">
+                <h3>{event.name}</h3>
+                <span className="sp-pill-badge">{event.status}</span>
+              </div>
+              <p className="sp-card-desc">{event.detail}</p>
             </motion.div>
           ))}
         </div>
-      </motion.section>
+      </Section>
 
-      {/* Animated Stats Section */}
-      <motion.section
-        className="home-stats-section"
-        variants={sectionVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-      >
-        <div className="home-stats-grid">
-          {stats.map((item) => (
-            <TiltCard key={item.label} className="home-stat-card" maxTilt={10}>
-              <span className="stat-icon-badge">{item.icon}</span>
-              <strong>
-                <CountUp value={item.value} suffix={item.suffix} />
-              </strong>
-              <span>{item.label}</span>
-            </TiltCard>
+      {/* ══ CELEBRITIES ═══════════════════════════════════════════════ */}
+      <Section id="celebrities" eyebrow="Celebrity Singers" title="Live on the Ozilla Stage" centered>
+        <p className="sp-section-subtitle">Four high-impact performers, one premium Lahore festival atmosphere, and a stage built for unforgettable crowd moments.</p>
+        <div className="sp-celebrity-grid">
+          {performers.map((p, idx) => (
+            <motion.article key={p.name} className={`sp-celeb-card ${p.isHeadliner ? 'sp-celeb-headliner' : ''}`}
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: idx * 0.08 }}>
+              <div className="sp-celeb-frame">
+                <img src={p.image} alt={p.name} loading="lazy" onError={e => { e.currentTarget.src = assetUrl('/assets/prism-auth-visual.jpg') }} />
+                <div className="sp-celeb-overlay">
+                  {p.isHeadliner && <span className="sp-headliner-badge">MAIN ARTIST</span>}
+                  <h3>{p.name}</h3>
+                  <p>{p.genre}</p>
+                </div>
+              </div>
+            </motion.article>
           ))}
         </div>
-      </motion.section>
 
-      {/* Why Choose Ozilla */}
-      <motion.section
-        className="home-section home-split-section"
-        variants={sectionVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-      >
-        <div className="home-section-heading">
-          <p className="home-eyebrow">Why Choose Ozilla</p>
-          <h2>Designed for music lovers, families, creators and brands.</h2>
-          <p>
-            A safe, premium and highly shareable event experience with live performances,
-            food culture, partner discounts and powerful brand moments.
-          </p>
-        </div>
-
-        <div className="home-reason-grid">
-          {reasons.map((reason) => (
-            <motion.div key={reason.title} variants={itemVariants}>
-              <TiltCard className="home-reason-card" maxTilt={12}>
-                <span className="reason-icon">{reason.icon}</span>
-                <div className="reason-info">
-                  <h4>{reason.title}</h4>
-                  <p>{reason.subtitle}</p>
-                </div>
-              </TiltCard>
-            </motion.div>
-          ))}
-        </div>
-      </motion.section>
-
-      {/* Upcoming Events */}
-      <motion.section
-        className="home-section"
-        variants={sectionVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-      >
-        <div className="home-section-heading">
-          <p className="home-eyebrow">Upcoming Events</p>
-          <h2>Festival moments coming next.</h2>
-        </div>
-
-        <div className="home-event-grid">
-          {upcomingEvents.map((event) => (
-            <motion.div key={event.title} variants={itemVariants}>
-              <TiltCard className="home-event-card" maxTilt={12}>
-                <div className="event-card-inner">
-                  <div className="event-tag-badge">{event.tag}</div>
-                  <span>{event.date}</span>
-                  <h3>{event.title}</h3>
-                  <p>{event.description}</p>
-                  <Link to="/events" className="event-link-btn">
-                    View Details →
-                  </Link>
-                </div>
-              </TiltCard>
-            </motion.div>
-          ))}
-        </div>
-      </motion.section>
-
-      {/* Celebrity Preview with Soundwave Hover Effect */}
-      <motion.section
-        className="home-section"
-        variants={sectionVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-      >
-        <div className="home-section-heading">
-          <p className="home-eyebrow">Celebrity Preview</p>
-          <h2>Featured voices for the Ozilla stage.</h2>
-        </div>
-
-        <div className="home-celebrity-grid">
-          {celebrityPreview.map((artist) => (
-            <motion.div key={artist.name} variants={itemVariants}>
-              <TiltCard className="home-celebrity-card" maxTilt={16}>
-                <img
-                  src={artist.image}
-                  alt={artist.name}
-                  loading="lazy"
-                  onError={(e) => {
-                    e.currentTarget.src = assetUrl('/assets/prism-auth-visual.jpg')
-                  }}
-                />
-                <div className="artist-soundwave-ring">
-                  <span />
-                  <span />
-                  <span />
-                </div>
-                <div className="home-celebrity-overlay">
-                  <span className="celebrity-role-badge">{artist.role}</span>
-                  <h3>{artist.name}</h3>
-                  <p className="celebrity-genre">{artist.genre}</p>
-                </div>
-              </TiltCard>
-            </motion.div>
-          ))}
-        </div>
-      </motion.section>
-
-      {/* Partner Marquee */}
-      <motion.section
-        className="home-partner-section"
-        variants={sectionVariants}
-        initial="hidden"
-        whileInView="visible"
-        viewport={{ once: true, amount: 0.2 }}
-      >
-        <div className="home-section-heading home-center-heading">
-          <p className="home-eyebrow">Partners</p>
-          <h2>Built for brands that want real audience attention.</h2>
-        </div>
-
-        <div className="home-partner-marquee">
-          <div className="home-partner-track">
-            {[...partnerItems, ...partnerItems, ...partnerItems].map((partner, index) => (
-              <span key={`${partner}-${index}`} className="partner-chip">
-                {partner}
-              </span>
+        {/* Countdown */}
+        <div className="sp-countdown">
+          <p className="sp-eyebrow" style={{ marginBottom: '1.2rem' }}>Festival Starts In</p>
+          <div className="sp-countdown-grid">
+            {[['Days', countdown.days], ['Hours', countdown.hours], ['Minutes', countdown.minutes], ['Seconds', countdown.seconds]].map(([label, val]) => (
+              <div key={label} className="sp-countdown-card">
+                <strong>{String(val).padStart(2, '0')}</strong>
+                <span>{label}</span>
+              </div>
             ))}
           </div>
         </div>
-      </motion.section>
+      </Section>
 
-      {/* Dynamic CSS Styles */}
+      {/* ══ FUTURE EVENTS ═════════════════════════════════════════════ */}
+      <Section id="future-events" eyebrow="What's Coming" title="Upcoming Experiences">
+        <div className="sp-future-grid">
+          {futureEvents.map((ev, idx) => (
+            <motion.div key={ev.name} className="sp-glass-card"
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}>
+              <span className="sp-pill-badge">{ev.status}</span>
+              <h3 style={{ marginTop: '0.6rem' }}>{ev.name}</h3>
+              <p className="sp-meta-text">{ev.date} · {ev.location}</p>
+              <p className="sp-card-desc" style={{ flex: 1 }}>{ev.description}</p>
+              <Link to="/tickets" className="sp-accent-link">Get Tickets →</Link>
+            </motion.div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ══ HISTORY ═══════════════════════════════════════════════════ */}
+      <Section id="history" eyebrow="Our Journey" title="Festival History">
+        <div className="sp-timeline">
+          {historyEvents.map((ev, idx) => (
+            <motion.div key={ev.name} className="sp-timeline-item"
+              initial={{ opacity: 0, x: idx % 2 === 0 ? -30 : 30 }} whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }} transition={{ duration: 0.6, delay: idx * 0.08 }}>
+              <div className="sp-timeline-icon">{ev.icon}</div>
+              <div className="sp-glass-card sp-timeline-content">
+                <div className="sp-meta-text"><span className="sp-year-highlight">{ev.year}</span> · {ev.date}</div>
+                <h3>{ev.name}</h3>
+                <p className="sp-card-desc">{ev.description}</p>
+                <div className="sp-tag-cloud">
+                  {ev.highlights.map(h => <span key={h} className="sp-tag">{h}</span>)}
+                </div>
+                <p className="sp-venue-text">📍 {ev.venue}</p>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ══ HOTELS ════════════════════════════════════════════════════ */}
+      <Section id="hotels" eyebrow="Partner Hotels" title="Where to Stay in Lahore">
+        <div className="sp-hotels-grid">
+          {ozillaProfessionalContent.hotels.map((hotel, idx) => (
+            <motion.div key={hotel.name} className={`sp-glass-card sp-hotel-card ${idx === 0 ? 'sp-featured-border' : ''}`}
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: idx * 0.07 }}>
+              {hotel.showImage && (
+                <div className="sp-hotel-img-wrap">
+                  <img src={hotel.image} alt={hotel.name} loading="lazy"
+                    onError={e => { e.currentTarget.src = assetUrl('/assets/prism-auth-visual.jpg') }} />
+                </div>
+              )}
+              <div className="sp-hotel-body">
+                <div className="sp-card-header">
+                  <h3>{hotel.name}</h3>
+                  {hotel.rating && <span className="sp-rating-tag">⭐ {hotel.rating}</span>}
+                </div>
+                <p className="sp-meta-text">📍 {hotel.location}</p>
+                <p className="sp-card-desc">{hotel.description}</p>
+                <div className="sp-tag-cloud">
+                  {hotel.facilities?.map(f => <span key={f} className="sp-tag">{f}</span>)}
+                </div>
+                <p className="sp-contact-text">{hotel.contact}</p>
+                {hotel.website && (
+                  <a href={hotel.website} target="_blank" rel="noopener noreferrer" className="sp-accent-link">Book Now →</a>
+                )}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ══ RESTAURANTS ═══════════════════════════════════════════════ */}
+      <Section id="restaurants" eyebrow="Partner Restaurants" title="Food Culture at Ozilla">
+        <div className="sp-restaurants-grid">
+          {ozillaProfessionalContent.restaurants.map((r, idx) => (
+            <motion.div key={r.name} className="sp-glass-card"
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}>
+              <div className="sp-card-header">
+                <h3>{r.name}</h3>
+                <span className="sp-discount-pill">{r.discount}</span>
+              </div>
+              <p className="sp-meta-text">{r.cuisine} · {r.location}</p>
+              <p className="sp-card-desc">{r.offer}</p>
+              <div className="sp-code-box">
+                <span>Promo Code:</span>
+                <code>{r.code}</code>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ══ DISCOUNTS ═════════════════════════════════════════════════ */}
+      <Section id="discounts" eyebrow="Exclusive Offers" title="Festival Discounts">
+        <div className="sp-discounts-grid">
+          {discountItems.map((d, idx) => (
+            <motion.div key={d.brand} className="sp-glass-card"
+              initial={{ opacity: 0, scale: 0.94 }} whileInView={{ opacity: 1, scale: 1 }} viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: idx * 0.08 }}>
+              <span className="sp-eyebrow" style={{ fontSize: '0.7rem' }}>{d.category}</span>
+              <h3 style={{ marginTop: '0.2rem' }}>{d.brand}</h3>
+              <p className="sp-card-desc" style={{ margin: '0.5rem 0 1rem' }}>{d.desc}</p>
+              <div className="sp-discount-footer">
+                <span className="sp-big-discount">{d.discount}</span>
+                <code className="sp-code-pill">{d.code}</code>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ══ FACILITIES ════════════════════════════════════════════════ */}
+      <Section id="facilities" eyebrow="At the Festival" title="World-Class Facilities">
+        <div className="sp-facilities-grid">
+          {facilitiesList.map((f, idx) => (
+            <motion.div key={f.title} className="sp-glass-card sp-facility-card"
+              initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.4, delay: idx * 0.06 }}>
+              <span className="sp-facility-icon">{f.icon}</span>
+              <h3>{f.title}</h3>
+              <p className="sp-card-desc">{f.desc}</p>
+            </motion.div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ══ SPONSORSHIP ═══════════════════════════════════════════════ */}
+      <Section id="sponsorship" eyebrow="Partner With Us" title="Sponsorship Packages" centered>
+        <p className="sp-section-subtitle">Be part of Lahore's biggest festival. Get brand exposure, audience access, and premium activation opportunities.</p>
+        <div className="sp-sponsorship-grid">
+          {sponsorshipTiers.map((tier, idx) => (
+            <motion.div key={tier.tier} className={`sp-glass-card sp-sponsor-card ${idx === 0 ? 'sp-featured-border' : ''}`}
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+              transition={{ duration: 0.5, delay: idx * 0.1 }}>
+              <div className="sp-card-header">
+                <h3>{tier.tier}</h3>
+                <span className="sp-pill-badge">{tier.price}</span>
+              </div>
+              <ul className="sp-sponsor-perks">
+                {tier.perks.map(perk => <li key={perk}><span className="sp-check">✓</span>{perk}</li>)}
+              </ul>
+              <a href="#contact" className="sp-btn-glass" style={{ textAlign: 'center', marginTop: '1rem' }}>Enquire Now</a>
+            </motion.div>
+          ))}
+        </div>
+      </Section>
+
+      {/* ══ CONTACT ═══════════════════════════════════════════════════ */}
+      <Section id="contact" eyebrow="Get In Touch" title="Contact Us">
+        <div className="sp-contact-layout">
+          <div className="sp-contact-cards">
+            {contactCards.map(card => (
+              <div key={card.label} className="sp-glass-card sp-contact-card">
+                <span className="sp-contact-icon">{card.icon}</span>
+                <div>
+                  <strong className="sp-contact-label">{card.label}</strong>
+                  <p className="sp-contact-val">{card.value}</p>
+                  <small className="sp-contact-detail">{card.detail}</small>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="sp-glass-card sp-contact-form-wrap">
+            <h3 style={{ marginBottom: '1.2rem', fontSize: '1.4rem' }}>Send a Message</h3>
+            <ContactForm />
+          </div>
+        </div>
+      </Section>
+
+      {/* ══ STYLES - Theme matching video 1.mp4 ═══════════════════════ */}
       <style>{`
-        .home-premium {
-          --home-deep: #041719;
-          --home-ink: #101819;
-          --home-muted: #55706f;
-          --home-card: rgba(255, 250, 242, 0.88);
-          --home-gold: #ffb000;
-          --home-wine: #39132f;
-          color: var(--home-ink);
-          position: relative;
-          overflow: hidden;
-          background:
-            radial-gradient(circle at 10% 18%, rgba(255, 176, 0, 0.09), transparent 24rem),
-            radial-gradient(circle at 90% 42%, rgba(7, 51, 50, 0.14), transparent 26rem),
-            linear-gradient(180deg, #fffaf4 0%, #f7eee8 48%, #fffaf4 100%);
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        .sp-main {
+          --bg-dark:       #550e0e;
+          --bg-card:       rgba(85, 14, 14, 0.4);
+          --border-pink:   rgba(236, 72, 153, 0.35);
+          --pink-accent:   #EC4899;
+          --orange-accent: #ba5916;
+          --crimson-dark:  #550e0e;
+          --bg-orange:     #cf5704;
+          --text-white:    #ffffff;
+          --text-muted:    rgba(255, 255, 255, 0.85);
+          font-family: 'Inter', system-ui, -apple-system, sans-serif;
+          color: var(--text-white);
+          background: linear-gradient(180deg, #cf5704 0%, #ba5916 25%, #550e0e 65%, #2a0407 100%);
+          scroll-behavior: smooth;
+          min-height: 100vh;
+          overflow-x: hidden;
         }
 
-        .home-hero {
+        /* ── HERO SECTION ── */
+        .sp-hero {
           position: relative;
+          width: 100%;
           min-height: 100vh;
-          overflow: hidden;
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: clamp(7.5rem, 12vw, 10rem) 1.25rem 4rem;
+          overflow: hidden;
           isolation: isolate;
-          background:
-            radial-gradient(circle at 50% 40%, rgba(255, 176, 0, 0.2), transparent 22rem),
-            radial-gradient(circle at 18% 78%, rgba(255, 77, 46, 0.18), transparent 20rem),
-            radial-gradient(circle at 82% 18%, rgba(11, 79, 76, 0.72), transparent 26rem),
-            linear-gradient(135deg, #020b0d, #041719 48%, #39132f);
+          background: #cf5704;
         }
 
-        .home-hero-media {
+        .sp-lightfall-wrap {
           position: absolute;
-          left: 50%;
-          top: 48%;
-          width: min(78vw, 860px);
-          height: min(70vh, 680px);
-          object-fit: contain;
-          opacity: 0.54;
-          filter: saturate(1.25) contrast(1.1) drop-shadow(0 0 45px rgba(255, 176, 0, 0.28));
-          transform: translate(-50%, -50%);
-          z-index: 1;
+          inset: 0;
+          width: 100%;
+          height: 100%;
+          z-index: 0;
           pointer-events: none;
         }
 
-        .home-hero-overlay {
-          position: absolute;
-          inset: 0;
-          background:
-            radial-gradient(circle at 50% 38%, rgba(255, 176, 0, 0.08), transparent 20rem),
-            linear-gradient(90deg, rgba(2, 12, 12, 0.92), rgba(2, 12, 12, 0.44), rgba(2, 12, 12, 0.88)),
-            linear-gradient(180deg, rgba(2, 12, 12, 0.26), rgba(2, 12, 12, 0.92));
-          z-index: 1;
-        }
-
-        /* Interactive Stage Controls Widget */
-        .home-stage-controls {
-          position: absolute;
-          right: 2rem;
-          bottom: 2rem;
-          z-index: 10;
-          display: flex;
-          flex-direction: column;
-          align-items: flex-end;
-          gap: 0.75rem;
-        }
-
-        .beat-toggle-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.6rem;
-          padding: 0.6rem 1.1rem;
-          border-radius: 999px;
-          border: 1px solid rgba(255, 255, 255, 0.25);
-          background: rgba(4, 23, 25, 0.75);
-          color: #fff;
-          font-size: 0.78rem;
-          font-weight: 800;
-          letter-spacing: 0.08em;
-          cursor: pointer;
-          backdrop-filter: blur(16px);
-          transition: all 220ms ease;
-          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .beat-toggle-btn.active {
-          background: linear-gradient(135deg, #ff007f, #7928ca);
-          border-color: #ff007f;
-          box-shadow: 0 0 25px rgba(255, 0, 127, 0.5);
-        }
-
-        .equalizer-bars {
-          display: inline-flex;
-          align-items: flex-end;
-          gap: 3px;
-          height: 14px;
-        }
-
-        .equalizer-bars i {
-          width: 3px;
-          background: var(--home-gold);
-          border-radius: 2px;
-          height: 100%;
-          animation: eqPulse 800ms ease-in-out infinite alternate;
-        }
-
-        .equalizer-bars i:nth-child(2) { animation-delay: 200ms; }
-        .equalizer-bars i:nth-child(3) { animation-delay: 400ms; }
-
-        @keyframes eqPulse {
-          0% { height: 30%; }
-          100% { height: 100%; }
-        }
-
-        .preset-selector {
-          display: flex;
-          gap: 0.4rem;
-          padding: 0.4rem;
-          border-radius: 999px;
-          background: rgba(0, 0, 0, 0.5);
-          border: 1px solid rgba(255, 255, 255, 0.15);
-          backdrop-filter: blur(12px);
-        }
-
-        .preset-pill {
-          padding: 0.35rem 0.8rem;
-          border-radius: 999px;
-          border: none;
-          background: transparent;
-          color: rgba(255, 255, 255, 0.7);
-          font-size: 0.72rem;
-          font-weight: 700;
-          cursor: pointer;
-          transition: all 200ms ease;
-        }
-
-        .preset-pill.active,
-        .preset-pill:hover {
-          color: #fff;
-          background: var(--accent, #ffb000);
-          box-shadow: 0 0 14px var(--accent, #ffb000);
-        }
-
-        .home-hero-content {
-          width: min(1120px, 100%);
-          color: #fff;
-          position: relative;
-          z-index: 2;
-        }
-
-        .home-kicker,
-        .home-eyebrow {
-          color: var(--home-gold);
-          font-size: 0.88rem;
-          font-weight: 900;
-          letter-spacing: 0.18em;
-          text-transform: uppercase;
-        }
-
-        .home-kinetic-title {
-          max-width: 920px;
-          margin: 0.7rem 0 1rem;
-          font-size: clamp(3.4rem, 9.5vw, 8.5rem);
-          line-height: 0.88;
-          letter-spacing: -0.055em;
-          text-transform: uppercase;
-          text-wrap: balance;
-        }
-
-        .kinetic-word {
-          display: inline-block;
-          background: linear-gradient(135deg, #ffffff 30%, #ffd36a 70%, #ff6b1a 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
-          filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.5));
-          cursor: default;
-        }
-
-        .home-hero-copy {
-          max-width: 620px;
-          color: rgba(255, 255, 255, 0.86);
-          font-size: clamp(1.08rem, 2vw, 1.45rem);
-          line-height: 1.65;
-        }
-
-        .home-hero-actions {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 1rem;
-          margin-top: 2rem;
-        }
-
-        .home-btn {
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          min-height: 3.4rem;
-          padding: 0 1.6rem;
-          border-radius: 999px;
-          font-weight: 900;
-          position: relative;
-          overflow: hidden;
-          isolation: isolate;
-          transition: transform 220ms ease, box-shadow 220ms ease;
-        }
-
-        .home-btn-primary {
-          background: linear-gradient(135deg, #ffb000, #ff6b1a 58%, #ff4d2e);
-          color: #111;
-          box-shadow: 0 18px 38px rgba(255, 126, 0, 0.35);
-        }
-
-        .home-btn-primary:hover {
-          transform: translateY(-3px) scale(1.02);
-          box-shadow: 0 24px 48px rgba(255, 126, 0, 0.5);
-        }
-
-        .home-btn-secondary {
-          border: 1px solid rgba(255, 255, 255, 0.45);
-          color: #fff;
-          background: rgba(255, 255, 255, 0.08);
-          backdrop-filter: blur(14px);
-        }
-
-        .home-btn-secondary:hover {
-          transform: translateY(-3px);
-          background: rgba(255, 255, 255, 0.16);
-        }
-
-        .home-hero-badges {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.75rem;
-          margin-top: 1.4rem;
-        }
-
-        .home-hero-badges span {
-          display: inline-flex;
-          align-items: center;
-          min-height: 2.3rem;
-          padding: 0 1rem;
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          border-radius: 999px;
-          background: rgba(255, 255, 255, 0.09);
-          color: rgba(255, 255, 255, 0.85);
-          font-size: 0.78rem;
-          font-weight: 900;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          backdrop-filter: blur(16px);
-        }
-
-        .home-scroll-indicator {
-          position: absolute;
-          left: 50%;
-          bottom: 1.4rem;
-          transform: translateX(-50%);
-          display: grid;
-          justify-items: center;
-          gap: 0.5rem;
-          color: rgba(255, 255, 255, 0.72);
-          font-size: 0.76rem;
-          text-transform: uppercase;
-          letter-spacing: 0.16em;
-          z-index: 2;
-        }
-
-        .home-scroll-indicator span {
-          width: 1px;
-          height: 2.8rem;
-          background: linear-gradient(180deg, transparent, #ffb000, transparent);
-          animation: homePulse 1.7s ease-in-out infinite;
-        }
-
-        @keyframes homePulse {
-          0%, 100% { opacity: 0.35; transform: scaleY(0.75); }
-          50% { opacity: 1; transform: scaleY(1); }
-        }
-
-        .home-hero-divider {
-          width: min(1180px, calc(100% - 2rem));
-          height: 1px;
-          margin: -1px auto 0;
-          background: linear-gradient(90deg, transparent, rgba(255, 176, 0, 0.55), rgba(11, 79, 76, 0.32), transparent);
+        .sp-hero-content {
           position: relative;
           z-index: 3;
-        }
-
-        .home-section,
-        .home-stats-section,
-        .home-partner-section {
-          width: min(1180px, calc(100% - 2rem));
-          margin: 0 auto;
-          padding: clamp(4rem, 8vw, 7rem) 0;
-          position: relative;
-          isolation: isolate;
-        }
-
-        .home-section-heading {
-          max-width: 760px;
-          margin-bottom: 2.2rem;
-        }
-
-        .home-center-heading {
-          margin-left: auto;
-          margin-right: auto;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
           text-align: center;
+          padding: 6rem 1.5rem 4rem;
+          max-width: 900px;
+          width: 100%;
+          background: transparent !important;
+          box-shadow: none !important;
+          border: none !important;
+          outline: none !important;
+          backdrop-filter: none !important;
+          filter: none !important;
         }
 
-        .home-section-heading h2 {
-          margin-top: 0.45rem;
-          color: var(--home-ink);
-          font-size: clamp(2.2rem, 5.5vw, 4.8rem);
-          line-height: 0.98;
-          letter-spacing: -0.05em;
-          text-transform: uppercase;
+        .sp-hero-title {
+          font-size: clamp(3.5rem, 9.5vw, 7.5rem);
+          font-weight: 900;
+          line-height: 1;
+          letter-spacing: -0.04em;
+          color: #ffffff;
+          margin-bottom: 2.2rem;
+          background: transparent !important;
+          box-shadow: none !important;
+          border: none !important;
+          outline: none !important;
+          text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+          filter: none !important;
         }
 
-        .home-section-heading h2 span {
-          color: #ff6b1a;
+        /* MaskedHeading hero title */
+        .sp-hero-masked {
+          display: block;
+          width: 100%;
+          max-width: 100%;
+          min-height: 0.9em;
+          margin-bottom: 2.2rem;
+          line-height: 1 !important;
+          background: transparent !important;
+          box-shadow: none !important;
+          border: none !important;
+          outline: none !important;
+          filter: none !important;
         }
 
-        .home-section-heading p:not(.home-eyebrow) {
-          margin-top: 1rem;
-          color: var(--home-muted);
-          font-size: 1.05rem;
-          line-height: 1.75;
+
+        .sp-hero-actions {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1rem;
+          flex-wrap: wrap;
         }
 
-        /* Highlight Cards Grid */
-        .home-highlight-grid {
-          display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 1.25rem;
+        /* Video Action Buttons */
+        .sp-btn-white {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0.85rem 2rem;
+          border-radius: 999px;
+          background: #ffffff;
+          color: #080111;
+          font-size: 0.95rem;
+          font-weight: 700;
+          text-decoration: none;
+          transition: transform 200ms ease, box-shadow 200ms ease;
+          box-shadow: 0 8px 30px rgba(255, 255, 255, 0.25);
+          border: none;
+          cursor: pointer;
         }
 
-        .home-highlight-card {
-          min-height: 240px;
-          padding: 1.5rem;
-          border: 1px solid rgba(11, 79, 76, 0.15);
-          border-radius: 26px;
-          background: linear-gradient(145deg, rgba(255, 250, 245, 0.94), rgba(246, 238, 232, 0.8));
-          box-shadow: 0 20px 55px rgba(18, 34, 34, 0.08);
-          overflow: hidden;
-          transition: box-shadow 300ms ease, border-color 300ms ease;
+        .sp-btn-white:hover {
+          transform: translateY(-3px) scale(1.02);
+          box-shadow: 0 14px 40px rgba(255, 255, 255, 0.4);
         }
 
-        .home-highlight-card:hover {
-          border-color: rgba(255, 176, 0, 0.6);
-          box-shadow: 0 30px 70px rgba(18, 34, 34, 0.16);
+        .sp-btn-glass {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0.85rem 2rem;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.08);
+          border: 1px solid rgba(255, 255, 255, 0.25);
+          color: #ffffff;
+          font-size: 0.95rem;
+          font-weight: 700;
+          text-decoration: none;
+          backdrop-filter: blur(14px);
+          transition: transform 200ms ease, background 200ms ease, border-color 200ms ease;
         }
 
-        .home-card-icon {
-          width: 3.4rem;
-          height: 3.4rem;
-          display: grid;
-          place-items: center;
-          font-size: 1.6rem;
-          margin-bottom: 1.4rem;
-          border-radius: 18px;
-          background: linear-gradient(135deg, #041719, #0b4f4c);
-          color: #ffd36a;
-          box-shadow: 0 10px 24px rgba(4, 23, 25, 0.25);
+        .sp-btn-glass:hover {
+          transform: translateY(-3px);
+          background: rgba(236, 72, 153, 0.2);
+          border-color: rgba(236, 72, 153, 0.5);
         }
 
-        .home-highlight-card h3 {
-          font-size: 1.35rem;
+        /* ── SECTIONS ── */
+        .sp-section {
+          padding: clamp(4rem, 8vw, 7rem) 0;
+          scroll-margin-top: 75px;
+        }
+
+        .sp-section-inner {
+          width: min(1200px, calc(100% - 2.5rem));
+          margin: 0 auto;
+        }
+
+        .sp-centered { text-align: center; }
+
+        .sp-eyebrow {
+          display: block;
+          color: var(--pink-accent);
+          font-size: 0.8rem;
           font-weight: 800;
-          color: var(--home-ink);
-          margin-bottom: 0.6rem;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          margin-bottom: 0.5rem;
         }
 
-        .home-highlight-card p {
-          color: var(--home-muted);
-          font-size: 0.96rem;
+        .sp-section-title {
+          font-size: clamp(2.2rem, 5vw, 4rem);
+          font-weight: 800;
+          line-height: 1.05;
+          letter-spacing: -0.04em;
+          color: #ffffff;
+          margin-bottom: 2rem;
+        }
+
+        .sp-section-subtitle {
+          max-width: 680px;
+          margin: 0 auto 2.5rem;
+          font-size: 1.05rem;
+          color: var(--text-muted);
           line-height: 1.65;
         }
 
-        /* Stats Grid */
-        .home-stats-grid {
-          display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
-          gap: 1.2rem;
-          padding: 1.2rem;
-          border-radius: 32px;
-          background: linear-gradient(135deg, #041719, #073332 58%, #39132f);
-          box-shadow: 0 28px 75px rgba(2, 11, 13, 0.28);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .home-stat-card {
-          min-height: 155px;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          padding: 1.2rem;
-          border-radius: 22px;
-          background: rgba(255, 255, 255, 0.08);
-          color: #fff;
-          backdrop-filter: blur(12px);
-          transition: background 220ms ease;
-        }
-
-        .home-stat-card:hover {
-          background: rgba(255, 255, 255, 0.15);
-        }
-
-        .stat-icon-badge {
-          font-size: 1.4rem;
-          margin-bottom: 0.4rem;
-        }
-
-        .home-stat-card strong {
-          display: block;
-          color: #ffd36a;
-          font-size: clamp(2.2rem, 5vw, 4rem);
-          font-weight: 900;
-          line-height: 1;
-        }
-
-        .home-stat-card span:not(.stat-icon-badge) {
-          color: rgba(255, 255, 255, 0.8);
-          font-weight: 800;
-          font-size: 0.9rem;
-          margin-top: 0.35rem;
-          text-transform: uppercase;
-          letter-spacing: 0.06em;
-        }
-
-        /* Reasons Grid */
-        .home-split-section {
-          display: grid;
-          grid-template-columns: 0.9fr 1.1fr;
-          gap: clamp(1.5rem, 4vw, 4rem);
-          align-items: center;
-        }
-
-        .home-reason-grid {
-          display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 1rem;
-        }
-
-        .home-reason-card {
-          min-height: 110px;
-          display: flex;
-          align-items: center;
-          gap: 1rem;
-          padding: 1.25rem;
-          border-radius: 24px;
-          background: rgba(255, 255, 255, 0.85);
-          border: 1px solid rgba(11, 79, 76, 0.12);
-          box-shadow: 0 16px 45px rgba(18, 34, 34, 0.08);
-          backdrop-filter: blur(12px);
-        }
-
-        .reason-icon {
-          font-size: 1.8rem;
-          flex-shrink: 0;
-        }
-
-        .reason-info h4 {
-          font-size: 1.05rem;
-          font-weight: 800;
-          color: var(--home-ink);
-          margin-bottom: 0.2rem;
-        }
-
-        .reason-info p {
-          font-size: 0.85rem;
-          color: var(--home-muted);
-        }
-
-        /* Upcoming Events */
-        .home-event-grid {
-          display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 1.2rem;
-        }
-
-        .home-event-card {
-          border-radius: 28px;
-          background: #fffaf5;
-          box-shadow: 0 22px 58px rgba(18, 34, 34, 0.1);
+        /* ── DARK GLASS CARD ── */
+        .sp-glass-card {
+          background: var(--bg-card);
+          border: 1px solid var(--border-pink);
+          border-radius: 20px;
           padding: 1.6rem;
-          border: 1px solid rgba(11, 79, 76, 0.12);
+          backdrop-filter: blur(14px);
+          transition: transform 260ms ease, border-color 260ms ease, box-shadow 260ms ease;
         }
 
-        .event-tag-badge {
-          display: inline-block;
-          padding: 0.3rem 0.8rem;
-          border-radius: 999px;
-          background: linear-gradient(135deg, #ffb000, #ff6b1a);
-          color: #111;
-          font-size: 0.72rem;
-          font-weight: 900;
-          text-transform: uppercase;
-          margin-bottom: 1rem;
+        .sp-glass-card:hover {
+          transform: translateY(-4px);
+          border-color: rgba(236, 72, 153, 0.45);
+          box-shadow: 0 14px 40px rgba(236, 72, 153, 0.18);
         }
 
-        .home-event-card span:not(.event-tag-badge) {
-          display: block;
-          color: #9a3b0b;
-          font-weight: 900;
-          font-size: 0.8rem;
-          margin-bottom: 0.4rem;
-        }
-
-        .home-event-card h3 {
-          font-size: 1.4rem;
-          font-weight: 800;
-          color: var(--home-ink);
+        .sp-card-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 0.75rem;
           margin-bottom: 0.6rem;
         }
 
-        .home-event-card p {
-          color: var(--home-muted);
-          font-size: 0.95rem;
-          line-height: 1.6;
-          margin-bottom: 1.2rem;
+        .sp-card-header h3 {
+          font-size: 1.25rem;
+          font-weight: 700;
+          color: #ffffff;
         }
 
-        .event-link-btn {
-          font-weight: 800;
-          color: #39132f;
-          text-decoration: none;
-          transition: color 200ms ease;
+        .sp-card-desc {
+          font-size: 0.92rem;
+          color: var(--text-muted);
+          line-height: 1.65;
         }
 
-        .event-link-btn:hover {
-          color: #ff6b1a;
-        }
-
-        /* Celebrity Grid */
-        .home-celebrity-grid {
-          display: grid;
-          grid-template-columns: repeat(4, minmax(0, 1fr));
-          gap: 1.2rem;
-        }
-
-        .home-celebrity-card {
-          position: relative;
-          overflow: hidden;
-          min-height: 380px;
-          border-radius: 28px;
-          background: #111;
-          box-shadow: 0 25px 60px rgba(18, 34, 34, 0.16);
-          isolation: isolate;
-        }
-
-        .home-celebrity-card img {
-          width: 100%;
-          height: 100%;
-          position: absolute;
-          inset: 0;
-          object-fit: cover;
-          transition: transform 500ms ease;
-        }
-
-        .home-celebrity-card:hover img {
-          transform: scale(1.08);
-        }
-
-        .home-celebrity-overlay {
-          position: absolute;
-          inset: 0;
-          display: flex;
-          flex-direction: column;
-          justify-content: flex-end;
-          padding: 1.5rem;
-          background: linear-gradient(180deg, transparent 36%, rgba(2, 10, 10, 0.94));
-          z-index: 2;
-        }
-
-        .celebrity-role-badge {
-          display: inline-block;
-          width: fit-content;
-          padding: 0.25rem 0.75rem;
+        .sp-pill-badge {
+          padding: 0.3rem 0.8rem;
           border-radius: 999px;
-          background: rgba(255, 176, 0, 0.25);
-          border: 1px solid rgba(255, 176, 0, 0.5);
-          color: #ffd36a;
+          background: rgba(236, 72, 153, 0.15);
+          border: 1px solid rgba(236, 72, 153, 0.3);
+          color: var(--pink-accent);
           font-size: 0.72rem;
           font-weight: 800;
           text-transform: uppercase;
+        }
+
+        .sp-meta-text {
+          font-size: 0.84rem;
+          color: rgba(255, 255, 255, 0.55);
+          font-weight: 600;
           margin-bottom: 0.5rem;
-          backdrop-filter: blur(8px);
         }
 
-        .home-celebrity-overlay h3 {
-          color: #fff;
-          font-size: 1.5rem;
-          font-weight: 900;
-          text-transform: uppercase;
+        .sp-accent-link {
+          color: var(--pink-accent);
+          font-weight: 700;
+          text-decoration: none;
+          font-size: 0.9rem;
+          transition: color 200ms ease;
+          display: inline-block;
         }
 
-        .celebrity-genre {
-          color: rgba(255, 255, 255, 0.7);
-          font-size: 0.85rem;
-          margin-top: 0.2rem;
+        .sp-accent-link:hover {
+          color: #ff7b00;
         }
 
-        /* Partner Marquee */
-        .home-partner-marquee {
-          overflow: hidden;
-          padding: 1.2rem;
-          border-radius: 30px;
-          background: linear-gradient(135deg, #041719, #073332 58%, #39132f);
-          box-shadow: 0 24px 65px rgba(2, 11, 13, 0.18);
-          border: 1px solid rgba(255, 255, 255, 0.08);
+        /* ── ABOUT ── */
+        .sp-about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
+        .sp-lead { font-size: 1.15rem; line-height: 1.7; color: #ffffff; margin-bottom: 1rem; }
+        .sp-about-text p { color: var(--text-muted); line-height: 1.7; margin-bottom: 1.5rem; }
+        .sp-journey-steps { display: flex; flex-direction: column; gap: 0.75rem; }
+        .sp-journey-step { display: flex; align-items: center; gap: 1rem; padding: 0.8rem 1.1rem; background: rgba(236, 72, 153, 0.08); border-radius: 14px; border-left: 3px solid var(--pink-accent); }
+        .sp-step-num { width: 28px; height: 28px; background: linear-gradient(135deg, var(--pink-accent), var(--amber-accent)); border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 0.8rem; color: #fff; flex-shrink: 0; }
+        .sp-about-features h3 { font-size: 1.05rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--pink-accent); margin-bottom: 0.8rem; }
+        .sp-tag-cloud { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+        .sp-tag { display: inline-block; padding: 0.35rem 0.85rem; border-radius: 999px; background: rgba(255, 255, 255, 0.06); border: 1px solid rgba(255, 255, 255, 0.15); color: rgba(255, 255, 255, 0.85); font-size: 0.82rem; font-weight: 600; }
+        .sp-tag-accent { background: rgba(236, 72, 153, 0.12); border-color: rgba(236, 72, 153, 0.3); color: var(--pink-accent); }
+
+        /* ── EVENTS ── */
+        .sp-events-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+
+        /* ── CELEBRITIES ── */
+        .sp-celebrity-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; margin-bottom: 4rem; }
+        .sp-celeb-card { border-radius: 22px; overflow: hidden; cursor: default; }
+        .sp-celeb-frame { position: relative; aspect-ratio: 4/5; }
+        .sp-celeb-frame img { width: 100%; height: 100%; object-fit: cover; object-position: center top; transition: transform 400ms ease; }
+        .sp-celeb-card:hover .sp-celeb-frame img { transform: scale(1.06); }
+        .sp-celeb-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; justify-content: flex-end; padding: 1.25rem; background: linear-gradient(180deg, transparent 30%, rgba(8, 1, 17, 0.95)); }
+        .sp-celeb-overlay h3 { color: #fff; font-size: 1.3rem; font-weight: 800; text-transform: uppercase; }
+        .sp-celeb-overlay p { color: rgba(255, 255, 255, 0.7); font-size: 0.8rem; margin-top: 0.2rem; }
+        .sp-headliner-badge { display: inline-block; padding: 0.25rem 0.75rem; border-radius: 999px; background: linear-gradient(135deg, var(--pink-accent), var(--amber-accent)); color: #fff; font-size: 0.68rem; font-weight: 800; letter-spacing: 0.08em; margin-bottom: 0.5rem; width: fit-content; }
+        .sp-celeb-headliner { box-shadow: 0 0 35px rgba(236, 72, 153, 0.3); border: 1px solid rgba(236, 72, 153, 0.4); }
+
+        /* ── COUNTDOWN ── */
+        .sp-countdown { text-align: center; padding: 2rem 0; }
+        .sp-countdown-grid { display: inline-grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; }
+        .sp-countdown-card { background: var(--bg-card); border: 1px solid var(--border-pink); border-radius: 18px; padding: 1.4rem 2rem; text-align: center; backdrop-filter: blur(12px); }
+        .sp-countdown-card strong { display: block; font-size: clamp(2.2rem, 4.5vw, 3.8rem); font-weight: 900; color: var(--pink-accent); line-height: 1; }
+        .sp-countdown-card span { font-size: 0.76rem; font-weight: 700; color: rgba(255, 255, 255, 0.55); text-transform: uppercase; letter-spacing: 0.12em; }
+
+        /* ── FUTURE EVENTS ── */
+        .sp-future-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+
+        /* ── HISTORY / TIMELINE ── */
+        .sp-timeline { position: relative; display: flex; flex-direction: column; gap: 1.8rem; }
+        .sp-timeline::before { content: ''; position: absolute; left: 2.1rem; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, var(--pink-accent), transparent); }
+        .sp-timeline-item { display: flex; gap: 1.5rem; align-items: flex-start; }
+        .sp-timeline-icon { width: 44px; height: 44px; flex-shrink: 0; background: linear-gradient(135deg, var(--pink-accent), var(--purple-glow)); border-radius: 50%; display: grid; place-items: center; font-size: 1.1rem; font-weight: 900; color: #fff; z-index: 1; box-shadow: 0 0 20px rgba(236, 72, 153, 0.4); }
+        .sp-timeline-content { flex: 1; }
+        .sp-year-highlight { font-size: 1rem; color: var(--pink-accent); font-weight: 800; }
+        .sp-venue-text { font-size: 0.82rem; color: var(--pink-accent); font-weight: 600; margin-top: 0.6rem; }
+
+        /* ── HOTELS ── */
+        .sp-hotels-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
+        .sp-hotel-card { display: flex; flex-direction: column; overflow: hidden; padding: 0; }
+        .sp-featured-border { border-color: rgba(236, 72, 153, 0.5); box-shadow: 0 0 30px rgba(236, 72, 153, 0.2); }
+        .sp-hotel-img-wrap { height: 180px; overflow: hidden; }
+        .sp-hotel-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 400ms ease; }
+        .sp-hotel-card:hover .sp-hotel-img-wrap img { transform: scale(1.05); }
+        .sp-hotel-body { padding: 1.4rem; display: flex; flex-direction: column; gap: 0.6rem; flex: 1; }
+        .sp-rating-tag { font-size: 0.78rem; font-weight: 700; color: var(--amber-accent); white-space: nowrap; }
+        .sp-contact-text { font-size: 0.8rem; color: rgba(255, 255, 255, 0.5); }
+
+        /* ── RESTAURANTS ── */
+        .sp-restaurants-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
+        .sp-discount-pill { padding: 0.3rem 0.85rem; border-radius: 999px; background: linear-gradient(135deg, var(--pink-accent), var(--amber-accent)); color: #fff; font-size: 0.72rem; font-weight: 800; }
+        .sp-code-box { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 1rem; background: rgba(255, 255, 255, 0.05); border-radius: 10px; margin-top: 0.4rem; }
+        .sp-code-box span { font-size: 0.82rem; color: var(--text-muted); }
+        .sp-code-box code { font-family: monospace; background: rgba(236, 72, 153, 0.18); padding: 0.25rem 0.65rem; border-radius: 6px; color: var(--pink-accent); font-weight: 800; }
+
+        /* ── DISCOUNTS ── */
+        .sp-discounts-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; }
+        .sp-discount-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 0.5rem; }
+        .sp-big-discount { font-size: 1.3rem; font-weight: 900; color: var(--pink-accent); }
+        .sp-code-pill { font-family: monospace; background: rgba(236, 72, 153, 0.18); padding: 0.3rem 0.7rem; border-radius: 8px; color: var(--pink-accent); font-weight: 800; font-size: 0.82rem; }
+
+        /* ── FACILITIES ── */
+        .sp-facilities-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.2rem; }
+        .sp-facility-card { text-align: center; }
+        .sp-facility-icon { font-size: 2.2rem; display: block; margin-bottom: 0.75rem; }
+
+        /* ── SPONSORSHIP ── */
+        .sp-sponsorship-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.25rem; }
+        .sp-sponsor-card { display: flex; flex-direction: column; gap: 1rem; }
+        .sp-sponsor-perks { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; flex: 1; }
+        .sp-sponsor-perks li { display: flex; align-items: flex-start; gap: 0.6rem; font-size: 0.88rem; color: var(--text-muted); }
+        .sp-check { color: var(--pink-accent); font-weight: 900; }
+
+        /* ── CONTACT ── */
+        .sp-contact-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; }
+        .sp-contact-cards { display: flex; flex-direction: column; gap: 0.9rem; }
+        .sp-contact-card { display: flex; gap: 1rem; align-items: flex-start; }
+        .sp-contact-icon { width: 42px; height: 42px; background: linear-gradient(135deg, var(--pink-accent), var(--purple-glow)); border-radius: 10px; display: grid; place-items: center; font-size: 0.72rem; font-weight: 800; color: #fff; flex-shrink: 0; }
+        .sp-contact-label { font-size: 0.85rem; font-weight: 800; color: var(--pink-accent); display: block; margin-bottom: 0.15rem; }
+        .sp-contact-val { font-size: 0.95rem; font-weight: 700; color: #ffffff; margin-bottom: 0.15rem; }
+        .sp-contact-detail { font-size: 0.8rem; color: var(--text-muted); }
+
+        /* ── CONTACT FORM ── */
+        .sp-contact-form { display: flex; flex-direction: column; gap: 1rem; }
+        .sp-form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .sp-field { display: flex; flex-direction: column; gap: 0.4rem; }
+        .sp-field label { font-size: 0.8rem; font-weight: 700; color: var(--pink-accent); text-transform: uppercase; letter-spacing: 0.06em; }
+        .sp-field input, .sp-field textarea { padding: 0.85rem 1rem; border-radius: 12px; border: 1px solid rgba(236, 72, 153, 0.25); background: rgba(255, 255, 255, 0.05); color: #ffffff; font-size: 0.95rem; outline: none; transition: border-color 200ms; font-family: inherit; resize: vertical; }
+        .sp-field input:focus, .sp-field textarea:focus { border-color: var(--pink-accent); background: rgba(236, 72, 153, 0.1); }
+        .sp-form-success { color: #4ade80; font-size: 0.9rem; font-weight: 700; }
+        .sp-form-error   { color: #f87171; font-size: 0.9rem; font-weight: 700; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1200px) {
+          .sp-celebrity-grid, .sp-facilities-grid, .sp-sponsorship-grid, .sp-discounts-grid { grid-template-columns: repeat(3, 1fr); }
         }
 
-        .home-partner-track {
-          display: inline-flex;
-          min-width: max-content;
-          gap: 1.2rem;
-          animation: homePartnerMove 28s linear infinite;
+        @media (max-width: 992px) {
+          .sp-celebrity-grid, .sp-facilities-grid, .sp-sponsorship-grid, .sp-discounts-grid,
+          .sp-hotels-grid, .sp-restaurants-grid, .sp-future-grid { grid-template-columns: repeat(2, 1fr); }
+          .sp-about-grid, .sp-contact-layout { grid-template-columns: 1fr; gap: 2rem; }
+          .sp-countdown-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
-        .partner-chip {
-          min-width: 170px;
-          padding: 1.1rem 1.4rem;
-          border-radius: 20px;
-          background: rgba(255, 255, 255, 0.1);
-          color: #fff;
-          text-align: center;
-          font-weight: 900;
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-          border: 1px solid rgba(255, 255, 255, 0.12);
-          backdrop-filter: blur(10px);
-        }
-
-        @keyframes homePartnerMove {
-          from { transform: translateX(0); }
-          to { transform: translateX(-33.33%); }
-        }
-
-        @media (max-width: 1024px) {
-          .home-highlight-grid,
-          .home-event-grid,
-          .home-celebrity-grid {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-          }
-
-          .home-stats-grid,
-          .home-split-section {
-            grid-template-columns: repeat(2, minmax(0, 1fr));
-          }
-        }
-
-        @media (max-width: 768px) {
-          .home-highlight-grid,
-          .home-stats-grid,
-          .home-split-section,
-          .home-reason-grid,
-          .home-event-grid,
-          .home-celebrity-grid {
-            grid-template-columns: 1fr;
-          }
-
-          .home-stage-controls {
-            right: 1rem;
-            bottom: 1rem;
-          }
+        @media (max-width: 640px) {
+          .sp-section { padding: 3.5rem 0; }
+          .sp-section-inner { width: min(100%, calc(100% - 1.5rem)); }
+          .sp-celebrity-grid, .sp-facilities-grid, .sp-sponsorship-grid, .sp-discounts-grid,
+          .sp-hotels-grid, .sp-restaurants-grid, .sp-future-grid, .sp-events-grid { grid-template-columns: 1fr; }
+          .sp-form-row { grid-template-columns: 1fr; }
+          .sp-hero-title { font-size: clamp(2.4rem, 12vw, 4.2rem); margin-bottom: 1.5rem; }
+          .sp-hero-masked { margin-bottom: 1.5rem; }
+          .sp-hero-content { padding: 5rem 1rem 3rem; }
+          .sp-hero-actions { flex-direction: column; width: 100%; max-width: 280px; }
+          .sp-btn-white, .sp-btn-glass { width: 100%; text-align: center; }
+          .sp-countdown-grid { grid-template-columns: repeat(2, 1fr); gap: 0.65rem; }
+          .sp-countdown-card { padding: 1rem 0.8rem; }
+          .sp-timeline::before { left: 1rem; }
+          .sp-timeline-icon { width: 34px; height: 34px; font-size: 0.85rem; }
         }
       `}</style>
     </main>
