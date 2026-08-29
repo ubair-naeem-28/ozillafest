@@ -61,6 +61,20 @@ export function useTicket() {
     }
   }, [fetchMyTickets])
 
+  const payWithCard = useCallback(async (ticketId, cardData) => {
+    setLoading(true)
+    try {
+      const response = await ticketService.payWithCard(ticketId, cardData)
+      await fetchMyTickets()
+      return response
+    } catch (err) {
+      setError(err.message)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }, [fetchMyTickets])
+
   return {
     tickets,
     loading,
@@ -68,6 +82,7 @@ export function useTicket() {
     fetchMyTickets,
     requestTicket,
     getTicketById,
+    payWithCard,
     uploadPaymentProof
   }
 }

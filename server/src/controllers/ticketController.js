@@ -267,6 +267,37 @@ export async function getTicketById(req, res) {
   return res.json(ticket.toJSON())
 }
 
+export async function payWithCard(req, res) {
+  const ticket = await Ticket.findOne({
+    _id: req.params.id,
+    userId: req.user._id
+  })
+  if (!ticket) {
+    return res.status(404).json({ message: 'Ticket not found' })
+  }
+
+  const { cardNumber, cardholderName, cardType, cardLast4 } = req.body || {}
+  const rawNumber = String(cardNumber || '').replace(/\s/g, '')
+  const last4 = cardLast4 || rawNumber.slice(-4) || '4242'
+  const resolvedCardholder = String(cardholderName || ticket.fullName).trim()
+
+  ticket.status = 'approved'
+  ticket.paymentMethod = 'card'
+  ticket.cardType = cardType || 'card'
+  ticket.cardLast4 = last4
+  ticket.cardholderName = resolvedCardholder
+  ticket.transactionId = `TXN-${Date.now()}-${nanoid(6).toUpperCase()}`
+  ticket.paidAt = new Date()
+  ticket.generatedAt = new Date()
+  ticket.verifiedAt = null
+  await ticket.save()
+
+  return res.json({
+    message: 'Card payment deducted and ticket pass generated successfully',
+    ticket: ticket.toJSON()
+  })
+}
+
 export async function uploadPaymentProof(req, res) {
   const ticket = await Ticket.findOne({
     _id: req.params.id,

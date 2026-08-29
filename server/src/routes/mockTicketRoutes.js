@@ -185,6 +185,32 @@ router.post('/:id/cancel', (req, res) => {
   res.json({ message: 'Ticket cancelled successfully', ticket, mode: 'no-db' })
 })
 
+router.post('/:id/pay-card', (req, res) => {
+  const ticket = tickets.get(req.params.id)
+  if (!ticket) {
+    return res.status(404).json({ message: 'Ticket not found' })
+  }
+
+  const now = new Date().toISOString()
+  ticket.status = 'approved'
+  ticket.paymentMethod = 'card'
+  ticket.cardType = req.body?.cardType || 'card'
+  ticket.cardLast4 = req.body?.cardLast4 || '4242'
+  ticket.cardholderName = req.body?.cardholderName || ticket.fullName
+  ticket.transactionId = `TXN-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`
+  ticket.paidAt = now
+  ticket.generatedAt = now
+  ticket.verifiedAt = null
+  ticket.updatedAt = now
+  tickets.set(ticket.id, ticket)
+
+  res.json({
+    message: 'Card payment deducted and ticket generated successfully',
+    ticket,
+    mode: 'no-db'
+  })
+})
+
 router.post('/:id/payment-proof', upload.single('paymentProof'), (req, res) => {
   const ticket = tickets.get(req.params.id)
   if (!ticket) {

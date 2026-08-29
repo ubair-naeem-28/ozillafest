@@ -1,7 +1,7 @@
 let googleScriptPromise
 
-function loadGoogleScript() {
-  if (window.google?.accounts?.oauth2) {
+export function loadGoogleScript() {
+  if (window.google?.accounts?.id || window.google?.accounts?.oauth2) {
     return Promise.resolve(window.google)
   }
 
@@ -30,9 +30,51 @@ function loadGoogleScript() {
   return googleScriptPromise
 }
 
+/**
+ * Initializes Google One Tap / Identity Services
+ */
+export async function initGoogleOneTap({ clientId, onCredential, onError }) {
+  if (!clientId) return null
+
+  try {
+    await loadGoogleScript()
+    if (!window.google?.accounts?.id) return null
+
+    window.google.accounts.id.initialize({
+      client_id: clientId,
+      callback: async (response) => {
+        try {
+          if (response?.credential && onCredential) {
+            await onCredential(response.credential)
+          }
+        } catch (err) {
+          if (onError) onError(err)
+        }
+      },
+      auto_select: false,
+      cancel_on_tap_outside: true
+    })
+
+    window.google.accounts.id.prompt((notification) => {
+      if (notification.isNotDisplayed()) {
+        // Notification wasn't displayed (e.g. suppressed by browser/FedCM/cooldown)
+      } else if (notification.isSkippedMoment()) {
+        // Notification was skipped
+      } else if (notification.isDismissedMoment()) {
+        // Notification was dismissed
+      }
+    })
+  } catch (error) {
+    if (onError) onError(error)
+  }
+}
+
+/**
+ * Initiates Google OAuth popup code login
+ */
 export async function startGooglePopupLogin({ clientId, onCode }) {
   if (!clientId) {
-    throw new Error('Google client is not configured')
+    throw new Error('Google Client ID is not configured. Please set VITE_GOOGLE_CLIENT_ID in client/.env')
   }
 
   await loadGoogleScript()
@@ -66,3 +108,4 @@ export async function startGooglePopupLogin({ clientId, onCode }) {
     codeClient.requestCode()
   })
 }
+

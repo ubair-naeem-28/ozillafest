@@ -9,6 +9,7 @@ import {
   getTicketAvailability,
   getMyTickets,
   getTicketById,
+  payWithCard,
   requestTicket,
   uploadPaymentProof,
   verifyTicket,
@@ -44,6 +45,7 @@ router.get('/admin/pending', requireAdmin, getPendingTicketsAdmin)
 router.post('/admin/:id/decision', requireAdmin, decideTicketAdmin)
 router.get('/my-tickets', getMyTickets)
 router.post('/:id/cancel', cancelTicket)
+router.post('/:id/pay-card', payWithCard)
 router.post('/:id/payment-proof', upload.single('paymentProof'), uploadPaymentProof)
 router.post('/:id/verify', verifyTicket)
 

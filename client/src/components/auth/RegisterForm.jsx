@@ -230,18 +230,13 @@ function RegisterForm() {
 
   const handleGoogleRegister = async () => {
     resetFeedback()
+    if (!googleClientId) {
+      setError('Google Sign-In configuration required: Please add VITE_GOOGLE_CLIENT_ID in client/.env')
+      return
+    }
+
     setGoogleLoading(true)
     try {
-      if (!googleClientId) {
-        const response = await authService.googleCodeLogin('local-dev-google-login', 'postmessage')
-        tokenStorage.setToken(response.token)
-        await checkAuth()
-        setMessage('Google sign-up successful. Preparing your festival workspace...')
-        await pauseForTransition()
-        navigate(safeReturnTo)
-        return
-      }
-
       await startGooglePopupLogin({
         clientId: googleClientId,
         onCode: async (code) => {
@@ -254,7 +249,10 @@ function RegisterForm() {
         }
       })
     } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Google sign-up failed')
+      const message = err.response?.data?.message || err.message || 'Google sign-up failed'
+      if (!message.toLowerCase().includes('cancel')) {
+        setError(message)
+      }
     } finally {
       setGoogleLoading(false)
     }

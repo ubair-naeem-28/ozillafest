@@ -1,5 +1,4 @@
-import React from 'react'
-import { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { authService } from '../../services/authService'
@@ -56,19 +55,14 @@ function LoginForm() {
   const handleGoogleLogin = async () => {
     setError('')
     setSuccess('')
+
+    if (!googleClientId) {
+      setError('Google Sign-In configuration required: Please add VITE_GOOGLE_CLIENT_ID in client/.env')
+      return
+    }
+
     setGoogleLoading(true)
-
     try {
-      if (!googleClientId) {
-        const response = await authService.googleCodeLogin('local-dev-google-login', 'postmessage')
-        tokenStorage.setToken(response.token)
-        await checkAuth()
-        setSuccess('Google sign-in successful. Preparing your festival workspace...')
-        await new Promise((resolve) => setTimeout(resolve, 450))
-        navigate(safeReturnTo)
-        return
-      }
-
       await startGooglePopupLogin({
         clientId: googleClientId,
         onCode: async (code) => {
@@ -82,7 +76,9 @@ function LoginForm() {
       })
     } catch (err) {
       const message = err.response?.data?.message || err.message || 'Google sign-in failed'
-      setError(message)
+      if (!message.toLowerCase().includes('cancel')) {
+        setError(message)
+      }
     } finally {
       setGoogleLoading(false)
     }

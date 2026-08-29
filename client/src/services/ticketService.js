@@ -280,6 +280,81 @@ export const ticketService = {
     }
   },
 
+  async payWithCard(ticketId, cardData) {
+    if (forceLocalMode) {
+      const tickets = readLocalTickets()
+      const identity = getCurrentIdentity()
+      const index = tickets.findIndex((item) => item.id === ticketId && isOwnedByCurrentUser(item, identity))
+      if (index === -1) {
+        const notFoundError = new Error('Ticket not found')
+        notFoundError.response = { data: { message: 'Ticket not found' } }
+        throw notFoundError
+      }
+
+      const now = new Date().toISOString()
+      const updatedTicket = {
+        ...tickets[index],
+        status: 'approved',
+        paymentMethod: 'card',
+        cardType: cardData?.cardType || 'card',
+        cardLast4: cardData?.cardLast4 || '4242',
+        cardholderName: cardData?.cardholderName || '',
+        transactionId: `TXN-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`,
+        paidAt: now,
+        generatedAt: now,
+        verifiedAt: null,
+        updatedAt: now
+      }
+      tickets[index] = updatedTicket
+      writeLocalTickets(tickets)
+
+      return {
+        message: 'Payment processed and ticket generated successfully',
+        ticket: updatedTicket,
+        mode: 'local-fallback'
+      }
+    }
+    try {
+      const response = await apiClient.post(`/tickets/${ticketId}/pay-card`, cardData)
+      return response.data
+    } catch (error) {
+      if (markLocalMode(error)) {
+        const tickets = readLocalTickets()
+        const identity = getCurrentIdentity()
+        const index = tickets.findIndex((item) => item.id === ticketId && isOwnedByCurrentUser(item, identity))
+        if (index === -1) {
+          const notFoundError = new Error('Ticket not found')
+          notFoundError.response = { data: { message: 'Ticket not found' } }
+          throw notFoundError
+        }
+
+        const now = new Date().toISOString()
+        const updatedTicket = {
+          ...tickets[index],
+          status: 'approved',
+          paymentMethod: 'card',
+          cardType: cardData?.cardType || 'card',
+          cardLast4: cardData?.cardLast4 || '4242',
+          cardholderName: cardData?.cardholderName || '',
+          transactionId: `TXN-${Date.now()}-${Math.random().toString(36).slice(2, 7).toUpperCase()}`,
+          paidAt: now,
+          generatedAt: now,
+          verifiedAt: null,
+          updatedAt: now
+        }
+        tickets[index] = updatedTicket
+        writeLocalTickets(tickets)
+
+        return {
+          message: 'Payment processed and ticket generated successfully',
+          ticket: updatedTicket,
+          mode: 'local-fallback'
+        }
+      }
+      throw error
+    }
+  },
+
   async uploadPaymentProof(ticketId, formData) {
     if (forceLocalMode) {
       const tickets = readLocalTickets()

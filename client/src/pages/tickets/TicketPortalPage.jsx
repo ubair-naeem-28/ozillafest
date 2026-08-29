@@ -3,20 +3,20 @@ import { useNavigate } from 'react-router-dom'
 import { useTicket } from '../../hooks/useTicket'
 import { useAuth } from '../../hooks/useAuth'
 import TicketRequestForm from '../../components/tickets/TicketRequestForm'
-import IbanDisplayCard from '../../components/tickets/IbanDisplayCard'
+import CardPaymentForm from '../../components/tickets/CardPaymentForm'
 import AlertMessage from '../../components/common/AlertMessage'
 import { ticketService } from '../../services/ticketService'
 
-const portalSteps = ['Personal Info', 'Ticket Details', 'Payment', 'Proof Upload', 'Confirmation']
-const trustBadges = ['Secure Payments', 'Protected Booking', 'QR Ticket', 'Official Festival Ticket']
+const portalSteps = ['Personal Info', 'Ticket Details', 'Card Payment', 'Confirmation']
+const trustBadges = ['Secure Payments', 'Protected Booking', 'Instant QR Ticket', 'Official Festival Pass']
 const whyBook = [
-  ['Secure Booking', 'Protected ticket request and account-based access.'],
-  ['Fast Confirmation', 'Admin verification workflow after payment proof upload.'],
-  ['QR Ticket', 'Verified bookings generate scannable festival tickets.'],
-  ['Premium Support', 'Support team available for booking and payment guidance.']
+  ['Instant Card Payment', 'Automatic & seamless deduction from your debit/credit card.'],
+  ['Instant QR Ticket', 'Verified bookings immediately generate scannable festival QR tickets.'],
+  ['Protected Checkout', '256-bit SSL encrypted and PCI-compliant secure transaction.'],
+  ['Premium Support', 'Support team available 24/7 for booking and festival guidance.']
 ]
 const benefits = ['VIP Access', 'Celebrity Performances', 'Food Court Access', 'Discount Offers', 'Festival Merchandise', 'Premium Seating']
-const bookingTimeline = ['Booking', 'Verification', 'Approval', 'QR Ticket Generation', 'Ready To Attend']
+const bookingTimeline = ['Personal Info', 'Ticket Details', 'Card Payment', 'QR Ticket Issued']
 
 const defaultSummary = {
   ticketType: 'General',
@@ -32,17 +32,15 @@ const defaultSummary = {
 function TicketPortalPage() {
   const navigate = useNavigate()
   const { user } = useAuth()
-  const { requestTicket, uploadPaymentProof, loading } = useTicket()
+  const { requestTicket, payWithCard, loading } = useTicket()
   const [alert, setAlert] = useState(null)
   const [showPayment, setShowPayment] = useState(false)
   const [ticketRequest, setTicketRequest] = useState(null)
-  const [paymentFile, setPaymentFile] = useState(null)
-  const [paymentPreview, setPaymentPreview] = useState('')
   const [bookingSummary, setBookingSummary] = useState(defaultSummary)
   const [availability, setAvailability] = useState(null)
   const [availabilityLoading, setAvailabilityLoading] = useState(true)
 
-  const activeStep = showPayment ? 4 : 2
+  const activeStep = showPayment ? 3 : 2
   const reserveMinutes = useMemo(() => 14, [])
   const displayName = `${user?.firstName || ''} ${user?.lastName || ''}`.trim() || user?.name || user?.email || 'Festival Guest'
   const soldOut = Boolean(availability?.soldOut)
@@ -92,7 +90,7 @@ function TicketPortalPage() {
       const response = await requestTicket(ticketData)
       setTicketRequest(response)
       setShowPayment(true)
-      setAlert({ type: 'success', message: 'Ticket request submitted. Please upload your payment proof.' })
+      setAlert({ type: 'success', message: 'Ticket reserved! Please enter your card details to complete payment.' })
       const updatedAvailability = await ticketService.getAvailability().catch(() => null)
       if (updatedAvailability) setAvailability(updatedAvailability)
     } catch (error) {
@@ -107,38 +105,24 @@ function TicketPortalPage() {
     }
   }
 
-  const handleFileSelect = (file) => {
-    setPaymentFile(file || null)
-    setPaymentPreview('')
-    if (!file) return
-
-    const reader = new FileReader()
-    reader.onloadend = () => setPaymentPreview(String(reader.result || ''))
-    reader.readAsDataURL(file)
-  }
-
-  const handleUploadProof = async () => {
+  const handleCardPayment = async (cardData) => {
     if (!ticketRequest?.id) {
-      setAlert({ type: 'error', message: 'Ticket request not found.' })
-      return
-    }
-
-    if (!paymentFile) {
-      setAlert({ type: 'error', message: 'Please select a payment screenshot/image.' })
+      setAlert({ type: 'error', message: 'Ticket request session expired. Please retry booking.' })
       return
     }
 
     try {
-      await uploadPaymentProof(ticketRequest.id, paymentFile)
-      setAlert({ type: 'success', message: 'Payment proof uploaded successfully. Generating your ticket...' })
-      setPaymentFile(null)
-      setPaymentPreview('')
+      await payWithCard(ticketRequest.id, cardData)
+      setAlert({
+        type: 'success',
+        message: `Payment of PKR ${bookingSummary.total.toLocaleString()} deducted successfully! Your QR ticket is ready.`
+      })
       navigate(`/tickets/view/${ticketRequest.id}`)
     } catch (error) {
       const message =
         error?.response?.data?.message ||
         error?.message ||
-        'Failed to upload payment proof.'
+        'Failed to process card payment. Please verify your card details and try again.'
       setAlert({ type: 'error', message })
     }
   }
@@ -206,8 +190,8 @@ function TicketPortalPage() {
             <section className="ticket-booking-card">
               <div className="ticket-card-top">
                 <div>
-                  <p>{showPayment ? 'Payment Step' : 'Premium Booking Portal'}</p>
-                  <h2>{showPayment ? 'Complete Your Payment' : 'Reserve Your Festival Ticket'}</h2>
+                  <p>{showPayment ? 'Card Payment' : 'Premium Booking Portal'}</p>
+                  <h2>{showPayment ? 'Card Payment Details' : 'Reserve Your Festival Ticket'}</h2>
                 </div>
                 <span>{showPayment ? `Reserved for ${reserveMinutes} minutes` : 'Official festival ticket'}</span>
               </div>
@@ -223,44 +207,12 @@ function TicketPortalPage() {
                 />
               ) : (
                 <div className="ticket-payment-flow">
-                  <IbanDisplayCard />
-
-                  <section className="ticket-upload-card">
-                    <div className="ticket-panel-heading">
-                      <p>Step 4</p>
-                      <h3>Upload Payment Proof</h3>
-                    </div>
-                    <label
-                      className="ticket-dropzone"
-                      onDragOver={(event) => event.preventDefault()}
-                      onDrop={(event) => {
-                        event.preventDefault()
-                        handleFileSelect(event.dataTransfer.files?.[0])
-                      }}
-                    >
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={(e) => handleFileSelect(e.target.files?.[0])}
-                      />
-                      <strong>{paymentFile ? paymentFile.name : 'Drag & drop payment screenshot here'}</strong>
-                      <span>or browse file from your device</span>
-                    </label>
-
-                    {paymentPreview && (
-                      <div className="ticket-proof-preview">
-                        <img src={paymentPreview} alt="Payment proof preview" />
-                      </div>
-                    )}
-
-                    <button
-                      className="ticket-primary-button"
-                      onClick={handleUploadProof}
-                      disabled={loading}
-                    >
-                      {loading ? 'Generating QR Ticket...' : 'Submit Payment Proof'}
-                    </button>
-                  </section>
+                  <CardPaymentForm
+                    amount={bookingSummary.total}
+                    onSubmit={handleCardPayment}
+                    loading={loading}
+                    onBack={() => setShowPayment(false)}
+                  />
                 </div>
               )}
             </section>

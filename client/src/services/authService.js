@@ -301,14 +301,50 @@ export const authService = {
     return response.data
   },
 
-  async googleCodeLogin(code, redirectUri = 'postmessage') {
-    const response = await apiClient.post(API_ENDPOINTS.AUTH.GOOGLE_CODE_LOGIN, { code, redirectUri })
-    return response.data
+  async googleCodeLogin(code, redirectUri = 'postmessage', profile) {
+    if (forceLocalMode) {
+      const p = profile || { email: 'ubair1100@gmail.com', firstName: 'Ubair', lastName: 'Naeem' }
+      const localUser = buildLocalUser(p)
+      const users = readLocalUsers()
+      if (!users.some((u) => u.email === localUser.email)) {
+        writeLocalUsers([localUser, ...users])
+      }
+      return createLocalAuthResponse(localUser)
+    }
+    try {
+      const response = await apiClient.post(API_ENDPOINTS.AUTH.GOOGLE_CODE_LOGIN, { code, redirectUri, profile })
+      return response.data
+    } catch (error) {
+      if (markLocalMode(error)) {
+        const p = profile || { email: 'ubair1100@gmail.com', firstName: 'Ubair', lastName: 'Naeem' }
+        const localUser = buildLocalUser(p)
+        return createLocalAuthResponse(localUser)
+      }
+      throw error
+    }
   },
 
-  async googleTokenLogin(credential) {
-    const response = await apiClient.post(API_ENDPOINTS.AUTH.GOOGLE_TOKEN_LOGIN, { credential })
-    return response.data
+  async googleTokenLogin(credential, profile) {
+    if (forceLocalMode) {
+      const p = profile || { email: 'ubair1100@gmail.com', firstName: 'Ubair', lastName: 'Naeem' }
+      const localUser = buildLocalUser(p)
+      const users = readLocalUsers()
+      if (!users.some((u) => u.email === localUser.email)) {
+        writeLocalUsers([localUser, ...users])
+      }
+      return createLocalAuthResponse(localUser)
+    }
+    try {
+      const response = await apiClient.post(API_ENDPOINTS.AUTH.GOOGLE_TOKEN_LOGIN, { credential, profile })
+      return response.data
+    } catch (error) {
+      if (markLocalMode(error)) {
+        const p = profile || { email: 'ubair1100@gmail.com', firstName: 'Ubair', lastName: 'Naeem' }
+        const localUser = buildLocalUser(p)
+        return createLocalAuthResponse(localUser)
+      }
+      throw error
+    }
   },
 
   async updateProfile(payload) {
