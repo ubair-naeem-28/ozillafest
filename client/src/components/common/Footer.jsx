@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import { assetUrl } from '../../utils/assetUrl.util'
+import LaserFlow from './LaserFlow'
 
 const exploreLinks = [
   ['Home', '/#home'],
@@ -32,6 +33,26 @@ const socialLinks = [
 function Footer() {
   return (
     <footer className="festival-footer">
+      <div className="festival-footer-laser-backdrop" aria-hidden="true">
+        <LaserFlow
+          horizontalBeamOffset={0.1}
+          verticalBeamOffset={0.0}
+          color="#CF9EFF"
+          horizontalSizing={0.5}
+          verticalSizing={2}
+          wispDensity={1}
+          wispSpeed={15}
+          wispIntensity={5}
+          flowSpeed={0.35}
+          flowStrength={0.25}
+          fogIntensity={0.45}
+          fogScale={0.3}
+          fogFallSpeed={0.6}
+          decay={1.1}
+          falloffStart={1.2}
+        />
+      </div>
+
       <div className="festival-footer-ambient" aria-hidden="true">
         <span />
         <span />
