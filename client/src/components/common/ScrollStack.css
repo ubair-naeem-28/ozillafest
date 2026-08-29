@@ -1,0 +1,101 @@
+.scroll-stack-container {
+  position: relative;
+  width: 100%;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  transform: translateZ(0);
+}
+
+.scroll-stack-inner {
+  position: relative;
+  width: min(1200px, calc(100% - 2.5rem));
+  margin: 0 auto;
+  padding: 3rem 0 12rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.scroll-stack-card-wrapper {
+  position: sticky;
+  width: 100%;
+  transform-origin: top center;
+  transition: transform 0.25s ease, filter 0.25s ease;
+  will-change: transform, filter;
+}
+
+.scroll-stack-card {
+  position: relative;
+  width: 100%;
+  min-height: 520px;
+  border-radius: 36px;
+  background: linear-gradient(145deg, #550e0e 0%, #200407 100%);
+  border: none !important;
+  box-shadow:
+    0 -14px 35px rgba(0, 0, 0, 0.65),
+    0 25px 60px rgba(0, 0, 0, 0.7);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  padding: clamp(2rem, 5vw, 3.5rem);
+  box-sizing: border-box;
+  overflow: hidden;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+/* Tab Header at top of each card matching 2.mp4 video card deck */
+.scroll-stack-card-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.8rem;
+  padding: 0.45rem 1.2rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.45);
+  border: none !important;
+  backdrop-filter: blur(12px);
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+}
+
+.stack-tab-badge {
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: #EC4899;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.stack-tab-title {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.scroll-stack-card-content {
+  position: relative;
+  width: 100%;
+}
+
+.scroll-stack-end {
+  width: 100%;
+  height: 20px;
+}
+
+@media (max-width: 768px) {
+  .scroll-stack-inner {
+    width: min(100%, calc(100% - 1.5rem));
+    padding: 2rem 0 8rem;
+  }
+  .scroll-stack-card-wrapper {
+    top: 70px !important;
+    margin-bottom: 2.5rem !important;
+  }
+  .scroll-stack-card {
+    padding: 1.5rem;
+    border-radius: 24px;
+    min-height: auto;
+  }
+}
