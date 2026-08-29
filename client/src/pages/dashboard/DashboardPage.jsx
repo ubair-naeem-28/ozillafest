@@ -1042,7 +1042,7 @@ function DashboardPage() {
         .vip-inner {
           display: grid;
           grid-template-columns: 1.2fr 1fr;
-          gap: 3.5rem;
+          gap: 3rem;
           align-items: center;
         }
 
@@ -1050,14 +1050,14 @@ function DashboardPage() {
           list-style: none;
           display: flex;
           flex-direction: column;
-          gap: 0.8rem;
+          gap: 0.75rem;
         }
 
         .vip-perks-list li {
           display: flex;
           align-items: center;
           gap: 0.8rem;
-          font-size: 1rem;
+          font-size: 0.98rem;
           font-weight: 600;
           color: rgba(255, 255, 255, 0.95);
         }
@@ -1081,11 +1081,11 @@ function DashboardPage() {
 
         .pass-holo-badge {
           width: 300px;
-          height: 430px;
+          height: 420px;
           border-radius: 28px;
           background: linear-gradient(145deg, rgba(30, 4, 8, 0.95), rgba(10, 1, 3, 0.95));
-          border: 2px solid rgba(255, 255, 255, 0.4);
-          box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), 0 0 50px rgba(255, 255, 255, 0.15);
+          border: none !important;
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.75);
           position: relative;
           padding: 2rem 1.8rem;
           display: flex;
@@ -1108,7 +1108,7 @@ function DashboardPage() {
           background: rgba(0, 0, 0, 0.8);
           border-radius: 999px;
           margin: 0 auto 1.5rem;
-          border: 1px solid rgba(255, 255, 255, 0.2);
+          border: none !important;
         }
 
         .pass-header strong {
@@ -1132,12 +1132,12 @@ function DashboardPage() {
 
         .pass-center-visual {
           text-align: center;
-          margin: 2rem 0;
+          margin: 1.5rem 0;
         }
 
         .pass-big-year {
           display: block;
-          font-size: 4rem;
+          font-size: 3.8rem;
           font-weight: 900;
           color: rgba(255, 255, 255, 0.2);
           line-height: 1;
@@ -1156,7 +1156,6 @@ function DashboardPage() {
         .pass-footer {
           display: flex;
           justify-content: space-between;
-          border-top: 1px solid rgba(255, 255, 255, 0.15);
           padding-top: 1rem;
         }
 
@@ -1182,73 +1181,72 @@ function DashboardPage() {
         .sp-countdown-grid {
           display: inline-grid;
           grid-template-columns: repeat(4, 1fr);
-          gap: 1.2rem;
+          gap: 1rem;
         }
 
         .sp-countdown-card {
-          background: rgba(0, 0, 0, 0.35);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          border-radius: 20px;
-          padding: 1.4rem 2rem;
+          background: rgba(0, 0, 0, 0.3);
+          border: none !important;
+          border-radius: 18px;
+          padding: 1.2rem 1.6rem;
           text-align: center;
           backdrop-filter: blur(14px);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+          box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
         }
 
         .sp-countdown-card strong {
           display: block;
-          font-size: clamp(2rem, 4vw, 3.4rem);
+          font-size: clamp(1.8rem, 3.5vw, 3rem);
           font-weight: 900;
           color: #ffffff;
           line-height: 1;
         }
 
         .sp-countdown-card span {
-          font-size: 0.78rem;
+          font-size: 0.75rem;
           font-weight: 800;
           color: rgba(255, 255, 255, 0.75);
           text-transform: uppercase;
-          letter-spacing: 0.12em;
+          letter-spacing: 0.1em;
         }
 
         /* ── ABOUT ── */
-        .sp-about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; }
-        .sp-lead { font-size: 1.15rem; line-height: 1.7; color: #ffffff; margin-bottom: 1rem; }
+        .sp-about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2.5rem; align-items: start; }
+        .sp-lead { font-size: 1.12rem; line-height: 1.7; color: #ffffff; margin-bottom: 1rem; }
         .sp-about-text p { color: var(--text-muted); line-height: 1.7; margin-bottom: 1.5rem; }
         .sp-journey-steps { display: flex; flex-direction: column; gap: 0.75rem; }
-        .sp-journey-step { display: flex; align-items: center; gap: 1rem; padding: 0.8rem 1.1rem; background: rgba(0, 0, 0, 0.25); border-radius: 14px; border-left: 3px solid #ffffff; }
+        .sp-journey-step { display: flex; align-items: center; gap: 1rem; padding: 0.8rem 1.1rem; background: rgba(0, 0, 0, 0.25); border-radius: 14px; }
         .sp-step-num { width: 28px; height: 28px; background: #ffffff; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 0.8rem; color: #ba5916; flex-shrink: 0; }
-        .sp-about-features h3 { font-size: 1.05rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #ffffff; margin-bottom: 0.8rem; }
+        .sp-about-features h3 { font-size: 1.02rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.08em; color: #ffffff; margin-bottom: 0.8rem; }
         .sp-tag-cloud { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-        .sp-tag { display: inline-block; padding: 0.35rem 0.85rem; border-radius: 999px; background: rgba(0, 0, 0, 0.25); border: 1px solid rgba(255, 255, 255, 0.2); color: #ffffff; font-size: 0.82rem; font-weight: 600; }
-        .sp-tag-accent { background: rgba(255, 255, 255, 0.18); border-color: rgba(255, 255, 255, 0.4); color: #ffffff; }
+        .sp-tag { display: inline-block; padding: 0.35rem 0.85rem; border-radius: 999px; background: rgba(0, 0, 0, 0.3); border: none !important; color: #ffffff; font-size: 0.82rem; font-weight: 600; }
+        .sp-tag-accent { background: rgba(255, 255, 255, 0.18); color: #ffffff; }
 
         /* ── EVENTS ── */
-        .sp-events-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.4rem; }
-        .sp-future-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
+        .sp-events-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+        .sp-future-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
 
         /* ── TIMELINE ── */
-        .sp-timeline { position: relative; display: flex; flex-direction: column; gap: 1.8rem; }
-        .sp-timeline::before { content: ''; position: absolute; left: 2.1rem; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.5), transparent); }
+        .sp-timeline { position: relative; display: flex; flex-direction: column; gap: 1.6rem; }
+        .sp-timeline::before { content: ''; position: absolute; left: 2.1rem; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.4), transparent); }
         .sp-timeline-item { display: flex; gap: 1.5rem; align-items: flex-start; }
-        .sp-timeline-icon { width: 44px; height: 44px; flex-shrink: 0; background: #ffffff; border-radius: 50%; display: grid; place-items: center; font-size: 1.1rem; font-weight: 900; color: #ba5916; z-index: 1; box-shadow: 0 0 25px rgba(0, 0, 0, 0.4); }
+        .sp-timeline-icon { width: 44px; height: 44px; flex-shrink: 0; background: #ffffff; border-radius: 50%; display: grid; place-items: center; font-size: 1.1rem; font-weight: 900; color: #ba5916; z-index: 1; box-shadow: 0 0 20px rgba(0, 0, 0, 0.35); }
         .sp-timeline-content { flex: 1; }
         .sp-year-highlight { font-size: 1rem; color: #ffffff; font-weight: 800; }
         .sp-venue-text { font-size: 0.82rem; color: #ffffff; opacity: 0.9; font-weight: 600; margin-top: 0.6rem; }
 
         /* ── HOTELS ── */
-        .sp-hotels-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
+        .sp-hotels-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
         .sp-hotel-card { display: flex; flex-direction: column; overflow: hidden; padding: 0; }
-        .sp-featured-border { border-color: rgba(255, 255, 255, 0.5); box-shadow: 0 0 30px rgba(0, 0, 0, 0.3); }
         .sp-hotel-img-wrap { height: 180px; overflow: hidden; }
         .sp-hotel-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 400ms ease; }
         .sp-hotel-card:hover .sp-hotel-img-wrap img { transform: scale(1.06); }
-        .sp-hotel-body { padding: 1.4rem; display: flex; flex-direction: column; gap: 0.6rem; flex: 1; }
+        .sp-hotel-body { padding: 1.3rem; display: flex; flex-direction: column; gap: 0.6rem; flex: 1; }
         .sp-rating-tag { font-size: 0.78rem; font-weight: 700; color: #ffb000; white-space: nowrap; }
         .sp-contact-text { font-size: 0.8rem; color: rgba(255, 255, 255, 0.75); }
 
         /* ── RESTAURANTS & DISCOUNTS ── */
-        .sp-restaurants-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.4rem; }
+        .sp-restaurants-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; }
         .sp-discount-pill { padding: 0.3rem 0.85rem; border-radius: 999px; background: #ffffff; color: #cf5704; font-size: 0.72rem; font-weight: 800; }
         .sp-code-box { display: flex; align-items: center; gap: 0.75rem; padding: 0.6rem 1rem; background: rgba(0, 0, 0, 0.25); border-radius: 10px; margin-top: 0.4rem; }
         .sp-code-box span { font-size: 0.82rem; color: var(--text-muted); }
@@ -1273,31 +1271,32 @@ function DashboardPage() {
 
         /* ── RESPONSIVE ── */
         @media (max-width: 1200px) {
-          .sp-celebrity-grid, .sp-facilities-grid, .sp-sponsorship-grid, .sp-discounts-grid { grid-template-columns: repeat(3, 1fr); }
-          .stats-inner-grid { grid-template-columns: repeat(2, 1fr); }
+          .sp-celebrity-grid, .sp-facilities-grid, .sp-sponsorship-grid, .sp-discounts-grid { grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+          .stats-inner-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
         }
 
         @media (max-width: 992px) {
           .sp-celebrity-grid, .sp-facilities-grid, .sp-sponsorship-grid, .sp-discounts-grid,
-          .sp-hotels-grid, .sp-restaurants-grid, .sp-future-grid { grid-template-columns: repeat(2, 1fr); }
+          .sp-hotels-grid, .sp-restaurants-grid, .sp-future-grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
           .sp-about-grid, .vip-inner { grid-template-columns: 1fr; gap: 2rem; }
           .sp-countdown-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
         @media (max-width: 640px) {
-          .stats-inner-grid { grid-template-columns: 1fr; }
+          .stats-inner-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+          .stat-card { padding: 0.9rem 1rem; }
+          .stat-val { font-size: 1.4rem; }
           .sp-celebrity-grid, .sp-facilities-grid, .sp-sponsorship-grid, .sp-discounts-grid,
-          .sp-hotels-grid, .sp-restaurants-grid, .sp-future-grid, .sp-events-grid { grid-template-columns: 1fr; }
-          .sp-hero-title { font-size: clamp(2.4rem, 12vw, 4.2rem); margin-bottom: 1.5rem; }
+          .sp-hotels-grid, .sp-restaurants-grid, .sp-future-grid, .sp-events-grid { grid-template-columns: 1fr; gap: 1rem; }
           .sp-hero-masked { margin-bottom: 1.5rem; }
-          .sp-hero-content { padding: 5rem 1rem 3rem; }
-          .sp-hero-actions { flex-direction: column; width: 100%; max-width: 280px; }
-          .sp-btn-white, .sp-btn-glass { width: 100%; text-align: center; }
+          .sp-hero-content { padding: 4.5rem 1rem 2.5rem; }
+          .sp-hero-actions { flex-direction: column; width: 100%; max-width: 280px; gap: 0.75rem; }
+          .sp-btn-white, .sp-btn-glass { width: 100%; text-align: center; padding: 0.8rem 1.6rem; }
           .sp-countdown-grid { grid-template-columns: repeat(2, 1fr); gap: 0.65rem; }
-          .sp-countdown-card { padding: 1rem 0.8rem; }
+          .sp-countdown-card { padding: 0.9rem 0.75rem; }
           .sp-timeline::before { left: 1rem; }
           .sp-timeline-icon { width: 34px; height: 34px; font-size: 0.85rem; }
-          .pass-holo-badge { width: 100%; height: auto; min-height: 420px; }
+          .pass-holo-badge { width: 100%; height: auto; min-height: 400px; padding: 1.5rem; }
         }
       `}</style>
     </main>

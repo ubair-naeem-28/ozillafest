@@ -20,7 +20,11 @@ app.use(
         return
       }
 
-      if (env.corsOrigins.includes(origin)) {
+      const isAllowedConfig = env.corsOrigins.includes(origin)
+      const isGitHubPages = /^https:\/\/[a-zA-Z0-9-]+\.github\.io$/.test(origin)
+      const isLocalhost = /^http:\/\/(localhost|127\.0\.0\.1)(:\d+)?$/.test(origin)
+
+      if (isAllowedConfig || isGitHubPages || isLocalhost) {
         callback(null, true)
         return
       }

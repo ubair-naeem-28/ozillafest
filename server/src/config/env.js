@@ -18,7 +18,7 @@ export const env = {
   port: Number(process.env.PORT || 5000),
   mongoUri: process.env.MONGODB_URI || process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/prism_event_and_tour',
   jwtSecret: process.env.JWT_SECRET || 'change-me',
-  corsOrigins: (process.env.CORS_ORIGIN || 'http://localhost:8080,http://127.0.0.1:8080')
+  corsOrigins: (process.env.CORS_ORIGIN || 'http://localhost:8080,http://127.0.0.1:8080,http://localhost:5173,http://127.0.0.1:5173,https://ubair-naeem-28.github.io')
     .split(',')
     .map((value) => value.trim())
     .filter(Boolean),

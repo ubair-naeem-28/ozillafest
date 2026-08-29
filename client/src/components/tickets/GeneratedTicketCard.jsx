@@ -57,127 +57,161 @@ function GeneratedTicketCard({ ticket, actionTo, actionLabel = 'View Ticket' }) 
   const bookingId = ticket.bookingId || ticket.requestId || ticket.id
   const statusMeta = getStatusMeta(ticket.status)
   const isApproved = ticket.status === 'approved'
+  const passTypeLabel = `${(ticket.ticketType || 'VIP').toUpperCase()} PASS`
+  const formattedEventDate = ticket.eventDate ? formatDate(ticket.eventDate) : 'Nov 01, 2026'
+  const festivalDayLabel = ticket.festivalDay === 'day2' ? 'Day 2' : 'Day 1'
 
   const downloadCanvas = (canvas) => {
     const link = document.createElement('a')
     link.href = canvas.toDataURL('image/png')
-    link.download = `ozilla-ticket-${ticketNumber}.png`
+    link.download = `ozilla-pass-${ticketNumber}.png`
     link.click()
   }
 
   const handleDownloadTicket = async () => {
-    const ticketNode = ticketCardRef.current
     const qrCanvas = qrWrapRef.current?.querySelector('canvas')
-    if (!ticketNode || !qrCanvas) return
 
-    const rect = ticketNode.getBoundingClientRect()
-    const scale = Math.min(2, window.devicePixelRatio || 1.5)
+    // High-resolution canvas render for crisp ticket badge image
+    const width = 1200
+    const height = 440
     const canvas = document.createElement('canvas')
-    const width = Math.ceil(rect.width)
-    const height = Math.ceil(rect.height)
-    canvas.width = Math.ceil(width * scale)
-    canvas.height = Math.ceil(height * scale)
+    canvas.width = width
+    canvas.height = height
 
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    ctx.scale(scale, scale)
-    const gradient = ctx.createLinearGradient(0, 0, width, height)
-    gradient.addColorStop(0, '#fffaf2')
-    gradient.addColorStop(0.52, '#edf5f0')
-    gradient.addColorStop(1, '#f5e6dc')
-    ctx.fillStyle = gradient
-    ctx.fillRect(0, 0, width, height)
+    // Outer dark gradient matching user pass design
+    const cardGradient = ctx.createLinearGradient(0, 0, width, height)
+    cardGradient.addColorStop(0, '#020d0f')
+    cardGradient.addColorStop(0.46, '#062828')
+    cardGradient.addColorStop(1, '#23081e')
 
-    const cardGradient = ctx.createLinearGradient(18, 18, width - 18, height - 18)
-    cardGradient.addColorStop(0, '#ffffff')
-    cardGradient.addColorStop(1, '#f6efe4')
-    roundRect(ctx, 14, 14, width - 28, height - 28, 28)
+    roundRect(ctx, 4, 4, width - 8, height - 8, 38)
     ctx.fillStyle = cardGradient
     ctx.fill()
-    ctx.strokeStyle = '#e8c879'
+
+    // Pass glowing border stroke
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)'
+    ctx.lineWidth = 3
+    ctx.stroke()
+
+    // Inner subtle glow accent at the top edge
+    const accentGrad = ctx.createLinearGradient(80, 0, width - 80, 0)
+    accentGrad.addColorStop(0, 'rgba(255, 189, 89, 0.7)')
+    accentGrad.addColorStop(0.5, 'rgba(14, 165, 233, 0.5)')
+    accentGrad.addColorStop(1, 'rgba(236, 72, 153, 0.6)')
+    ctx.strokeStyle = accentGrad
+    ctx.lineWidth = 3.5
+    ctx.beginPath()
+    ctx.moveTo(90, 6)
+    ctx.lineTo(width - 90, 6)
+    ctx.stroke()
+
+    // Top-Left: Pass Type & Festival Title
+    ctx.fillStyle = '#ffffff'
+    ctx.font = '800 20px "Segoe UI", Arial, sans-serif'
+    ctx.textAlign = 'left'
+    ctx.fillText(passTypeLabel, 54, 66)
+
+    ctx.fillStyle = '#ff9f1c'
+    ctx.font = '800 13px "Segoe UI", Arial, sans-serif'
+    ctx.fillText('OZILLA FESTIVAL 2026', 54, 94)
+
+    // Middle-Left: Attendee Name
+    const fullName = ticket.fullName || ticket.name || 'Festival Guest'
+    ctx.fillStyle = '#ffffff'
+    ctx.font = '800 36px "Segoe UI", Arial, sans-serif'
+    drawWrappedText(ctx, fullName, 54, 152, width - 360, 42)
+
+    // Attendee Email
+    const email = ticket.email || '-'
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.78)'
+    ctx.font = '600 17px "Segoe UI", Arial, sans-serif'
+    ctx.fillText(email, 54, 198)
+
+    // Bottom Meta Chips / Row (Date, Day, Location, Booking ID)
+    const metaChips = [
+      { label: 'DATE', val: formattedEventDate },
+      { label: 'DAY', val: festivalDayLabel },
+      { label: 'LOCATION', val: ticket.location || 'Lahore, Pakistan' },
+      { label: 'BOOKING ID', val: String(bookingId) }
+    ]
+
+    const chipY = 246
+    let chipX = 54
+    metaChips.forEach((chip) => {
+      ctx.font = '700 11px "Segoe UI", Arial, sans-serif'
+      const labelW = ctx.measureText(chip.label).width
+      ctx.font = '800 14px "Segoe UI", Arial, sans-serif'
+      const valW = ctx.measureText(chip.val).width
+      const chipW = Math.max(labelW, valW) + 28
+      const chipH = 58
+
+      roundRect(ctx, chipX, chipY, chipW, chipH, 12)
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.07)'
+      ctx.fill()
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.12)'
+      ctx.lineWidth = 1.5
+      ctx.stroke()
+
+      ctx.fillStyle = '#ff9f1c'
+      ctx.font = '800 11px "Segoe UI", Arial, sans-serif'
+      ctx.textAlign = 'left'
+      ctx.fillText(chip.label, chipX + 14, chipY + 22)
+
+      ctx.fillStyle = '#ffffff'
+      ctx.font = '800 14px "Segoe UI", Arial, sans-serif'
+      ctx.fillText(chip.val, chipX + 14, chipY + 44)
+
+      chipX += chipW + 14
+    })
+
+    // Footer note
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.45)'
+    ctx.font = '600 13px "Segoe UI", Arial, sans-serif'
+    ctx.textAlign = 'left'
+    ctx.fillText(`Official Festival Entry Pass • ID: ${ticketNumber} • Verify at entrance`, 54, 388)
+
+    // Top-Right: Ticket ID block
+    ctx.fillStyle = '#ffbd59'
+    ctx.font = '800 16px "Segoe UI", Arial, sans-serif'
+    ctx.textAlign = 'right'
+    ctx.fillText('TICKET ID', width - 54, 66)
+
+    ctx.fillStyle = '#ffffff'
+    ctx.font = '800 20px "Segoe UI", Arial, monospace'
+    ctx.fillText(String(ticketNumber), width - 54, 96)
+
+    // Right: QR Code Box
+    const qrSize = 190
+    const qrX = width - qrSize - 54
+    const qrY = 132
+
+    roundRect(ctx, qrX, qrY, qrSize, qrSize, 18)
+    ctx.fillStyle = '#ffffff'
+    ctx.fill()
+    ctx.strokeStyle = 'rgba(255, 189, 89, 0.4)'
     ctx.lineWidth = 2
     ctx.stroke()
 
-    const passGradient = ctx.createLinearGradient(28, 90, width - 28, 190)
-    passGradient.addColorStop(0, '#041719')
-    passGradient.addColorStop(0.6, '#073332')
-    passGradient.addColorStop(1, '#39132f')
-    roundRect(ctx, 28, 86, width - 56, 112, 20)
-    ctx.fillStyle = passGradient
-    ctx.fill()
-
-    ctx.fillStyle = '#ff8a00'
-    ctx.font = '700 11px Arial'
-    ctx.fillText('OZILLA FESTIVAL 2026', 28, 40)
-
-    ctx.fillStyle = '#102525'
-    ctx.font = '800 22px Arial'
-    ctx.fillText(ticket.eventName || 'Ozilla Festival', 28, 68)
-
-    ctx.fillStyle = '#ffffff'
-    ctx.font = '700 12px Arial'
-    ctx.fillText(`${ticket.ticketType || 'Festival'} Pass`.toUpperCase(), 44, 118)
-
-    ctx.font = '800 24px Arial'
-    drawWrappedText(ctx, ticket.fullName || ticket.name || 'Festival Guest', 44, 146, width - 150, 26)
-
-    ctx.fillStyle = 'rgba(255,255,255,0.75)'
-    ctx.font = '700 11px Arial'
-    drawWrappedText(ctx, ticket.email || '-', 44, 180, width - 150, 16)
-
-    ctx.fillStyle = '#ffbd59'
-    ctx.font = '800 10px Arial'
-    ctx.textAlign = 'right'
-    ctx.fillText('TICKET ID', width - 42, 126)
-    ctx.fillStyle = '#ffffff'
-    ctx.font = '800 11px Arial'
-    drawWrappedText(ctx, String(ticketNumber), width - 120, 148, 82, 14, 'right')
-    ctx.textAlign = 'left'
-
-    const metaRows = [
-      ['Booking ID', bookingId],
-      ['Date', ticket.eventDate ? formatDate(ticket.eventDate) : '-'],
-      ['Time', ticket.eventTime || '-'],
-      ['Day', ticket.festivalDay === 'day2' ? 'Day 2' : 'Day 1'],
-      ['Location', ticket.location || 'Lahore, Pakistan'],
-      ['Quantity', ticket.quantity || 1]
-    ]
-    let y = 222
-    metaRows.forEach(([label, value], index) => {
-      const col = index % 2
-      const row = Math.floor(index / 2)
-      const boxW = (width - 68) / 2
-      const x = 28 + col * (boxW + 12)
-      const boxY = y + row * 58
-      roundRect(ctx, x, boxY, boxW, 46, 10)
-      ctx.fillStyle = '#ffffff'
-      ctx.fill()
-      ctx.strokeStyle = '#dce9e4'
-      ctx.stroke()
-      ctx.fillStyle = '#ff8a00'
-      ctx.font = '800 9px Arial'
-      ctx.fillText(String(label).toUpperCase(), x + 10, boxY + 16)
+    if (qrCanvas && isApproved) {
+      ctx.drawImage(qrCanvas, qrX + 12, qrY + 12, qrSize - 24, qrSize - 24)
+    } else {
       ctx.fillStyle = '#102525'
-      ctx.font = '800 11px Arial'
-      drawWrappedText(ctx, String(value), x + 10, boxY + 33, boxW - 20, 12)
-    })
+      ctx.font = '800 13px "Segoe UI", Arial, sans-serif'
+      ctx.textAlign = 'center'
+      ctx.fillText('QR CODE', qrX + qrSize / 2, qrY + qrSize / 2 - 8)
+      ctx.font = '600 11px "Segoe UI", Arial, sans-serif'
+      ctx.fillStyle = '#6b7280'
+      ctx.fillText(isApproved ? 'GENERATING' : 'PENDING APPROVAL', qrX + qrSize / 2, qrY + qrSize / 2 + 12)
+    }
 
-    const qrSize = Math.min(150, Math.max(112, width * 0.34))
-    const qrX = (width - qrSize) / 2
-    const qrY = Math.min(height - qrSize - 76, 410)
-    roundRect(ctx, qrX - 12, qrY - 12, qrSize + 24, qrSize + 24, 18)
-    ctx.fillStyle = '#ffffff'
-    ctx.fill()
-    ctx.strokeStyle = '#ffbd59'
-    ctx.stroke()
-    ctx.drawImage(qrCanvas, qrX, qrY, qrSize, qrSize)
-
-    ctx.fillStyle = '#55706f'
-    ctx.font = '700 11px Arial'
+    // Text under QR code
+    ctx.fillStyle = '#ffbd59'
+    ctx.font = '800 11px "Segoe UI", Arial, sans-serif'
     ctx.textAlign = 'center'
-    ctx.fillText('Scan this QR code at the event entrance.', width / 2, qrY + qrSize + 34)
-    ctx.textAlign = 'left'
+    ctx.fillText('SCAN AT ENTRANCE', qrX + qrSize / 2, qrY + qrSize + 28)
 
     downloadCanvas(canvas)
   }
@@ -190,8 +224,8 @@ function GeneratedTicketCard({ ticket, actionTo, actionLabel = 'View Ticket' }) 
     if (!navigator.share) return
     try {
       await navigator.share({
-        title: ticket.eventName || 'Ozilla Festival Ticket',
-        text: `Ozilla Festival ticket ${ticketNumber}`
+        title: ticket.eventName || 'Ozilla Festival Ticket Pass',
+        text: `Ozilla Festival Ticket: ${ticketNumber} (${passTypeLabel})`
       })
     } catch {
       // Sharing was cancelled or unavailable.
@@ -199,459 +233,465 @@ function GeneratedTicketCard({ ticket, actionTo, actionLabel = 'View Ticket' }) 
   }
 
   return (
-    <article className="premium-ticket-card" ref={ticketCardRef}>
-      <div className="premium-ticket-glow" aria-hidden="true" />
-      <div className="premium-ticket-header">
-        <div>
-          <p>Ozilla Festival VIP Pass</p>
-          <h3>{ticket.eventName || 'Ozilla Festival'}</h3>
-        </div>
-        <span className={`premium-ticket-status ${statusMeta.className}`}>{statusMeta.label}</span>
-      </div>
+    <div className="ticket-pass-wrapper" ref={ticketCardRef}>
+      {/* Sleek Dark Horizontal Pass Badge matching the exact provided design */}
+      <div className="ticket-pass-badge">
+        <div className="ticket-pass-glow" aria-hidden="true" />
 
-      <div className="premium-ticket-pass">
-        <div className="premium-ticket-pass-main">
-          <span className="premium-ticket-type">{ticket.ticketType || 'festival'} pass</span>
-          <strong>{ticket.fullName || ticket.name || 'Festival Guest'}</strong>
-          <small>{ticket.email || '-'}</small>
-        </div>
-        <div className="premium-ticket-stub">
-          <span>Ticket ID</span>
-          <strong>{ticketNumber}</strong>
-        </div>
-      </div>
+        {/* Left Side: Pass Info, Attendee Details, Date, Day, Meta */}
+        <div className="ticket-pass-left">
+          <div className="ticket-pass-top-row">
+            <div className="ticket-pass-type-badge">{passTypeLabel}</div>
+            <div className="ticket-pass-festival-tag">OZILLA FESTIVAL 2026</div>
+          </div>
 
-      <div className="premium-ticket-meta">
-        <div><span>Booking ID</span><strong>{bookingId}</strong></div>
-        <div><span>Date</span><strong>{ticket.eventDate ? formatDate(ticket.eventDate) : '-'}</strong></div>
-        <div><span>Time</span><strong>{ticket.eventTime || '-'}</strong></div>
-        <div><span>Day</span><strong>{ticket.festivalDay === 'day2' ? 'Day 2' : 'Day 1'}</strong></div>
-        <div><span>Location</span><strong>{ticket.location || 'Lahore, Pakistan'}</strong></div>
-        <div><span>Quantity</span><strong>{ticket.quantity || 1}</strong></div>
-      </div>
+          <div className="ticket-pass-identity">
+            <h2 className="ticket-pass-name">{ticket.fullName || ticket.name || 'Festival Guest'}</h2>
+            <p className="ticket-pass-email">{ticket.email || '-'}</p>
+          </div>
 
-      <div className="premium-ticket-details">
-        <span>Entry Gate: Main Festival Gate</span>
-        <span>Parking: Partner parking zones</span>
-        <span>Organizer: Ozilla Festival</span>
-      </div>
+          <div className="ticket-pass-meta-row">
+            <div className="ticket-pass-chip">
+              <span className="ticket-pass-chip-label">DATE</span>
+              <strong className="ticket-pass-chip-value">{formattedEventDate}</strong>
+            </div>
+            <div className="ticket-pass-chip">
+              <span className="ticket-pass-chip-label">DAY</span>
+              <strong className="ticket-pass-chip-value">{festivalDayLabel}</strong>
+            </div>
+            <div className="ticket-pass-chip">
+              <span className="ticket-pass-chip-label">BOOKING ID</span>
+              <strong className="ticket-pass-chip-value">{bookingId}</strong>
+            </div>
+          </div>
 
-      {isApproved ? (
-        <div className="premium-ticket-qr" ref={qrWrapRef}>
-          <QrCodeDisplay ticket={ticket} size={132} showCaption={false} />
-          <p>Scan this QR code at the event entrance.</p>
-          <div className="premium-ticket-qr-actions">
-            <button type="button" onClick={handleDownloadTicket}>Download</button>
-            <button type="button" onClick={handlePrint}>Print</button>
-            <button type="button" onClick={handleShare}>Share</button>
+          <div className="ticket-pass-footnote">
+            <span>Official Festival Entry Pass • Valid for 1 Person</span>
           </div>
         </div>
-      ) : (
-        <div className="premium-ticket-qr premium-ticket-qr-pending">
-          <strong>QR Pending</strong>
-          <p>Your QR ticket will appear after admin approval.</p>
-        </div>
-      )}
 
-      <div className="premium-ticket-actions">
-        <Link to={actionTo || `/tickets/view/${ticket.id}`}>{actionLabel}</Link>
-        <button type="button">Save to Wallet</button>
-        <Link to="/contact">Contact Support</Link>
+        {/* Right Side: Ticket ID, QR Code */}
+        <div className="ticket-pass-right">
+          <div className="ticket-pass-id-block">
+            <span className="ticket-pass-id-label">TICKET ID</span>
+            <strong className="ticket-pass-id-value">{ticketNumber}</strong>
+          </div>
+
+          <div className="ticket-pass-qr-box" ref={qrWrapRef}>
+            {isApproved ? (
+              <QrCodeDisplay ticket={ticket} size={118} showCaption={false} />
+            ) : (
+              <div className="ticket-pass-qr-pending">
+                <span>QR Pending</span>
+                <small>Approval Required</small>
+              </div>
+            )}
+            <span className="ticket-pass-scan-hint">SCAN AT ENTRANCE</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Action Toolbar Below The Pass */}
+      <div className="ticket-pass-actions-bar">
+        <div className="ticket-pass-status-pill">
+          <span className={`status-dot ${statusMeta.className}`} />
+          <span>Status: <strong>{statusMeta.label}</strong></span>
+        </div>
+
+        <div className="ticket-pass-button-group">
+          {isApproved ? (
+            <button type="button" className="btn-pass-download" onClick={handleDownloadTicket}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                <polyline points="7 10 12 15 17 10" />
+                <line x1="12" y1="15" x2="12" y2="3" />
+              </svg>
+              Download Pass
+            </button>
+          ) : (
+            <button type="button" className="btn-pass-download disabled" disabled title="Available after verification">
+              Download Pass (Pending)
+            </button>
+          )}
+
+          <button type="button" className="btn-pass-secondary" onClick={handlePrint}>
+            Print
+          </button>
+          <button type="button" className="btn-pass-secondary" onClick={handleShare}>
+            Share
+          </button>
+
+          {actionTo && (
+            <Link to={actionTo} className="btn-pass-link">
+              {actionLabel}
+            </Link>
+          )}
+        </div>
       </div>
 
       <style>{`
-        .premium-ticket-card {
+        .ticket-pass-wrapper {
+          width: 100%;
+          max-width: 960px;
+          margin: 0 auto;
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+
+        .ticket-pass-badge {
           position: relative;
           overflow: hidden;
           width: 100%;
-          max-width: 100%;
-          min-height: 100%;
-          border: 1px solid rgba(11, 79, 76, 0.14);
           border-radius: 28px;
-          padding: clamp(1rem, 2.4vw, 1.2rem);
-          background:
-            linear-gradient(145deg, rgba(255, 255, 255, 0.74), rgba(255, 250, 242, 0.48)),
-            radial-gradient(circle at 0% 0%, rgba(255, 189, 89, 0.16), transparent 14rem);
-          box-shadow: 0 28px 78px rgba(2, 11, 13, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.55);
-          backdrop-filter: blur(20px);
-          transition: transform 240ms ease, box-shadow 240ms ease, border-color 240ms ease;
-        }
-
-        .premium-ticket-card,
-        .premium-ticket-card * {
+          padding: clamp(1.2rem, 3vw, 2rem);
+          background: linear-gradient(135deg, #020d0f 0%, #062828 46%, #23081e 100%);
+          border: 1px solid rgba(255, 255, 255, 0.16);
+          box-shadow: 0 24px 60px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+          display: grid;
+          grid-template-columns: 1fr auto;
+          gap: 1.5rem;
+          align-items: center;
+          color: #ffffff;
           box-sizing: border-box;
-          min-width: 0;
+          transition: transform 260ms ease, box-shadow 260ms ease;
         }
 
-        .premium-ticket-card:hover {
-          transform: translateY(-6px);
-          border-color: rgba(255, 176, 0, 0.34);
-          box-shadow: 0 34px 90px rgba(2, 11, 13, 0.15), 0 0 34px rgba(255, 176, 0, 0.08);
+        .ticket-pass-badge:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 30px 75px rgba(0, 0, 0, 0.55), 0 0 35px rgba(255, 189, 89, 0.12);
         }
 
-        .premium-ticket-glow {
+        .ticket-pass-glow {
           position: absolute;
-          inset: -30% -20% auto auto;
-          width: 42%;
-          aspect-ratio: 1;
-          border-radius: 999px;
-          background: rgba(255, 189, 89, 0.22);
-          filter: blur(34px);
+          top: -40%;
+          right: 20%;
+          width: 280px;
+          height: 280px;
+          background: radial-gradient(circle, rgba(255, 189, 89, 0.18), transparent 70%);
+          filter: blur(40px);
           pointer-events: none;
         }
 
-        .premium-ticket-header,
-        .premium-ticket-pass,
-        .premium-ticket-actions,
-        .premium-ticket-qr-actions {
+        .ticket-pass-left {
           display: flex;
-          align-items: center;
-          justify-content: space-between;
-          gap: 0.85rem;
-        }
-
-        .premium-ticket-header {
-          position: relative;
+          flex-direction: column;
+          gap: 1rem;
+          min-width: 0;
           z-index: 1;
         }
 
-        .premium-ticket-header p,
-        .premium-ticket-type,
-        .premium-ticket-stub span,
-        .premium-ticket-meta span {
+        .ticket-pass-top-row {
+          display: flex;
+          align-items: center;
+          gap: 0.8rem;
+          flex-wrap: wrap;
+        }
+
+        .ticket-pass-type-badge {
+          background: rgba(255, 255, 255, 0.12);
+          border: 1px solid rgba(255, 255, 255, 0.22);
+          color: #ffffff;
+          font-size: 0.76rem;
+          font-weight: 900;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          padding: 0.35rem 0.8rem;
+          border-radius: 999px;
+        }
+
+        .ticket-pass-festival-tag {
+          color: #ff9f1c;
+          font-size: 0.76rem;
+          font-weight: 900;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+        }
+
+        .ticket-pass-identity {
+          display: flex;
+          flex-direction: column;
+          gap: 0.25rem;
+        }
+
+        .ticket-pass-name {
           margin: 0;
-          color: #ff8a00;
-          font-size: 0.68rem;
-          font-weight: 950;
+          color: #ffffff;
+          font-size: clamp(1.4rem, 3.2vw, 2.3rem);
+          font-weight: 900;
+          line-height: 1.1;
+          letter-spacing: -0.03em;
+          overflow-wrap: anywhere;
+        }
+
+        .ticket-pass-email {
+          margin: 0;
+          color: rgba(255, 255, 255, 0.74);
+          font-size: clamp(0.85rem, 1.8vw, 1.05rem);
+          font-weight: 500;
+          overflow-wrap: anywhere;
+        }
+
+        .ticket-pass-meta-row {
+          display: flex;
+          align-items: center;
+          gap: 0.65rem;
+          flex-wrap: wrap;
+        }
+
+        .ticket-pass-chip {
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          border-radius: 12px;
+          padding: 0.45rem 0.75rem;
+          display: flex;
+          flex-direction: column;
+          gap: 0.1rem;
+        }
+
+        .ticket-pass-chip-label {
+          color: #ff9f1c;
+          font-size: 0.62rem;
+          font-weight: 900;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+        }
+
+        .ticket-pass-chip-value {
+          color: #ffffff;
+          font-size: 0.85rem;
+          font-weight: 800;
+          white-space: nowrap;
+        }
+
+        .ticket-pass-footnote {
+          color: rgba(255, 255, 255, 0.45);
+          font-size: 0.72rem;
+          font-weight: 600;
+          letter-spacing: 0.04em;
+        }
+
+        .ticket-pass-right {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 0.75rem;
+          z-index: 1;
+          flex-shrink: 0;
+        }
+
+        .ticket-pass-id-block {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-end;
+          gap: 0.15rem;
+          text-align: right;
+        }
+
+        .ticket-pass-id-label {
+          color: #ffbd59;
+          font-size: 0.72rem;
+          font-weight: 900;
           letter-spacing: 0.12em;
           text-transform: uppercase;
         }
 
-        .premium-ticket-header h3 {
-          margin: 0.25rem 0 0;
-          color: #102525;
-          font-size: clamp(1.25rem, 2.5vw, 1.85rem);
-          line-height: 1.04;
-          letter-spacing: -0.04em;
-          overflow-wrap: anywhere;
+        .ticket-pass-id-value {
+          color: #ffffff;
+          font-size: clamp(0.95rem, 2vw, 1.25rem);
+          font-weight: 900;
+          font-family: 'Courier New', Courier, monospace, sans-serif;
+          letter-spacing: 0.04em;
         }
 
-        .premium-ticket-status {
-          flex: 0 0 auto;
-          border-radius: 999px;
-          padding: 0.55rem 0.75rem;
-          font-size: 0.74rem;
-          font-weight: 950;
-          text-transform: uppercase;
-          letter-spacing: 0.08em;
-        }
-
-        .premium-ticket-status.is-approved { color: #065f46; background: rgba(34, 197, 94, 0.14); box-shadow: 0 0 24px rgba(34, 197, 94, 0.14); }
-        .premium-ticket-status.is-submitted { color: #075985; background: rgba(14, 165, 233, 0.14); box-shadow: 0 0 24px rgba(14, 165, 233, 0.14); }
-        .premium-ticket-status.is-cancelled { color: #9f1239; background: rgba(244, 63, 94, 0.14); box-shadow: 0 0 24px rgba(244, 63, 94, 0.14); }
-        .premium-ticket-status.is-pending { color: #92400e; background: rgba(255, 189, 89, 0.2); box-shadow: 0 0 24px rgba(255, 176, 0, 0.12); }
-
-        .premium-ticket-pass {
-          position: relative;
-          overflow: hidden;
-          margin: 1rem 0;
-          border-radius: 24px;
-          padding: 1rem;
-          color: #fff;
-          background:
-            linear-gradient(135deg, rgba(4, 23, 25, 0.96), rgba(7, 51, 50, 0.88), rgba(57, 19, 47, 0.84)),
-            radial-gradient(circle at 18% 18%, rgba(255, 189, 89, 0.28), transparent 12rem);
-        }
-
-        .premium-ticket-pass::after {
-          content: '';
-          position: absolute;
-          inset: 0 auto 0 68%;
-          width: 1px;
-          border-left: 1px dashed rgba(255, 255, 255, 0.28);
-        }
-
-        .premium-ticket-pass::before {
-          content: '';
-          position: absolute;
-          inset: 0 auto 0 -40%;
-          width: 36%;
-          background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.24), transparent);
-          transform: skewX(-18deg);
-          animation: ticketPassShine 4s ease-in-out infinite;
-        }
-
-        .premium-ticket-pass-main,
-        .premium-ticket-stub {
-          position: relative;
-          z-index: 1;
-        }
-
-        .premium-ticket-pass-main strong {
-          display: block;
-          margin: 0.35rem 0;
-          color: #fff;
-          font-size: clamp(1.25rem, 3vw, 2rem);
-          line-height: 1.05;
-          letter-spacing: -0.04em;
-          overflow-wrap: anywhere;
-        }
-
-        .premium-ticket-pass-main small,
-        .premium-ticket-stub strong {
-          color: rgba(255, 255, 255, 0.76);
-          overflow-wrap: anywhere;
-        }
-
-        .premium-ticket-stub {
-          width: 30%;
-          display: grid;
-          gap: 0.35rem;
-          text-align: right;
-        }
-
-        .premium-ticket-meta {
-          display: grid;
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-          gap: 0.7rem;
-        }
-
-        .premium-ticket-meta div,
-        .premium-ticket-details span {
-          border: 1px solid rgba(11, 79, 76, 0.1);
+        .ticket-pass-qr-box {
+          background: #ffffff;
           border-radius: 16px;
-          padding: 0.75rem;
-          background: rgba(255, 255, 255, 0.54);
-          min-width: 0;
+          padding: 0.6rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.35rem;
+          box-shadow: 0 10px 25px rgba(0, 0, 0, 0.35);
         }
 
-        .premium-ticket-meta strong {
+        .ticket-pass-qr-box .bg-white {
+          padding: 0 !important;
+          border: none !important;
+          box-shadow: none !important;
+          border-radius: 0 !important;
+        }
+
+        .ticket-pass-qr-box canvas {
           display: block;
-          margin-top: 0.25rem;
-          color: #102525;
-          overflow-wrap: anywhere;
+          max-width: 120px;
+          height: auto;
+          border-radius: 6px;
         }
 
-        .premium-ticket-details {
-          display: grid;
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-          gap: 0.65rem;
-          margin-top: 0.75rem;
-          color: #315b59;
-          font-size: 0.9rem;
-          font-weight: 800;
-        }
-
-        .premium-ticket-details span {
-          overflow-wrap: anywhere;
-        }
-
-        .premium-ticket-qr {
-          display: grid;
-          justify-items: center;
-          gap: 0.65rem;
-          margin: 1rem 0;
-          border: 1px solid rgba(255, 189, 89, 0.24);
-          border-radius: 22px;
-          padding: 1rem;
-          background: rgba(255, 255, 255, 0.55);
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
-        }
-
-        .premium-ticket-qr > div > div {
-          max-width: 100%;
-          border-color: rgba(255, 189, 89, 0.5) !important;
-          box-shadow: 0 0 0 8px rgba(255, 189, 89, 0.08), 0 18px 42px rgba(255, 138, 0, 0.16) !important;
-          animation: ticketQrPulse 2.6s ease-in-out infinite;
-        }
-
-        .premium-ticket-qr canvas {
-          max-width: 100% !important;
-          height: auto !important;
-        }
-
-        .premium-ticket-qr p {
-          margin: 0;
-          color: #55706f;
-          text-align: center;
-          line-height: 1.5;
-        }
-
-        .premium-ticket-qr-pending strong {
-          display: grid;
-          place-items: center;
-          width: 120px;
-          height: 120px;
-          border-radius: 22px;
-          color: #92400e;
-          background: rgba(255, 189, 89, 0.18);
-        }
-
-        .premium-ticket-actions a,
-        .premium-ticket-actions button,
-        .premium-ticket-qr-actions button {
-          min-height: 44px;
-          display: inline-flex;
+        .ticket-pass-qr-pending {
+          width: 118px;
+          height: 118px;
+          display: flex;
+          flex-direction: column;
           align-items: center;
           justify-content: center;
-          border: 0;
-          border-radius: 999px;
-          padding: 0 0.9rem;
-          font-weight: 950;
-          cursor: pointer;
-          transition: transform 200ms ease, box-shadow 200ms ease;
           text-align: center;
-          white-space: normal;
+          color: #92400e;
+          background: #fef3c7;
+          border-radius: 10px;
+          padding: 0.5rem;
+          gap: 0.2rem;
         }
 
-        .premium-ticket-actions a:focus-visible,
-        .premium-ticket-actions button:focus-visible,
-        .premium-ticket-qr-actions button:focus-visible {
-          outline: 3px solid rgba(255, 189, 89, 0.72);
-          outline-offset: 4px;
-          box-shadow: 0 0 0 7px rgba(255, 189, 89, 0.16);
+        .ticket-pass-qr-pending span {
+          font-weight: 800;
+          font-size: 0.8rem;
         }
 
-        .premium-ticket-actions a:first-child {
-          color: #101819;
-          background: linear-gradient(135deg, #ffbd59, #ff8a00, #ff4d2e);
-          box-shadow: 0 18px 44px rgba(255, 111, 26, 0.24);
+        .ticket-pass-qr-pending small {
+          font-size: 0.68rem;
+          line-height: 1.1;
         }
 
-        .premium-ticket-actions a:last-child,
-        .premium-ticket-actions button,
-        .premium-ticket-qr-actions button {
-          color: #0b4f4c;
-          background: rgba(255, 255, 255, 0.72);
-          box-shadow: inset 0 0 0 1px rgba(11, 79, 76, 0.13);
+        .ticket-pass-scan-hint {
+          color: #102525;
+          font-size: 0.62rem;
+          font-weight: 900;
+          letter-spacing: 0.06em;
+          text-transform: uppercase;
         }
 
-        .premium-ticket-actions a:hover,
-        .premium-ticket-actions button:hover,
-        .premium-ticket-qr-actions button:hover {
-          transform: translateY(-2px);
+        .ticket-pass-actions-bar {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1rem;
+          flex-wrap: wrap;
+          padding: 0.4rem 0.2rem;
         }
 
-        @keyframes ticketPassShine {
-          0%, 55% { transform: translateX(0) skewX(-18deg); opacity: 0; }
-          68% { opacity: 1; }
-          100% { transform: translateX(420%) skewX(-18deg); opacity: 0; }
+        .ticket-pass-status-pill {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          font-size: 0.88rem;
+          color: #374151;
         }
 
-        @keyframes ticketQrPulse {
-          0%, 100% { box-shadow: 0 0 0 8px rgba(255, 189, 89, 0.08), 0 18px 42px rgba(255, 138, 0, 0.16) !important; }
-          50% { box-shadow: 0 0 0 13px rgba(255, 189, 89, 0.13), 0 24px 58px rgba(255, 138, 0, 0.22) !important; }
+        .status-dot {
+          width: 10px;
+          height: 10px;
+          border-radius: 999px;
+          background: #f59e0b;
         }
 
-        @media (max-width: 720px) {
-          .premium-ticket-header,
-          .premium-ticket-actions,
-          .premium-ticket-pass {
-            display: grid;
-          }
+        .status-dot.is-approved { background: #10b981; box-shadow: 0 0 10px rgba(16, 185, 129, 0.6); }
+        .status-dot.is-submitted { background: #0ea5e9; }
+        .status-dot.is-cancelled { background: #f43f5e; }
 
-          .premium-ticket-stub {
-            width: 100%;
-            text-align: left;
-          }
+        .ticket-pass-button-group {
+          display: flex;
+          align-items: center;
+          gap: 0.65rem;
+          flex-wrap: wrap;
+        }
 
-          .premium-ticket-pass::after {
-            display: none;
-          }
+        .btn-pass-download {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.5rem;
+          background: linear-gradient(135deg, #059669, #047857);
+          color: #ffffff;
+          font-weight: 800;
+          font-size: 0.88rem;
+          padding: 0.6rem 1.1rem;
+          border-radius: 12px;
+          border: none;
+          cursor: pointer;
+          transition: all 200ms ease;
+          box-shadow: 0 4px 12px rgba(5, 150, 105, 0.3);
+        }
 
-          .premium-ticket-details,
-          .premium-ticket-meta {
+        .btn-pass-download:hover:not(:disabled) {
+          background: linear-gradient(135deg, #10b981, #059669);
+          transform: translateY(-1px);
+          box-shadow: 0 6px 18px rgba(5, 150, 105, 0.45);
+        }
+
+        .btn-pass-download.disabled,
+        .btn-pass-download:disabled {
+          background: #9ca3af;
+          cursor: not-allowed;
+          box-shadow: none;
+        }
+
+        .btn-pass-secondary {
+          background: #ffffff;
+          border: 1px solid #d1d5db;
+          color: #374151;
+          font-weight: 700;
+          font-size: 0.88rem;
+          padding: 0.6rem 1rem;
+          border-radius: 12px;
+          cursor: pointer;
+          transition: all 180ms ease;
+        }
+
+        .btn-pass-secondary:hover {
+          background: #f9fafb;
+          border-color: #9ca3af;
+        }
+
+        .btn-pass-link {
+          color: #2563eb;
+          font-weight: 700;
+          font-size: 0.88rem;
+          padding: 0.6rem 0.8rem;
+          text-decoration: none;
+          transition: color 180ms ease;
+        }
+
+        .btn-pass-link:hover {
+          text-decoration: underline;
+        }
+
+        @media (max-width: 680px) {
+          .ticket-pass-badge {
             grid-template-columns: 1fr;
+            text-align: center;
           }
 
-          .premium-ticket-actions a,
-          .premium-ticket-actions button {
-            width: 100%;
-          }
-        }
-
-        @media (max-width: 540px) {
-          .premium-ticket-card {
-            border-radius: 24px;
-            padding: 0.95rem;
+          .ticket-pass-left {
+            align-items: center;
           }
 
-          .premium-ticket-header {
-            align-items: start;
+          .ticket-pass-top-row,
+          .ticket-pass-meta-row {
+            justify-content: center;
           }
 
-          .premium-ticket-status {
-            width: fit-content;
-            max-width: 100%;
-          }
-
-          .premium-ticket-pass {
-            border-radius: 20px;
-            padding: 0.9rem;
-          }
-
-          .premium-ticket-meta div,
-          .premium-ticket-details span,
-          .premium-ticket-qr {
-            padding: 0.72rem;
-          }
-        }
-
-        @media (max-width: 420px) {
-          .premium-ticket-card {
-            border-radius: 22px;
-            padding: 0.85rem;
-          }
-
-          .premium-ticket-qr-actions {
-            display: grid;
+          .ticket-pass-right {
+            align-items: center;
             width: 100%;
           }
 
-          .premium-ticket-qr-actions button {
-            width: 100%;
-          }
-        }
-
-        @media (max-width: 360px) {
-          .premium-ticket-card {
-            border-radius: 18px;
-            padding: 0.72rem;
+          .ticket-pass-id-block {
+            align-items: center;
+            text-align: center;
           }
 
-          .premium-ticket-header h3 {
-            font-size: 1.12rem;
+          .ticket-pass-actions-bar {
+            flex-direction: column;
+            align-items: stretch;
           }
 
-          .premium-ticket-header p,
-          .premium-ticket-type,
-          .premium-ticket-stub span,
-          .premium-ticket-meta span {
-            font-size: 0.62rem;
-            letter-spacing: 0.09em;
-          }
-
-          .premium-ticket-pass-main strong {
-            font-size: 1.15rem;
-          }
-
-          .premium-ticket-actions a,
-          .premium-ticket-actions button,
-          .premium-ticket-qr-actions button {
-            min-height: 42px;
-            padding-inline: 0.72rem;
-            font-size: 0.86rem;
-          }
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-          .premium-ticket-pass::before,
-          .premium-ticket-qr > div > div {
-            animation: none;
+          .ticket-pass-button-group {
+            justify-content: center;
           }
         }
       `}</style>
-    </article>
+    </div>
   )
 }
 
