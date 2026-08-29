@@ -10,9 +10,10 @@ const rootDir = path.resolve(clientDir, '..')
 const distDir = path.resolve(clientDir, 'dist')
 const docsDir = path.resolve(rootDir, 'docs')
 
-const repoName = process.env.GITHUB_REPOSITORY ? process.env.GITHUB_REPOSITORY.split('/')[1] : null
-const isGitHubPages = process.env.GITHUB_PAGES === 'true' || Boolean(process.env.GITHUB_REPOSITORY)
-const base = process.env.VITE_BASE || (isGitHubPages ? (repoName ? `/${repoName}/` : '/ozillafest/') : '/')
+const repoName = process.env.GITHUB_REPOSITORY ? process.env.GITHUB_REPOSITORY.split('/')[1] : 'ozillafest'
+const base = process.env.VITE_BASE || `/${repoName}/`
+
+console.log(`Building client with base path: ${base}`)
 
 await build({
   configFile: false,
