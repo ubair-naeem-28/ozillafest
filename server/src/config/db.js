@@ -1,7 +1,14 @@
+import dns from 'dns'
 import mongoose from 'mongoose'
 import { env } from './env.js'
 import '../models/User.js'
 import '../models/Ticket.js'
+
+try {
+  dns.setServers(['8.8.8.8', '1.1.1.1'])
+} catch (_err) {
+  // Ignore in environments where setting DNS servers is restricted
+}
 
 const REQUIRED_COLLECTIONS = [
   'users',
