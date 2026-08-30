@@ -1,7 +1,11 @@
 import axios from 'axios'
 import { tokenStorage } from '../utils/tokenStorage.util'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000/api'
+const API_BASE_URL =
+  import.meta.env.VITE_API_BASE_URL ||
+  (typeof window !== 'undefined' && window.location.hostname.includes('github.io')
+    ? 'https://ozillafest.onrender.com/api'
+    : 'http://localhost:5000/api')
 
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
