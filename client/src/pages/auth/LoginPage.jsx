@@ -1,25 +1,18 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import LoginForm from '../../components/auth/LoginForm'
-import { assetUrl } from '../../utils/assetUrl.util'
 
 function LoginPage() {
   return (
-    <div className="login-premium-panel">
-      <div className="login-brand-lockup">
-        <img src={assetUrl('/assets/logo.jpeg')} alt="Ozilla Festival" className="login-brand-logo" />
-        <div>
-          <p className="auth-brand">Ozilla Festival 2026</p>
-          <h2 className="auth-title">Welcome Back</h2>
-          <p className="auth-subtitle">Continue your Ozilla Festival journey.</p>
-        </div>
-      </div>
+    <div className="auth-form-container">
       <LoginForm />
-      <div className="login-auth-footer">
+
+      <div className="auth-footer-links">
         <Link to="/privacy">Privacy Policy</Link>
-        <Link to="/terms">Terms & Conditions</Link>
-        <Link to="/contact">Need Help?</Link>
-        <Link to="/contact">Contact Support</Link>
+        <span>•</span>
+        <Link to="/terms">Terms of Service</Link>
+        <span>•</span>
+        <Link to="/#contact">Need Help?</Link>
       </div>
     </div>
   )

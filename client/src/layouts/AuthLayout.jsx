@@ -1,6 +1,7 @@
 import React from 'react'
-import { Outlet, useLocation } from 'react-router-dom'
+import { Outlet, useLocation, Link } from 'react-router-dom'
 import { assetUrl } from '../utils/assetUrl.util'
+import PlexusNetBackground from '../components/common/PlexusNetBackground'
 
 function AuthLayout({ children }) {
   const location = useLocation()
@@ -9,26 +10,67 @@ function AuthLayout({ children }) {
 
   return (
     <div className={`auth-page ${isLogin ? 'auth-page-login' : ''} ${isRegister ? 'auth-page-register' : ''}`}>
-      <div className="auth-shell">
-        <aside className="auth-side-panel">
-          <div className="auth-side-copy">
-            <div className="auth-side-logo-wrap">
-              <img
-                src={assetUrl('/assets/company-logo.jpeg')}
-                alt="Ozilla Festival"
-                className="auth-side-logo"
-              />
-            </div>
-            <h1 className="auth-side-title">Premium Concert & Event</h1>
-            <p className="auth-side-text">
-              Continue with your account to purchase tickets and manage festival access.
-            </p>
-          </div>
-        </aside>
+      <PlexusNetBackground
+        nodeColor="#EC4899"
+        lineColor="236, 72, 153"
+        secondaryColor="255, 90, 31"
+        maxDistance={135}
+        speed={0.5}
+      />
+      <div className="auth-ambient-blob-1" aria-hidden="true" />
+      <div className="auth-ambient-blob-2" aria-hidden="true" />
 
+      <div className="auth-centered-shell">
+        {/* Centered Brand & Title Header */}
+        <div className="auth-center-header">
+          <Link to="/" className="auth-center-logo-wrap" aria-label="Go to Home">
+            <img
+              src={assetUrl('/assets/ozilla/logo.png')}
+              alt="Ozilla Festival"
+              className="auth-center-logo"
+              onError={(e) => { e.currentTarget.src = assetUrl('/assets/logo.jpeg') }}
+            />
+            <div className="auth-center-brand-text">
+              <strong>OZILLA FESTIVAL</strong>
+              <span>OFFICIAL PORTAL · 2026</span>
+            </div>
+          </Link>
+
+          <span className="auth-center-tag">PAKISTAN'S PREMIER MUSIC FESTIVAL</span>
+
+          <h1 className="auth-center-title">
+            {isLogin ? 'Welcome Back to Ozilla' : 'Join Ozilla Festival 2026'}
+          </h1>
+        </div>
+
+        {/* Centered Sleek Glass Form Card */}
         <section className="auth-card">
-          {children || <Outlet />}
+          <div className="auth-card-tabs">
+            <Link
+              to={`/login${location.search}`}
+              className={`auth-tab-btn ${isLogin ? 'active' : ''}`}
+            >
+              Sign In
+            </Link>
+            <Link
+              to={`/register${location.search}`}
+              className={`auth-tab-btn ${isRegister ? 'active' : ''}`}
+            >
+              Create Account
+            </Link>
+          </div>
+
+          <div className="auth-card-body">
+            {children || <Outlet />}
+          </div>
         </section>
+
+        {/* Centered Event Date & Security Ribbon */}
+        <div className="auth-center-ribbon">
+          <span>📅 Nov 01, 2026</span>
+          <span>📍 Lahore, Pakistan</span>
+          <span>⭐ 10,000+ Fans</span>
+        </div>
       </div>
     </div>
   )
