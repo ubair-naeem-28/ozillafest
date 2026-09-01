@@ -19,6 +19,7 @@ import {
   handleJazzCashIpn,
   initiateEasypaisaCheckout,
   handleEasypaisaIpn,
+  createStripeCheckoutSession,
   requestTicket,
   uploadPaymentProof,
   verifyTicket,
@@ -59,6 +60,7 @@ router.post('/admin/:id/decision', requireAdmin, decideTicketAdmin)
 router.get('/my-tickets', getMyTickets)
 router.post('/:id/cancel', cancelTicket)
 router.post('/:id/pay-card', payWithCard)
+router.post('/:id/stripe-session', createStripeCheckoutSession)
 router.post('/:id/pay-jazzcash', payWithJazzCash)
 router.post('/:id/pay-easypaisa', payWithEasypaisa)
 router.post('/:id/payfast-checkout', initiatePayFastCheckout)

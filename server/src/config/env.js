@@ -40,6 +40,8 @@ export const env = {
   easypaisaStoreId: process.env.EASYPAISA_STORE_ID || '10089',
   easypaisaUser: process.env.EASYPAISA_USER || 'easypaisa_merchant',
   easypaisaPassword: process.env.EASYPAISA_PASS || 'easypaisa_pass',
+  stripeSecretKey: process.env.STRIPE_SECRET_KEY || '',
+  stripePublishableKey: process.env.STRIPE_PUBLISHABLE_KEY || '',
   adminEmails: (process.env.ADMIN_EMAILS || '')
     .split(',')
     .map((email) => email.trim().toLowerCase())

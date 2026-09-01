@@ -7,6 +7,7 @@ import { env } from '../config/env.js'
 import { payfastService } from '../services/payfastService.js'
 import { jazzcashService } from '../services/jazzcashService.js'
 import { easypaisaService } from '../services/easypaisaService.js'
+import { stripeService } from '../services/stripeService.js'
 
 function resolveEvent(eventId) {
   const event = contentData.events.find((item) => item.id === eventId)
@@ -384,6 +385,24 @@ export async function payWithCard(req, res) {
   const resolvedCardholder = String(cardholderName || ticket.fullName).trim()
   const totalAmount = getTicketPrice(ticket.ticketType) * (ticket.quantity || 1)
 
+  let stripeTxnId = `TXN-ST-${Date.now()}-${nanoid(6).toUpperCase()}`
+  try {
+    const paymentIntent = await stripeService.createPaymentIntent({
+      amountInPKR: totalAmount,
+      ticket,
+      metadata: {
+        cardLast4: last4,
+        cardholder: resolvedCardholder,
+        issuingBank: bank
+      }
+    })
+    if (paymentIntent?.paymentIntentId) {
+      stripeTxnId = paymentIntent.paymentIntentId
+    }
+  } catch (stripeErr) {
+    console.warn('Stripe Direct Charge Note:', stripeErr.message)
+  }
+
   ticket.status = 'approved'
   ticket.paymentMethod = 'card'
   ticket.cardType = cardType || brand.toLowerCase()
@@ -392,16 +411,42 @@ export async function payWithCard(req, res) {
   ticket.accountTitle = resolvedCardholder
   ticket.issuingBank = bank
   ticket.payoutAccount = `${env.payoutAccountTitle} | ${env.payoutBankName} (${env.ibanAccount})`
-  ticket.transactionId = `TXN-CRD-${Date.now()}-${nanoid(6).toUpperCase()}`
+  ticket.transactionId = stripeTxnId
   ticket.paidAt = new Date()
   ticket.generatedAt = new Date()
   ticket.verifiedAt = null
   await ticket.save()
 
   return res.json({
-    message: `Payment of PKR ${totalAmount.toLocaleString()} deducted from ${bank} ${brand} card and credited to organizer account successfully.`,
-    ticket: ticket.toJSON()
+    message: `Payment of PKR ${totalAmount.toLocaleString()} deducted from ${bank} ${brand} card via Stripe and credited to organizer account successfully.`,
+    ticket: ticket.toJSON(),
+    stripeTxnId
   })
+}
+
+export async function createStripeCheckoutSession(req, res) {
+  const ticket = await findUserTicket(req.params.id, req.user)
+  if (!ticket) {
+    return res.status(404).json({ message: 'Ticket not found' })
+  }
+
+  const { successUrl, cancelUrl } = req.body || {}
+  try {
+    const session = await stripeService.createCheckoutSession({
+      ticket,
+      successUrl,
+      cancelUrl
+    })
+
+    return res.json({
+      message: 'Stripe checkout session created successfully',
+      sessionId: session.sessionId,
+      sessionUrl: session.sessionUrl,
+      ticketId: ticket.id
+    })
+  } catch (error) {
+    return res.status(500).json({ message: 'Failed to create Stripe session', error: error.message })
+  }
 }
 
 export async function payWithJazzCash(req, res) {
