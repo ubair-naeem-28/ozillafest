@@ -5,6 +5,8 @@ import { User } from '../models/User.js'
 import { contentData } from '../data/contentData.js'
 import { env } from '../config/env.js'
 import { payfastService } from '../services/payfastService.js'
+import { jazzcashService } from '../services/jazzcashService.js'
+import { easypaisaService } from '../services/easypaisaService.js'
 
 function resolveEvent(eventId) {
   const event = contentData.events.find((item) => item.id === eventId)
@@ -701,4 +703,96 @@ export async function handlePayFastReturn(req, res) {
     : `${env.frontendUrl}/tickets`
 
   return res.redirect(destination)
+}
+
+export async function initiateJazzCashCheckout(req, res) {
+  const ticket = await findUserTicket(req.params.id, req.user)
+  if (!ticket) {
+    return res.status(404).json({ message: 'Ticket not found' })
+  }
+
+  const { returnUrl } = req.body || {}
+  const payload = jazzcashService.createCheckoutPayload(ticket, returnUrl)
+
+  return res.json({
+    message: 'JazzCash MPG session initiated successfully',
+    ticketId: ticket.id,
+    postUrl: 'https://sandbox.jazzcash.com.pk/CustomerPortal/transactionmanagement/merchantform/',
+    payload
+  })
+}
+
+export async function handleJazzCashIpn(req, res) {
+  const ipnData = req.body || {}
+  const billRef = String(ipnData.pp_BillReference || '')
+  const ticketId = billRef.startsWith('BILL-') ? billRef.replace('BILL-', '') : ipnData.pp_TxnRefNo
+
+  let ticket = null
+  if (ticketId) {
+    ticket = await Ticket.findOne({ $or: [{ _id: ticketId }, { ticketId: ticketId }] })
+  }
+
+  const isSuccess = jazzcashService.verifyCallback(ipnData)
+
+  if (ticket && isSuccess) {
+    ticket.status = 'approved'
+    ticket.paymentMethod = 'jazzcash'
+    ticket.transactionId = ipnData.pp_TxnRefNo || `TXN-JC-${Date.now()}`
+    ticket.paidAt = new Date()
+    ticket.generatedAt = new Date()
+    ticket.payoutAccount = `${env.jazzcashTitle} (JazzCash: ${env.jazzcashAccount})`
+    await ticket.save()
+  }
+
+  return res.status(200).json({
+    status: isSuccess ? 'success' : 'failed',
+    message: 'JazzCash IPN processed successfully',
+    ticketId: ticket?.id
+  })
+}
+
+export async function initiateEasypaisaCheckout(req, res) {
+  const ticket = await findUserTicket(req.params.id, req.user)
+  if (!ticket) {
+    return res.status(404).json({ message: 'Ticket not found' })
+  }
+
+  const { postBackUrl } = req.body || {}
+  const payload = easypaisaService.createCheckoutPayload(ticket, postBackUrl)
+
+  return res.json({
+    message: 'Easypaisa merchant checkout session initiated successfully',
+    ticketId: ticket.id,
+    postUrl: 'https://easypay.easypaisa.com.pk/easypay-service/rest/v4/initiate-ma-transaction',
+    payload
+  })
+}
+
+export async function handleEasypaisaIpn(req, res) {
+  const ipnData = req.body || {}
+  const orderId = String(ipnData.orderId || '')
+  const ticketId = orderId.includes('EP-OZ-') ? orderId.split('-')[2] : orderId
+
+  let ticket = null
+  if (ticketId) {
+    ticket = await Ticket.findOne({ $or: [{ _id: ticketId }, { ticketId: ticketId }] })
+  }
+
+  const isSuccess = easypaisaService.verifyCallback(ipnData)
+
+  if (ticket && isSuccess) {
+    ticket.status = 'approved'
+    ticket.paymentMethod = 'easypaisa'
+    ticket.transactionId = ipnData.transactionId || `TXN-EP-${Date.now()}`
+    ticket.paidAt = new Date()
+    ticket.generatedAt = new Date()
+    ticket.payoutAccount = `${env.easypaisaTitle} (Easypaisa: ${env.easypaisaAccount})`
+    await ticket.save()
+  }
+
+  return res.status(200).json({
+    status: isSuccess ? 'success' : 'failed',
+    message: 'Easypaisa IPN processed successfully',
+    ticketId: ticket?.id
+  })
 }

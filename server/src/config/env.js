@@ -32,8 +32,14 @@ export const env = {
   payfastLiveUrl: 'https://ipg.payfast.com.pk/api/token',
   jazzcashAccount: process.env.JAZZCASH_ACCOUNT || '0300-1234567',
   jazzcashTitle: process.env.JAZZCASH_TITLE || 'TALAL NASEER',
+  jazzcashMerchantId: process.env.JAZZCASH_MERCHANT_ID || 'MC12345',
+  jazzcashPassword: process.env.JAZZCASH_PASSWORD || 'password123',
+  jazzcashIntegritySalt: process.env.JAZZCASH_INTEGRITY_SALT || 'salt_ozilla_2026',
   easypaisaAccount: process.env.EASYPAISA_ACCOUNT || '0333-1234567',
   easypaisaTitle: process.env.EASYPAISA_TITLE || 'TALAL NASEER',
+  easypaisaStoreId: process.env.EASYPAISA_STORE_ID || '10089',
+  easypaisaUser: process.env.EASYPAISA_USER || 'easypaisa_merchant',
+  easypaisaPassword: process.env.EASYPAISA_PASS || 'easypaisa_pass',
   adminEmails: (process.env.ADMIN_EMAILS || '')
     .split(',')
     .map((email) => email.trim().toLowerCase())
