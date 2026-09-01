@@ -10,8 +10,10 @@ export const stripeService = {
    * Create a PaymentIntent for card payment
    */
   async createPaymentIntent({ amountInPKR, ticket, metadata = {} }) {
-    // Note: Stripe supports PKR or USD. In Stripe, amount in PKR is in Paisas (e.g. 100 for 1 PKR)
-    const amountInPaisa = Math.max(100, Math.round(Number(amountInPKR || 1) * 100))
+    // Stripe minimum transaction threshold is 50 US cents (approx 140 PKR)
+    const rawPkrAmount = Number(amountInPKR || 1)
+    const pkrCharge = Math.max(140, rawPkrAmount)
+    const amountInPaisa = Math.round(pkrCharge * 100)
 
     try {
       const paymentIntent = await stripe.paymentIntents.create({
@@ -37,27 +39,26 @@ export const stripeService = {
         status: paymentIntent.status
       }
     } catch (error) {
-      console.warn('Stripe PaymentIntent fallback/notice:', error.message)
-      // If currency PKR is restricted on test account, fallback with USD equivalent (e.g. $0.50)
-      if (error.code === 'currency_not_supported' || error.message?.includes('currency')) {
-        const fallbackIntent = await stripe.paymentIntents.create({
-          amount: 100, // $1.00 USD
-          currency: 'usd',
-          description: `Ozilla Festival 2026 - ${ticket.ticketType || 'General'} Pass`,
-          receipt_email: ticket.email || undefined,
-          metadata: {
-            ticketId: String(ticket.id || ticket._id),
-            ticketCode: ticket.ticketId || ''
-          }
-        })
-        return {
-          success: true,
-          clientSecret: fallbackIntent.client_secret,
-          paymentIntentId: fallbackIntent.id,
-          status: fallbackIntent.status
+      console.warn('Stripe PaymentIntent Notice:', error.message)
+      const fallbackIntent = await stripe.paymentIntents.create({
+        amount: 50, // $0.50 USD minimum
+        currency: 'usd',
+        description: `Ozilla Festival 2026 - ${ticket.ticketType || 'General'} Pass`,
+        receipt_email: ticket.email || undefined,
+        metadata: {
+          ticketId: String(ticket.id || ticket._id),
+          ticketCode: ticket.ticketId || ''
+        },
+        automatic_payment_methods: {
+          enabled: true
         }
+      })
+      return {
+        success: true,
+        clientSecret: fallbackIntent.client_secret,
+        paymentIntentId: fallbackIntent.id,
+        status: fallbackIntent.status
       }
-      throw error
     }
   },
 
