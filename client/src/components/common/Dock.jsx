@@ -6,12 +6,22 @@ import './Dock.css';
 
 function DockItem({ children, className = '', onClick, mouseX, spring, distance, magnification, baseItemSize, label }) {
   const ref = useRef(null);
+  const centerRef = useRef(null);
   const isHovered = useMotionValue(0);
 
+  const getCenter = () => {
+    if (centerRef.current !== null) return centerRef.current;
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      centerRef.current = rect.left + rect.width / 2;
+      return centerRef.current;
+    }
+    return 0;
+  };
+
   const mouseDistance = useTransform(mouseX, val => {
-    if (!ref.current || val === Infinity) return distance;
-    const rect = ref.current.getBoundingClientRect();
-    const itemCenter = rect.left + rect.width / 2;
+    if (val === Infinity || !ref.current) return distance;
+    const itemCenter = getCenter();
     return val - itemCenter;
   });
 
@@ -30,6 +40,19 @@ function DockItem({ children, className = '', onClick, mouseX, spring, distance,
     }
   };
 
+  const handleMouseEnter = () => {
+    if (ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      centerRef.current = rect.left + rect.width / 2;
+    }
+    isHovered.set(1);
+  };
+
+  const handleMouseLeave = () => {
+    centerRef.current = null;
+    isHovered.set(0);
+  };
+
   return (
     <motion.div
       ref={ref}
@@ -38,10 +61,10 @@ function DockItem({ children, className = '', onClick, mouseX, spring, distance,
         height: baseItemSize,
         scale
       }}
-      onHoverStart={() => isHovered.set(1)}
-      onHoverEnd={() => isHovered.set(0)}
-      onFocus={() => isHovered.set(1)}
-      onBlur={() => isHovered.set(0)}
+      onHoverStart={handleMouseEnter}
+      onHoverEnd={handleMouseLeave}
+      onFocus={handleMouseEnter}
+      onBlur={handleMouseLeave}
       onClick={onClick}
       className={`dock-item ${className}`}
       tabIndex={0}

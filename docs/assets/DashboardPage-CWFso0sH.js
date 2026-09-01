@@ -1,0 +1,759 @@
+import{j as e,m as d}from"./vendor-motion-DHTbcX3O.js";import{u as p,r as c,L as l}from"./vendor-react-6MXTWAEx.js";import{b as r,P as m}from"./index-CXEPEfDH.js";import"./vendor-utils-Bub7y9MC.js";const o={about:"OZilla Festival is a youth-focused entertainment experience combining music, food, culture, creators, brands and communities into one powerful lifestyle platform.",festivalExperience:["Live Concerts","DJ Nights","Food Experiences","Brand Activation Zones","Content and Photo Moments","Community Engagement"],journey:["Discover OZilla","Explore Partners","Select Discount","Use Promo Code","Enjoy Experience"],partnerBenefits:["Digital Visibility","Customer Reach","Influencer Promotion","Event Audience Access","Brand Awareness"],restaurants:[{name:"Street Grill Co.",cuisine:"BBQ and Fast Casual",location:"Karachi",discount:"15% OFF",offer:"Festival combo meal with priority queue access.",code:"OZILLA15"},{name:"Spice District",cuisine:"Pakistani Fusion",location:"Lahore",discount:"20% OFF",offer:"Family platter offer for OZilla audience.",code:"SPICE20"},{name:"Urban Brew",cuisine:"Cafe and Desserts",location:"Islamabad",discount:"Buy 1 Get 1",offer:"Coffee and dessert pair for creators and attendees.",code:"BREWBOGO"}],hotels:[{name:"Pearl Continental Hotel (PC)",location:"Lahore, Punjab, Pakistan",rates:"Premium city-center business and leisure rates",offer:"Flexible booking options with conference and dining access.",website:"https://www.expedia.com/Lahore-Hotels-Pearl-Continental-Lahore.h6062.Hotel-Information?chkin=2026-07-23&chkout=2026-07-24&x_pwa=1&rfrr=HSR&pwa_ts=1783538185568&referrerUrl=aHR0cHM6Ly93d3cuZXhwZWRpYS5jb20vSG90ZWwtU2VhcmNo&useRewards=false&rm1=a2&regionId=2068&destination=Lahore%2C+Punjab%2C+Pakistan&destType=MARKET&neighborhoodId=553248633981712959&selected=6062&latLong=31.554606%2C74.357155&sort=RECOMMENDED&top_dp=124&top_cur=USD&semcid=US.UB.BING.PT-c-EN.HOTEL&semdtl=a1429012176.b11315017303776210.g1kwd-82189323842618%3Aloc-144.e1c.m18d15bbf2af6c1d752fa9d1bc0e925b82.r1dbbc4399e805d7a471af9bb50c0eca6a53815556874c850795d8066b3e568804.c1.j1142691.k1152882.d182188878595064.h1e.i1.l1.n1.o1.p1.q1.s1.t1.x1.f1.u1.v1.w1&userIntent=&selectedRoomType=314006270&selectedRatePlan=380046345&categorySearch=any_option&searchId=60a6b42e-b43b-44af-a668-54a0fbd95022",image:r("/assets/hotels/Pearl-Continental-Lahore.jpg"),showImage:!0,description:"A flagship five-star property known for premium hospitality, executive facilities, and large event spaces.",facilities:["Luxury Rooms & Suites","Restaurants & Coffee Lounge","Swimming Pool","Fitness Center"],contact:"Reservations: +92 42 111 505 505",rating:"4.5/5"},{name:"Ramada by Wyndham Lahore",location:"Lahore, Punjab, Pakistan",rates:"Business-friendly international chain pricing",offer:"Comfort-focused stay packages with central access.",website:"https://www.guestreservations.com/ramada-by-wyndham-lahore-gulberg-ii/booking?utm_source=microsoft&utm_medium=cpc&utm_campaign=318380766&msclkid=2639f60cc7641752938d9c426507dbb5&ctTriggered=true",image:r("/assets/hotels/Ramada-by-Wyndham-Lahore-Gulberg-II.jpg"),showImage:!0,description:"An international-branded stay option designed for business travelers and families seeking modern comfort.",facilities:["Comfort Rooms","All-Day Dining","Meeting Facilities","Wi-Fi Access"],contact:"Reservations: +92 42 111 111 211",rating:"4.3/5"},{name:"Hotel Indigo Lahore",location:"Lahore, Punjab, Pakistan",rates:"Boutique premium rates for curated city stays",offer:"Lifestyle stay experience with modern interiors and city vibe.",website:"https://indigoheights.com/",image:r("/assets/hotels/Hotel-Indigo.jpg"),showImage:!0,description:"A contemporary boutique-style hotel brand experience offering design-led rooms and premium hospitality.",facilities:["Designer Rooms","Signature Dining","Fitness Facilities","Business Services"],contact:"Reservations: +92 42 111 111 111",rating:"4.4/5"},{name:"Hotel One Gulberg Lahore",location:"Lahore, Punjab, Pakistan",rates:"Upper-midscale corporate and family packages",offer:"Value-focused business stays in a prime Lahore district.",website:"https://www.guestreservations.com/hotel-one-gulberg-lahore/booking?utm_source=microsoft&utm_medium=cpc&utm_campaign=318380766&msclkid=3d22881e8b211d72a380e25028093b5b",image:r("/assets/hotels/Hotel-One-Gulberg-Lahore.jpg"),showImage:!0,description:"A trusted local hospitality brand known for practical comfort, business convenience, and central location.",facilities:["Business-Friendly Rooms","Breakfast Service","Meeting Room","24/7 Front Desk"],contact:"Reservations: +92 42 111 111 563",rating:"4.2/5"},{name:"Luxus Grand Hotel (LC)",location:"Lahore, Punjab, Pakistan",rates:"Executive and leisure stay rates",offer:"City-center premium rooms with event-friendly access.",website:"https://www.expedia.com/Lahore-Hotels-Luxus-Grand-Hotel.h16225098.Hotel-Information?chkin=2026-07-23&chkout=2026-07-24&x_pwa=1&rfrr=HSR&pwa_ts=1783538679588&referrerUrl=aHR0cHM6Ly93d3cuZXhwZWRpYS5jb20vSG90ZWwtU2VhcmNo&useRewards=false&rm1=a2&regionId=2068&destination=Lahore%2C+Punjab%2C+Pakistan&destType=MARKET&selected=16225098&latLong=31.554606%2C74.357155&sort=RECOMMENDED&top_dp=50&top_cur=USD&semcid=US.UB.BING.PT-c-EN.HOTEL&semdtl=a1429012176.b11317216326895908.g1kwd-82326765629610%3Aloc-144.e1c.m1f413ae58b13f11ee7d78c41612f456b3.r17441980d01bf266109c2845e02c5e619d691d9360faf76d1fb0b3ff083f73b12.c1.j1142691.k1152882.d182326298507125.h1e.i1.l1.n1.o1.p1.q1.s1.t1.x1.f1.u1.v1.w1&userIntent=&selectedRoomType=201690559&selectedRatePlan=208425873&categorySearch=any_option&searchId=b938991e-d9ee-47cd-a5b9-bfbbe22962a7",image:r("/assets/hotels/Luxus-Grand-Hotel.jpg"),showImage:!0,description:"A modern luxury hotel in Lahore offering upscale rooms, contemporary dining, and premium guest services.",facilities:["Premium Rooms","Restaurant & Cafe","Concierge Support","Airport Transfer Assistance"],contact:"Reservations: +92 42 111 589 879",rating:"4.4/5"},{name:"Nishat Hotel Lahore",location:"Lahore, Punjab, Pakistan",rates:"Premium luxury rates with lifestyle amenities",offer:"High-end accommodation with shopping and dining proximity.",website:"https://www.booking.com/hotel/pk/the-nishat.en-gb.html?aid=2276380&label=msn-G%2AualcbtRsY8_D6yMU0tng-80333218529225%3Atikwd-80333372562144%3Aloc-144%3Aneo%3Amte%3Alp142691%3Adec%3Acid578349423%3Aagid1285329581450391%3Aclkid91bc1c0fd2ae13842aa77641760a897b&sid=d2e80396e6c920f70a72e21ba196f068&all_sr_blocks=112449101_204759422_0_2_0_670390&checkin=2026-07-14&checkout=2026-07-15&dest_id=-2767043&dest_type=city&dist=0&group_adults=2&group_children=0&hapos=1&highlighted_blocks=112449101_204759422_0_2_0_670390&hpos=1&matching_block_id=112449101_204759422_0_2_0_670390&no_rooms=1&req_adults=2&req_children=0&room1=A%2CA&sb_price_type=total&sr_order=popularity&sr_pri_blocks=112449101_204759422_0_2_0_670390_3300000&srepoch=1783539000&srpvid=7c17890e04e000e0&type=total&ucfs=1&",image:r("/assets/hotels/Nishat.jpg"),showImage:!0,description:"A luxury Lahore hospitality brand recognized for refined interiors, premium service standards, and prime locations.",facilities:["Luxury Suites","Fine Dining","Spa & Wellness","Event and Meeting Spaces"],contact:"Reservations: +92 42 111 647 428",rating:"4.6/5"}]},g=[{name:"TALWINDER",isHeadliner:!0,genre:"Indie Pop / Punjabi Fusion",stage:"Main Prism Stage",bpm:"128 BPM",vibe:"Euphoric Night",image:r("/assets/ozilla/talwinder.jpg")},{name:"IMRAN KHAN",genre:"Punjabi Pop / Urban",stage:"Neon Bass Arena",bpm:"132 BPM",vibe:"High Energy",image:r("/assets/ozilla/Imran-Khan.jpg")},{name:"BOHEMIA",genre:"Punjabi Rap / Desi Hip Hop",stage:"Underground Stage",bpm:"95 BPM",vibe:"Heavy Bass",image:r("/assets/ozilla/Bohemia.jpg")},{name:"HASSAN RAHEEM",genre:"Pop / Indie R&B",stage:"Sunset Stage",bpm:"115 BPM",vibe:"Golden Hour Chill",image:r("/assets/ozilla/hassan-raheem.jpg")}],f=[{id:"general",name:"General Pass",badge:"STANDARD ACCESS",price:"PKR 4,500",sub:"Full 1-day festival admission",isFeatured:!1,perks:["Access to All 4 Music Stages","Food & Beats Street Access","Festival Photo Booths & Activations","Instant Digital QR Pass"],ctaText:"Get General Pass",ctaLink:"/tickets"},{id:"vip",name:"VIP Experience",badge:"MOST POPULAR",price:"PKR 12,500",sub:"Elevated front-row & lounge access",isFeatured:!0,perks:["Priority Front Stage Viewing Deck","Private VIP Artist Lounge Access","Dedicated Fast-Track Entry Gate","Complimentary Food & Drink Voucher","20% Partner Hotel & Dining Discounts","Holographic VIP Commemorative Pass"],ctaText:"Book VIP Pass →",ctaLink:"/tickets"},{id:"platinum",name:"All-Access Platinum",badge:"EXCLUSIVE ALL-ACCESS",price:"PKR 25,000",sub:"Ultimate luxury hospitality package",isFeatured:!1,perks:["Backstage & Artist Lounge Access","Valet Reserved Parking Spot","Gourmet Catering & Open Mocktail Bar","Exclusive Afterparty Invitation","Dedicated Hospitality Concierge","Full Merchandise Gift Bundle"],ctaText:"Reserve Platinum Pass",ctaLink:"/tickets"}],h=[{name:"Ozilla Festival 2026",date:"November 1, 2026",location:"Lahore, Pakistan",status:"FEATURED EVENT",description:"The flagship Ozilla experience with live music, food culture, partner activations, and premium crowd moments."},{name:"Celebrity Night",date:"Coming Soon",location:"Lahore, Pakistan",status:"LIVE EVENT",description:"A high-energy night built around headline artists, stage lights, social moments, and unforgettable performances."},{name:"Brand Experience Zone",date:"Coming Soon",location:"Lahore, Pakistan",status:"LIMITED SEATS",description:"Immersive sponsor zones, creator content, giveaways, product trials, and interactive festival experiences."}],b=[{name:"Ozilla Strategy Module",status:"Completed",detail:"Audience journey and activation playbook finalized."},{name:"Ozilla Scale Module",status:"Completed",detail:"Multi-channel visibility model and sponsor packages benchmarked."}],u=[{name:"Ozilla Strategy Module",year:"2023",description:"Campaign strategy foundation focused on brand positioning, audience mapping, and activation planning.",highlights:["Brand Positioning","Audience Research","Partner Onboarding"],venue:"Lahore Expo Center",date:"December 12, 2023"},{name:"Ozilla Scale Module",year:"2024",description:"Scale phase with creator collaborations, sponsor visibility lanes, and larger audience engagement programs.",highlights:["Creator Collaborations","Sponsor Visibility","Live Entertainment Blocks"],venue:"DHA Sports Club, Lahore",date:"November 9, 2024"},{name:"Ozilla Festival Website Brief 2026",year:"2025",description:"Pre-launch phase covering website content, ticketing workflow, and full experience readiness for the main festival.",highlights:["Ticketing Workflow","Experience Mapping","Marketing Readiness"],venue:"Gulberg Event District, Lahore",date:"October 18, 2025"},{name:"Ozilla Basand Festival",year:"2026",description:"Seasonal cultural festival featuring live entertainment, color-themed experiences, and partner activations.",highlights:["Cultural Performances","Live Music","Brand Activation Zones"],venue:"Lahore, Punjab",date:"March 07, 2026"},{name:"Ozilla Festival 2027 Season 2",year:"2027",description:"Second season expansion with larger audience engagement, celebrity performances, and upgraded event production.",highlights:["Celebrity Performances","Expanded Audience Program","Premium Experience Zones"],venue:"Lahore, Punjab",date:"November 14, 2027"}],x=[{tier:"Title Sponsor",price:"Premium",perks:["Exclusive brand naming rights","Stage backdrop placement","VIP zone branding","30-second ad slot","Social media features"]},{tier:"Gold Sponsor",price:"High",perks:["Brand activation zone","Banner placements","Digital features","Influencer mentions","On-ground presence"]},{tier:"Silver Sponsor",price:"Mid",perks:["Logo on all materials","Social shoutout","Booth at festival","Feature in email campaigns"]},{tier:"Media Partner",price:"Custom",perks:["Media coverage rights","Press passes","Collaborative content","Announcement placement"]}],v=[{title:"Main Concert Stage",desc:"World-class 100kW concert sound system, 360° laser array, and immersive sub-bass arrays."},{title:"Food & Beats Court",desc:"Curated food street featuring artisan fusion eats, mocktails, coffee and desserts."},{title:"24/7 Medical Hub",desc:"On-site first aid stations, paramedic support, and emergency rapid response teams."},{title:"Secure VIP Parking",desc:"Valet and managed parking zones for general festival attendees and VIP ticket holders."},{title:"Neon Photo Booths",desc:"Interactive holographic backdrops, creator lighting rigs, and festival photo moments."},{title:"Full Accessibility",desc:"Dedicated accessible viewing decks, pathways, and on-ground hospitality assistance."},{title:"Crowd Safety Squad",desc:"Trained professional security and crowd flow management across all festival zones."},{title:"Ultra-Fast WiFi",desc:"High-speed gigabit Wi-Fi zones for seamless streaming, posting, and sharing moments."}],y=[{brand:"Street Grill Co.",category:"Restaurant",discount:"15% OFF",code:"OZILLA15",desc:"Festival combo meal with priority queue access."},{brand:"Spice District",category:"Restaurant",discount:"20% OFF",code:"SPICE20",desc:"Family platter offer for OZilla audience."},{brand:"Urban Brew",category:"Cafe",discount:"Buy 1 Get 1",code:"BREWBOGO",desc:"Coffee and dessert pair for creators and attendees."},{brand:"Partner Hotels",category:"Hotel",discount:"10% OFF",code:"OZHOTEL10",desc:"Exclusive discount on festival weekend stays."}],j=[{value:"10,000+",label:"Music Lovers",sub:"Packed Live Crowd"},{value:"20+",label:"Star Performers",sub:"Celebrity & Indie Acts"},{value:"4",label:"Mega Stages",sub:"Non-stop Beats"},{value:"50+",label:"Food & Stalls",sub:"Culinary & Brand Hub"}];function w(t){const[n,s]=c.useState(()=>{const a=Math.max(new Date(t)-Date.now(),0);return{days:Math.floor(a/864e5),hours:Math.floor(a/36e5%24),minutes:Math.floor(a/6e4%60),seconds:Math.floor(a/1e3%60)}});return c.useEffect(()=>{const a=setInterval(()=>{const i=Math.max(new Date(t)-Date.now(),0);s({days:Math.floor(i/864e5),hours:Math.floor(i/36e5%24),minutes:Math.floor(i/6e4%60),seconds:Math.floor(i/1e3%60)})},1e3);return()=>clearInterval(a)},[t]),n}function E(){const t=p(),n=w("2026-11-01T18:00:00+05:00");return c.useEffect(()=>{const s=t.hash?.replace("#","");s?setTimeout(()=>{const a=document.getElementById(s);a&&a.scrollIntoView({behavior:"smooth",block:"start"})},150):window.scrollTo({top:0,behavior:"smooth"})},[t.hash]),e.jsxs("main",{className:"sp-main",children:[e.jsxs("section",{id:"home",className:"sp-hero","aria-label":"Ozilla Festival",children:[e.jsx(m,{nodeColor:"#EC4899",lineColor:"236, 72, 153",secondaryColor:"255, 90, 31",maxDistance:145,speed:.6}),e.jsx("div",{className:"sp-hero-ambient-glow"}),e.jsxs("div",{className:"sp-hero-content",children:[e.jsxs("div",{className:"sp-hero-badge",children:[e.jsx("span",{children:"✨"}),e.jsx("strong",{children:"OZILLA FESTIVAL 2026 · LAHORE"})]}),e.jsx("h1",{className:"sp-hero-title",children:"OZILLA FESTIVAL"}),e.jsx("p",{className:"sp-hero-subtitle",children:"Pakistan's Premier Music, Cultural & Entertainment Festival Live in Lahore. Experience 4 Mega Stages, Headline Artists, Gourmet Dining & Unmatched Sound."}),e.jsxs("div",{className:"sp-hero-meta-strip",children:[e.jsx("span",{children:"📅 November 1, 2026"}),e.jsx("span",{children:"📍 Lahore, Pakistan"}),e.jsx("span",{children:"⚡ 4 Mega Stages"}),e.jsx("span",{children:"🎟️ Official QR Passes"})]}),e.jsxs("div",{className:"sp-hero-actions",children:[e.jsx("a",{className:"sp-btn-ember",href:"#celebrities",children:"Explore Lineup"}),e.jsx(l,{className:"sp-btn-ghost",to:"/tickets",children:"Get VIP Passes"})]})]})]}),e.jsx("section",{className:"festival-stats-strip","aria-label":"Festival Highlights",children:e.jsx("div",{className:"sp-container",children:e.jsx("div",{className:"stats-inner-grid",children:j.map((s,a)=>e.jsxs(d.div,{className:"stat-card",initial:{opacity:0,y:20},whileInView:{opacity:1,y:0},viewport:{once:!0},transition:{duration:.4,delay:a*.08},children:[e.jsx("strong",{className:"stat-val",children:s.value}),e.jsx("span",{className:"stat-label",children:s.label}),e.jsx("small",{className:"stat-sub",children:s.sub})]},s.label))})})}),e.jsx("section",{id:"celebrities",className:"sp-section sp-section-celebrities","aria-label":"Celebrities Lineup",children:e.jsxs("div",{className:"sp-container",children:[e.jsxs("div",{className:"sp-section-header",children:[e.jsx("span",{className:"sp-eyebrow",children:"Live on the Ozilla Stage"}),e.jsx("h2",{className:"sp-section-title",children:"Celebrity Singers & Performers"}),e.jsx("p",{className:"sp-section-subtitle",children:"Four powerhouse headline performers, one premium Lahore festival atmosphere, and an amphitheatre built for unforgettable crowd moments."})]}),e.jsx("div",{className:"sp-celebrity-grid",children:g.map(s=>e.jsx("article",{className:`sp-celeb-card ${s.isHeadliner?"sp-celeb-headliner":""}`,children:e.jsxs("div",{className:"sp-celeb-frame",children:[e.jsx("img",{src:s.image,alt:s.name,loading:"lazy",decoding:"async",onError:a=>{a.currentTarget.src=r("/assets/prism-auth-visual.jpg")}}),e.jsx("div",{className:"celeb-holo-sheen"}),e.jsxs("div",{className:"celeb-top-badges",children:[s.isHeadliner?e.jsx("span",{className:"sp-headliner-badge",children:"★ MAIN HEADLINER"}):e.jsx("span",{className:"celeb-stage-tag",children:s.stage}),e.jsxs("div",{className:"celeb-mini-eq",children:[e.jsx("span",{}),e.jsx("span",{}),e.jsx("span",{})]})]}),e.jsxs("div",{className:"sp-celeb-overlay",children:[e.jsx("div",{className:"celeb-genre-pill",children:s.genre}),e.jsx("h3",{children:s.name}),e.jsxs("div",{className:"celeb-meta-row",children:[e.jsxs("span",{children:["⚡ ",s.bpm]}),e.jsxs("span",{children:["♫ ",s.vibe]})]})]})]})},s.name))}),e.jsxs("div",{className:"sp-countdown",children:[e.jsx("p",{className:"sp-eyebrow",style:{marginBottom:"1.4rem"},children:"Countdown to the First Beat Drop"}),e.jsx("div",{className:"sp-countdown-grid",children:[["Days",n.days],["Hours",n.hours],["Minutes",n.minutes],["Seconds",n.seconds]].map(([s,a])=>e.jsxs("div",{className:"sp-countdown-card",children:[e.jsx("strong",{children:String(a).padStart(2,"0")}),e.jsx("span",{children:s})]},s))})]})]})}),e.jsx("section",{id:"vip-experience",className:"sp-section sp-section-pricing","aria-label":"Festival Passes",children:e.jsxs("div",{className:"sp-container",children:[e.jsxs("div",{className:"sp-section-header",style:{textAlign:"center"},children:[e.jsx("span",{className:"sp-eyebrow",children:"CHOOSE YOUR ACCESS"}),e.jsx("h2",{className:"sp-section-title",children:"Festival Passes & VIP Tiers"}),e.jsx("p",{className:"sp-section-subtitle",style:{margin:"0 auto"},children:"Select your festival experience tier. Instant dynamic QR pass generated upon reservation with guaranteed fast-track admission."})]}),e.jsx("div",{className:"sp-pricing-grid",children:f.map(s=>e.jsxs("div",{className:`sp-pricing-card ${s.isFeatured?"sp-featured-pricing":""}`,children:[s.isFeatured&&e.jsx("div",{className:"sp-pricing-popular-tag",children:"MOST POPULAR ACCESS"}),e.jsxs("div",{className:"sp-pricing-header",children:[e.jsx("span",{className:"sp-tier-badge",children:s.badge}),e.jsx("h3",{children:s.name}),e.jsx("div",{className:"sp-pricing-cost",children:e.jsx("strong",{children:s.price})}),e.jsx("p",{className:"sp-pricing-sub",children:s.sub})]}),e.jsx("div",{className:"sp-pricing-divider"}),e.jsx("ul",{className:"sp-pricing-features",children:s.perks.map(a=>e.jsxs("li",{children:[e.jsx("span",{className:"sp-perk-check",children:"✓"}),e.jsx("span",{children:a})]},a))}),e.jsx(l,{to:s.ctaLink,className:s.isFeatured?"sp-btn-ember w-full":"sp-btn-ghost w-full",style:{textAlign:"center",marginTop:"auto"},children:s.ctaText})]},s.id))})]})}),e.jsx("section",{id:"about",className:"sp-section sp-section-about","aria-label":"About Ozilla",children:e.jsxs("div",{className:"sp-container",children:[e.jsxs("div",{className:"sp-section-header",children:[e.jsx("span",{className:"sp-eyebrow",children:"The Festival Experience"}),e.jsx("h2",{className:"sp-section-title",children:"Who We Are"})]}),e.jsxs("div",{className:"sp-about-grid",children:[e.jsxs("div",{className:"sp-about-text",children:[e.jsx("p",{className:"sp-lead",children:o.about}),e.jsx("p",{children:"The platform is designed around discovery, curated stage experiences, hospitality partnerships, exclusive discount access, and long-term brand collaborations."}),e.jsx("div",{className:"sp-journey-steps",children:o.journey.map((s,a)=>e.jsxs("div",{className:"sp-journey-step",children:[e.jsx("span",{className:"sp-step-num",children:a+1}),e.jsx("span",{children:s})]},s))})]}),e.jsxs("div",{className:"sp-about-features",children:[e.jsx("h3",{children:"Festival Highlights"}),e.jsx("div",{className:"sp-tag-cloud",children:o.festivalExperience.map(s=>e.jsx("span",{className:"sp-tag",children:s},s))}),e.jsx("h3",{style:{marginTop:"2rem"},children:"Partner Benefits"}),e.jsx("div",{className:"sp-tag-cloud",children:o.partnerBenefits.map(s=>e.jsx("span",{className:"sp-tag sp-tag-accent",children:s},s))})]})]})]})}),e.jsx("section",{id:"events",className:"sp-section sp-section-events","aria-label":"Past Events",children:e.jsxs("div",{className:"sp-container",children:[e.jsxs("div",{className:"sp-section-header",children:[e.jsx("span",{className:"sp-eyebrow",children:"Completed Milestones"}),e.jsx("h2",{className:"sp-section-title",children:"Past Event Modules"})]}),e.jsx("div",{className:"sp-events-grid",children:b.map(s=>e.jsxs("div",{className:"sp-glass-card",children:[e.jsxs("div",{className:"sp-card-header",children:[e.jsx("h3",{children:s.name}),e.jsx("span",{className:"sp-pill-badge",children:s.status})]}),e.jsx("p",{className:"sp-card-desc",children:s.detail})]},s.name))})]})}),e.jsx("section",{id:"future-events",className:"sp-section sp-section-future","aria-label":"Upcoming Events",children:e.jsxs("div",{className:"sp-container",children:[e.jsxs("div",{className:"sp-section-header",children:[e.jsx("span",{className:"sp-eyebrow",children:"Upcoming Roadmap"}),e.jsx("h2",{className:"sp-section-title",children:"Upcoming Experiences"})]}),e.jsx("div",{className:"sp-future-grid",children:h.map(s=>e.jsxs("div",{className:"sp-glass-card sp-future-card",children:[e.jsx("span",{className:"sp-pill-badge",children:s.status}),e.jsx("h3",{style:{marginTop:"0.8rem"},children:s.name}),e.jsxs("p",{className:"sp-meta-text",children:["📍 ",s.date," · ",s.location]}),e.jsx("p",{className:"sp-card-desc",style:{flex:1},children:s.description}),e.jsx(l,{to:"/tickets",className:"sp-accent-link",children:"Get Tickets →"})]},s.name))})]})}),e.jsx("section",{id:"history",className:"sp-section sp-section-history","aria-label":"Festival History",children:e.jsxs("div",{className:"sp-container",children:[e.jsxs("div",{className:"sp-section-header",children:[e.jsx("span",{className:"sp-eyebrow",children:"Festival Journey"}),e.jsx("h2",{className:"sp-section-title",children:"Our Legacy & Timeline"})]}),e.jsx("div",{className:"sp-timeline",children:u.map((s,a)=>e.jsxs("div",{className:"sp-timeline-item",children:[e.jsx("div",{className:"sp-timeline-icon",children:a+1}),e.jsxs("div",{className:"sp-glass-card sp-timeline-content",children:[e.jsxs("div",{className:"sp-meta-text",children:[e.jsx("span",{className:"sp-year-highlight",children:s.year})," · ",s.date]}),e.jsx("h3",{children:s.name}),e.jsx("p",{className:"sp-card-desc",children:s.description}),e.jsx("div",{className:"sp-tag-cloud",children:s.highlights.map(i=>e.jsx("span",{className:"sp-tag",children:i},i))}),e.jsxs("p",{className:"sp-venue-text",children:["📍 ",s.venue]})]})]},s.name))})]})}),e.jsx("section",{id:"hotels",className:"sp-section sp-section-hotels","aria-label":"Partner Hotels",children:e.jsxs("div",{className:"sp-container",children:[e.jsxs("div",{className:"sp-section-header",children:[e.jsx("span",{className:"sp-eyebrow",children:"Hospitality Partners"}),e.jsx("h2",{className:"sp-section-title",children:"Partner Hotels in Lahore"})]}),e.jsx("div",{className:"sp-hotels-grid",children:o.hotels.map((s,a)=>e.jsxs("div",{className:`sp-glass-card sp-hotel-card ${a===0?"sp-featured-border":""}`,children:[s.showImage&&e.jsx("div",{className:"sp-hotel-img-wrap",children:e.jsx("img",{src:s.image,alt:s.name,loading:"lazy",decoding:"async",onError:i=>{i.currentTarget.src=r("/assets/prism-auth-visual.jpg")}})}),e.jsxs("div",{className:"sp-hotel-body",children:[e.jsxs("div",{className:"sp-card-header",children:[e.jsx("h3",{children:s.name}),s.rating&&e.jsxs("span",{className:"sp-rating-tag",children:["⭐ ",s.rating]})]}),e.jsxs("p",{className:"sp-meta-text",children:["📍 ",s.location]}),e.jsx("p",{className:"sp-card-desc",children:s.description}),e.jsx("div",{className:"sp-tag-cloud",children:s.facilities?.map(i=>e.jsx("span",{className:"sp-tag",children:i},i))}),e.jsx("p",{className:"sp-contact-text",children:s.contact}),s.website&&e.jsx("a",{href:s.website,target:"_blank",rel:"noopener noreferrer",className:"sp-accent-link",children:"Book Room →"})]})]},s.name))})]})}),e.jsx("section",{id:"restaurants",className:"sp-section sp-section-dining","aria-label":"Dining Hub",children:e.jsxs("div",{className:"sp-container",children:[e.jsxs("div",{className:"sp-section-header",children:[e.jsx("span",{className:"sp-eyebrow",children:"Food & Drinks"}),e.jsx("h2",{className:"sp-section-title",children:"Festival Dining Hub"})]}),e.jsx("div",{className:"sp-restaurants-grid",children:o.restaurants.map(s=>e.jsxs("div",{className:"sp-glass-card",children:[e.jsxs("div",{className:"sp-card-header",children:[e.jsx("h3",{children:s.name}),e.jsx("span",{className:"sp-discount-pill",children:s.discount})]}),e.jsxs("p",{className:"sp-meta-text",children:[s.cuisine," · ",s.location]}),e.jsx("p",{className:"sp-card-desc",children:s.offer}),e.jsxs("div",{className:"sp-code-box",children:[e.jsx("span",{children:"Promo Code:"}),e.jsx("code",{children:s.code})]})]},s.name))})]})}),e.jsx("section",{id:"discounts",className:"sp-section sp-section-deals","aria-label":"Promo Vouchers",children:e.jsxs("div",{className:"sp-container",children:[e.jsxs("div",{className:"sp-section-header",children:[e.jsx("span",{className:"sp-eyebrow",children:"Exclusive Member Deals"}),e.jsx("h2",{className:"sp-section-title",children:"Festival Promo Vouchers"})]}),e.jsx("div",{className:"sp-discounts-grid",children:y.map(s=>e.jsxs("div",{className:"sp-glass-card sp-voucher-card",children:[e.jsx("span",{className:"sp-eyebrow",style:{fontSize:"0.75rem",marginBottom:"0.3rem"},children:s.category}),e.jsx("h3",{style:{marginTop:"0.2rem",fontSize:"1.3rem"},children:s.brand}),e.jsx("p",{className:"sp-card-desc",style:{margin:"0.6rem 0 1.2rem"},children:s.desc}),e.jsxs("div",{className:"sp-discount-footer",children:[e.jsx("span",{className:"sp-big-discount",children:s.discount}),e.jsx("code",{className:"sp-code-pill",children:s.code})]})]},s.brand))})]})}),e.jsx("section",{id:"facilities",className:"sp-section sp-section-facilities","aria-label":"Facilities",children:e.jsxs("div",{className:"sp-container",children:[e.jsxs("div",{className:"sp-section-header",children:[e.jsx("span",{className:"sp-eyebrow",children:"Festival Venue"}),e.jsx("h2",{className:"sp-section-title",children:"World-Class Facilities"})]}),e.jsx("div",{className:"sp-facilities-grid",children:v.map(s=>e.jsxs("div",{className:"sp-glass-card sp-facility-card",children:[e.jsx("h3",{children:s.title}),e.jsx("p",{className:"sp-card-desc",children:s.desc})]},s.title))})]})}),e.jsx("section",{id:"sponsorship",className:"sp-section sp-section-sponsorship","aria-label":"Sponsorships",children:e.jsxs("div",{className:"sp-container",children:[e.jsxs("div",{className:"sp-section-header",style:{textAlign:"center"},children:[e.jsx("span",{className:"sp-eyebrow",children:"Brand Partnerships"}),e.jsx("h2",{className:"sp-section-title",children:"Sponsorship Packages"}),e.jsx("p",{className:"sp-section-subtitle",style:{margin:"0 auto"},children:"Be part of Lahore's biggest music festival. Gain massive on-ground visibility and digital engagement."})]}),e.jsx("div",{className:"sp-sponsorship-grid",children:x.map((s,a)=>e.jsxs("div",{className:`sp-glass-card sp-sponsor-card ${a===0?"sp-featured-border":""}`,children:[e.jsxs("div",{className:"sp-card-header",children:[e.jsx("h3",{children:s.tier}),e.jsx("span",{className:"sp-pill-badge",children:s.price})]}),e.jsx("ul",{className:"sp-sponsor-perks",children:s.perks.map(i=>e.jsxs("li",{children:[e.jsx("span",{className:"sp-check",children:"✓"}),i]},i))}),e.jsx(l,{to:"/tickets",className:"sp-btn-ghost",style:{textAlign:"center",marginTop:"1.2rem"},children:"Get Partner Pass"})]},s.tier))})]})}),e.jsx("style",{children:`
+        .sp-main {
+          --pink-accent:   #EC4899;
+          --ember-accent:  #ff5a1f;
+          --ember-glow:    #ff8a3d;
+          --gold-accent:   #ffbd59;
+          --obsidian-dark: #0B0705;
+          --obsidian-card: rgba(27, 17, 11, 0.72);
+          --text-white:    #ffffff;
+          --text-muted:    rgba(255, 255, 255, 0.78);
+          font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+          color: #ffffff !important;
+          background: #0B0705 !important;
+          min-height: 100vh;
+          overflow-x: hidden;
+          position: relative;
+          letter-spacing: -0.01em;
+          word-spacing: 0.02em;
+        }
+
+        .sp-container {
+          width: min(1260px, calc(100% - 3.5rem));
+          margin: 0 auto;
+          position: relative;
+        }
+
+        .sp-section {
+          position: relative;
+          padding: clamp(5.5rem, 8.5vw, 8.5rem) 0;
+          border: none !important;
+        }
+
+        /* ── HERO SECTION ── */
+        .sp-hero {
+          position: relative;
+          width: 100%;
+          min-height: 90vh;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+          background:
+            radial-gradient(ellipse at 50% 15%, rgba(255, 90, 31, 0.28) 0%, rgba(85, 14, 14, 0.45) 45%, #0B0705 85%) !important;
+          padding: clamp(7rem, 12vw, 10rem) 1.5rem clamp(5rem, 8vw, 7rem);
+        }
+
+        .sp-hero-ambient-glow {
+          position: absolute;
+          top: 25%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          width: 700px;
+          height: 700px;
+          background: radial-gradient(circle, rgba(255, 138, 61, 0.28) 0%, rgba(236, 72, 153, 0.16) 50%, transparent 70%);
+          filter: blur(110px);
+          pointer-events: none;
+          z-index: 0;
+        }
+
+        .sp-hero-content {
+          position: relative;
+          z-index: 2;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          max-width: 940px;
+          width: 100%;
+          background: transparent !important;
+        }
+
+        .sp-hero-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.65rem;
+          padding: 0.5rem 1.35rem;
+          border-radius: 999px;
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 189, 89, 0.35);
+          backdrop-filter: blur(14px);
+          color: #ffbd59;
+          font-size: 0.84rem;
+          font-weight: 800;
+          letter-spacing: 0.14em;
+          margin-bottom: 1.8rem;
+          box-shadow: 0 6px 24px rgba(0, 0, 0, 0.35);
+        }
+
+        .sp-hero-title {
+          font-family: 'Outfit', sans-serif;
+          font-size: clamp(3.2rem, 8vw, 6rem);
+          font-weight: 900;
+          letter-spacing: -0.04em;
+          line-height: 1.02;
+          color: #ffffff;
+          margin-bottom: 1.5rem;
+          text-shadow: 0 14px 45px rgba(0, 0, 0, 0.85);
+          background: linear-gradient(180deg, #ffffff 45%, #ffd36a 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        .sp-hero-subtitle {
+          max-width: 740px;
+          font-size: clamp(1.08rem, 2vw, 1.3rem);
+          color: rgba(255, 255, 255, 0.88);
+          line-height: 1.75;
+          margin-bottom: 2.2rem;
+          word-spacing: 0.03em;
+        }
+
+        .sp-hero-meta-strip {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1.1rem;
+          flex-wrap: wrap;
+          margin-bottom: 2.8rem;
+        }
+
+        .sp-hero-meta-strip span {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.45rem;
+          padding: 0.45rem 1.15rem;
+          border-radius: 999px;
+          background: rgba(0, 0, 0, 0.65);
+          border: 1px solid rgba(255, 255, 255, 0.12);
+          color: #ffffff;
+          font-size: 0.85rem;
+          font-weight: 700;
+          letter-spacing: 0.01em;
+        }
+
+        .sp-hero-actions {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 1.4rem;
+          flex-wrap: wrap;
+        }
+
+        /* ── BUTTON SYSTEM (CreatorOS Inspired) ── */
+        .sp-btn-ember {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 1rem 2.4rem;
+          border-radius: 18px;
+          background: linear-gradient(120deg, #ff8a3d, #ff5a1f 55%, #e0380c) !important;
+          color: #ffffff !important;
+          font-size: 1rem;
+          font-weight: 800;
+          text-decoration: none;
+          letter-spacing: 0.01em;
+          transition: transform 220ms ease, box-shadow 220ms ease;
+          box-shadow: 0 12px 40px -8px rgba(255, 90, 31, 0.55);
+          border: none !important;
+          cursor: pointer;
+        }
+
+        .sp-btn-ember:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 18px 55px -6px rgba(255, 90, 31, 0.75);
+        }
+
+        .sp-btn-ghost {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 1rem 2.4rem;
+          border-radius: 18px;
+          background: rgba(255, 255, 255, 0.06) !important;
+          border: 1px solid rgba(255, 255, 255, 0.2) !important;
+          color: #ffffff !important;
+          font-size: 1rem;
+          font-weight: 700;
+          text-decoration: none;
+          backdrop-filter: blur(14px);
+          transition: transform 220ms ease, background 220ms ease, border-color 220ms ease;
+        }
+
+        .sp-btn-ghost:hover {
+          transform: translateY(-2px);
+          background: rgba(255, 255, 255, 0.15) !important;
+          border-color: rgba(255, 189, 89, 0.45) !important;
+        }
+
+        /* ── STATS STRIP ── */
+        .festival-stats-strip {
+          padding: 2.5rem 0;
+          background: rgba(14, 8, 5, 0.65) !important;
+          backdrop-filter: blur(20px);
+          border-top: 1px solid rgba(255, 255, 255, 0.06);
+          border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .stats-inner-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 1.6rem;
+        }
+
+        .stat-card {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          text-align: center;
+          padding: 1.6rem 1.3rem;
+          border-radius: 22px;
+          background: rgba(27, 17, 11, 0.65) !important;
+          border: 1px solid rgba(255, 255, 255, 0.08) !important;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 12px 35px rgba(0, 0, 0, 0.45);
+          transition: transform 200ms ease, border-color 200ms ease;
+        }
+
+        .stat-card:hover {
+          transform: translateY(-3px);
+          border-color: rgba(255, 90, 31, 0.45) !important;
+        }
+
+        .stat-val {
+          display: block;
+          font-family: 'Outfit', sans-serif;
+          font-size: clamp(2.2rem, 3.5vw, 2.7rem);
+          font-weight: 900;
+          color: #ffffff !important;
+          line-height: 1.05;
+          margin-bottom: 0.4rem;
+          letter-spacing: -0.03em;
+        }
+
+        .stat-label {
+          display: block;
+          font-size: 0.85rem;
+          font-weight: 800;
+          color: #ff8a3d !important;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          margin-bottom: 0.25rem;
+        }
+
+        .stat-sub {
+          font-size: 0.78rem;
+          color: var(--text-muted) !important;
+          line-height: 1.4;
+        }
+
+        /* ── SECTION HEADERS & TYPOGRAPHY ── */
+        .sp-section-header {
+          margin-bottom: 3.5rem;
+        }
+
+        .sp-eyebrow {
+          display: block;
+          color: #ffbd59 !important;
+          font-size: 0.82rem;
+          font-weight: 800;
+          letter-spacing: 0.18em;
+          text-transform: uppercase;
+          margin-bottom: 0.75rem;
+        }
+
+        .sp-section-title {
+          font-family: 'Outfit', sans-serif;
+          font-size: clamp(2.3rem, 4.8vw, 3.6rem);
+          font-weight: 900;
+          line-height: 1.08;
+          letter-spacing: -0.035em;
+          color: #ffffff !important;
+          margin-bottom: 1rem;
+        }
+
+        .sp-section-subtitle {
+          max-width: 720px;
+          font-size: 1.1rem;
+          color: var(--text-muted) !important;
+          line-height: 1.75;
+          word-spacing: 0.02em;
+        }
+
+        /* ── OBSIDIAN GLASS CARD ── */
+        .sp-glass-card {
+          background: rgba(27, 17, 11, 0.68) !important;
+          border: 1px solid rgba(255, 255, 255, 0.08) !important;
+          border-radius: 22px;
+          padding: clamp(1.8rem, 3vw, 2.3rem);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          transition: transform 260ms ease, border-color 260ms ease, box-shadow 260ms ease;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 16px 45px rgba(0, 0, 0, 0.55);
+          color: #ffffff !important;
+        }
+
+        .sp-glass-card:hover {
+          transform: translateY(-4px);
+          border-color: rgba(255, 189, 89, 0.35) !important;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 22px 55px rgba(0, 0, 0, 0.7);
+        }
+
+        .sp-card-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          gap: 0.85rem;
+          margin-bottom: 0.8rem;
+        }
+
+        .sp-card-header h3 {
+          font-family: 'Outfit', sans-serif;
+          font-size: 1.35rem;
+          font-weight: 800;
+          color: #ffffff !important;
+          letter-spacing: -0.02em;
+        }
+
+        .sp-card-desc {
+          font-size: 0.96rem;
+          color: rgba(255, 255, 255, 0.82) !important;
+          line-height: 1.72;
+          word-spacing: 0.02em;
+        }
+
+        .sp-pill-badge {
+          padding: 0.38rem 0.95rem;
+          border-radius: 999px;
+          background: rgba(255, 90, 31, 0.15) !important;
+          border: 1px solid rgba(255, 90, 31, 0.35) !important;
+          color: #ff8a3d !important;
+          font-size: 0.74rem;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+
+        .sp-meta-text {
+          font-size: 0.88rem;
+          color: rgba(255, 255, 255, 0.82) !important;
+          font-weight: 600;
+          margin-bottom: 0.6rem;
+          line-height: 1.5;
+        }
+
+        .sp-accent-link {
+          color: #ffbd59 !important;
+          font-weight: 800;
+          font-size: 0.96rem;
+          transition: color 200ms ease;
+          display: inline-block;
+          margin-top: 1rem;
+        }
+
+        .sp-accent-link:hover {
+          color: #ffffff !important;
+          text-decoration: underline;
+        }
+
+        /* ── CELEBRITY LINEUP GRID ── */
+        .sp-celebrity-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 1.6rem;
+          margin-bottom: 3.8rem;
+        }
+
+        .sp-celeb-card {
+          border-radius: 26px;
+          overflow: hidden;
+          border: 1px solid rgba(255, 255, 255, 0.08) !important;
+          background: rgba(27, 17, 11, 0.65) !important;
+          box-shadow: 0 16px 45px rgba(0, 0, 0, 0.6);
+          transition: transform 300ms ease, box-shadow 300ms ease, border-color 300ms ease;
+        }
+
+        .sp-celeb-card:hover {
+          transform: translateY(-6px) scale(1.02);
+          border-color: rgba(255, 90, 31, 0.5) !important;
+          box-shadow: 0 22px 55px rgba(255, 90, 31, 0.35);
+        }
+
+        .sp-celeb-frame {
+          position: relative;
+          aspect-ratio: 4/5;
+          overflow: hidden;
+        }
+
+        .sp-celeb-frame img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          object-position: center top;
+          transition: transform 500ms ease;
+        }
+
+        .sp-celeb-card:hover .sp-celeb-frame img {
+          transform: scale(1.08);
+        }
+
+        .celeb-holo-sheen {
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, transparent 50%, rgba(207, 87, 4, 0.2) 100%);
+          opacity: 0;
+          transition: opacity 300ms ease;
+          pointer-events: none;
+        }
+
+        .sp-celeb-card:hover .celeb-holo-sheen {
+          opacity: 1;
+        }
+
+        .celeb-top-badges {
+          position: absolute;
+          top: 1.1rem;
+          left: 1.1rem;
+          right: 1.1rem;
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          z-index: 2;
+        }
+
+        .sp-headliner-badge {
+          padding: 0.38rem 0.95rem;
+          border-radius: 999px;
+          background: linear-gradient(120deg, #ff8a3d, #ff5a1f) !important;
+          color: #fff !important;
+          font-size: 0.72rem;
+          font-weight: 900;
+          letter-spacing: 0.06em;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .celeb-stage-tag {
+          padding: 0.32rem 0.85rem;
+          border-radius: 999px;
+          background: rgba(0, 0, 0, 0.75) !important;
+          backdrop-filter: blur(8px);
+          color: #fff !important;
+          font-size: 0.72rem;
+          font-weight: 700;
+        }
+
+        .celeb-mini-eq {
+          display: flex;
+          align-items: flex-end;
+          gap: 2px;
+          height: 14px;
+        }
+
+        .celeb-mini-eq span {
+          width: 3px;
+          background: #ffffff !important;
+          border-radius: 1px;
+          animation: eqMini 0.8s ease-in-out infinite alternate;
+        }
+
+        .celeb-mini-eq span:nth-child(1) { height: 6px; }
+        .celeb-mini-eq span:nth-child(2) { height: 14px; animation-delay: 0.2s; }
+        .celeb-mini-eq span:nth-child(3) { height: 9px; animation-delay: 0.4s; }
+
+        @keyframes eqMini {
+          0% { height: 4px; }
+          100% { height: 14px; }
+        }
+
+        .sp-celeb-overlay {
+          position: absolute;
+          inset: 0;
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-end;
+          padding: 1.6rem;
+          background: linear-gradient(180deg, transparent 35%, rgba(11, 7, 5, 0.95));
+          z-index: 2;
+        }
+
+        .celeb-genre-pill {
+          font-size: 0.75rem;
+          color: #ffbd59 !important;
+          font-weight: 800;
+          text-transform: uppercase;
+          letter-spacing: 0.1em;
+          margin-bottom: 0.35rem;
+        }
+
+        .sp-celeb-overlay h3 {
+          font-family: 'Outfit', sans-serif;
+          color: #fff !important;
+          font-size: 1.5rem;
+          font-weight: 900;
+          text-transform: uppercase;
+          letter-spacing: -0.01em;
+          line-height: 1.1;
+        }
+
+        .celeb-meta-row {
+          display: flex;
+          justify-content: space-between;
+          font-size: 0.84rem;
+          color: rgba(255, 255, 255, 0.85) !important;
+          margin-top: 0.5rem;
+        }
+
+        /* ── COUNTDOWN ── */
+        .sp-countdown {
+          text-align: center;
+          padding: 2.5rem 0 0;
+        }
+
+        .sp-countdown-grid {
+          display: inline-grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 1.4rem;
+          max-width: 640px;
+          width: 100%;
+        }
+
+        .sp-countdown-card {
+          background: rgba(27, 17, 11, 0.78) !important;
+          border: 1px solid rgba(255, 255, 255, 0.08) !important;
+          border-radius: 20px;
+          padding: 1.4rem 1.5rem;
+          text-align: center;
+          backdrop-filter: blur(16px);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 10px 30px rgba(0, 0, 0, 0.45);
+        }
+
+        .sp-countdown-card strong {
+          display: block;
+          font-family: 'Outfit', sans-serif;
+          font-size: clamp(2rem, 3.8vw, 2.8rem);
+          font-weight: 900;
+          color: #ffffff !important;
+          line-height: 1;
+          margin-bottom: 0.4rem;
+        }
+
+        .sp-countdown-card span {
+          font-size: 0.76rem;
+          font-weight: 800;
+          color: #ffbd59 !important;
+          text-transform: uppercase;
+          letter-spacing: 0.14em;
+        }
+
+        /* ── PRICING / TICKET TIERS GRID (CreatorOS Style) ── */
+        .sp-pricing-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 1fr);
+          gap: 2rem;
+          align-items: stretch;
+        }
+
+        .sp-pricing-card {
+          background: rgba(27, 17, 11, 0.68) !important;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 26px;
+          padding: clamp(2rem, 3.5vw, 2.6rem);
+          display: flex;
+          flex-direction: column;
+          position: relative;
+          backdrop-filter: blur(20px);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 18px 50px rgba(0, 0, 0, 0.55);
+          transition: transform 260ms ease, border-color 260ms ease, box-shadow 260ms ease;
+        }
+
+        .sp-pricing-card:hover {
+          transform: translateY(-5px);
+          border-color: rgba(255, 189, 89, 0.4);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 26px 65px rgba(0, 0, 0, 0.7);
+        }
+
+        .sp-featured-pricing {
+          background: linear-gradient(160deg, rgba(45, 22, 12, 0.9) 0%, rgba(20, 10, 6, 0.98) 100%) !important;
+          border: 1.5px solid rgba(255, 90, 31, 0.55) !important;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 22px 65px rgba(255, 90, 31, 0.28);
+          transform: scale(1.03);
+        }
+
+        .sp-featured-pricing:hover {
+          transform: scale(1.03) translateY(-5px);
+          border-color: #ff5a1f !important;
+          box-shadow: 0 28px 75px rgba(255, 90, 31, 0.4);
+        }
+
+        .sp-pricing-popular-tag {
+          position: absolute;
+          top: -13px;
+          left: 50%;
+          transform: translateX(-50%);
+          background: linear-gradient(120deg, #ff8a3d, #ff5a1f) !important;
+          color: #ffffff;
+          font-size: 0.72rem;
+          font-weight: 900;
+          letter-spacing: 0.12em;
+          padding: 0.35rem 1rem;
+          border-radius: 999px;
+          box-shadow: 0 4px 18px rgba(255, 90, 31, 0.45);
+          white-space: nowrap;
+        }
+
+        .sp-pricing-header {
+          margin-bottom: 1.6rem;
+        }
+
+        .sp-tier-badge {
+          display: inline-block;
+          font-size: 0.76rem;
+          font-weight: 800;
+          color: #ffbd59;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          margin-bottom: 0.7rem;
+        }
+
+        .sp-pricing-header h3 {
+          font-family: 'Outfit', sans-serif;
+          font-size: 1.6rem;
+          font-weight: 900;
+          color: #ffffff;
+          margin-bottom: 0.9rem;
+          letter-spacing: -0.02em;
+        }
+
+        .sp-pricing-cost strong {
+          font-family: 'Outfit', sans-serif;
+          font-size: 2.3rem;
+          font-weight: 900;
+          color: #ffffff;
+          letter-spacing: -0.03em;
+        }
+
+        .sp-pricing-sub {
+          font-size: 0.9rem;
+          color: var(--text-muted);
+          margin-top: 0.4rem;
+          line-height: 1.5;
+        }
+
+        .sp-pricing-divider {
+          height: 1px;
+          background: rgba(255, 255, 255, 0.08);
+          margin-bottom: 1.6rem;
+        }
+
+        .sp-pricing-features {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+          gap: 0.95rem;
+          margin-bottom: 2.2rem;
+        }
+
+        .sp-pricing-features li {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.85rem;
+          font-size: 0.94rem;
+          color: rgba(255, 255, 255, 0.88);
+          line-height: 1.55;
+        }
+
+        .sp-perk-check {
+          color: #ffbd59;
+          font-weight: 900;
+          flex-shrink: 0;
+          margin-top: 2px;
+        }
+
+        /* ── ABOUT ── */
+        .sp-about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: start; }
+        .sp-lead { font-size: 1.2rem; line-height: 1.78; color: #ffffff !important; margin-bottom: 1.2rem; word-spacing: 0.02em; }
+        .sp-about-text p { color: var(--text-muted) !important; line-height: 1.78; margin-bottom: 1.6rem; word-spacing: 0.02em; }
+        .sp-journey-steps { display: flex; flex-direction: column; gap: 0.95rem; }
+        .sp-journey-step { display: flex; align-items: center; gap: 1.1rem; padding: 0.95rem 1.3rem; background: rgba(27, 17, 11, 0.65) !important; border: 1px solid rgba(255, 255, 255, 0.08) !important; border-radius: 16px; }
+        .sp-step-num { width: 30px; height: 30px; background: #ffbd59 !important; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 0.88rem; color: #101819 !important; flex-shrink: 0; }
+        .sp-about-features h3 { font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #ffffff !important; margin-bottom: 0.9rem; }
+        .sp-tag-cloud { display: flex; flex-wrap: wrap; gap: 0.6rem; }
+        .sp-tag { display: inline-block; padding: 0.45rem 1rem; border-radius: 999px; background: rgba(255, 255, 255, 0.06) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; color: #ffffff !important; font-size: 0.85rem; font-weight: 600; }
+        .sp-tag-accent { background: rgba(255, 90, 31, 0.15) !important; border: 1px solid rgba(255, 90, 31, 0.35) !important; color: #ff8a3d !important; }
+
+        /* ── EVENTS ── */
+        .sp-events-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.8rem; }
+        .sp-future-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8rem; }
+
+        /* ── TIMELINE ── */
+        .sp-timeline { position: relative; display: flex; flex-direction: column; gap: 2rem; }
+        .sp-timeline::before { content: ''; position: absolute; left: 2.2rem; top: 0; bottom: 0; width: 2px; background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.25), transparent); }
+        .sp-timeline-item { display: flex; gap: 1.8rem; align-items: flex-start; }
+        .sp-timeline-icon { width: 46px; height: 46px; flex-shrink: 0; background: #ffbd59 !important; border-radius: 50%; display: grid; place-items: center; font-size: 1.05rem; font-weight: 900; color: #101819 !important; z-index: 1; box-shadow: 0 0 22px rgba(0, 0, 0, 0.4); }
+        .sp-timeline-content { flex: 1; }
+        .sp-year-highlight { font-size: 1.05rem; color: #ffbd59 !important; font-weight: 800; }
+        .sp-venue-text { font-size: 0.86rem; color: #ffffff !important; opacity: 0.9; font-weight: 600; margin-top: 0.75rem; }
+
+        /* ── HOTELS ── */
+        .sp-hotels-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8rem; }
+        .sp-hotel-card { display: flex; flex-direction: column; overflow: hidden; padding: 0 !important; }
+        .sp-hotel-img-wrap { height: 200px; overflow: hidden; }
+        .sp-hotel-img-wrap img { width: 100%; height: 100%; object-fit: cover; transition: transform 400ms ease; }
+        .sp-hotel-card:hover .sp-hotel-img-wrap img { transform: scale(1.06); }
+        .sp-hotel-body { padding: 1.6rem; display: flex; flex-direction: column; gap: 0.7rem; flex: 1; }
+        .sp-rating-tag { font-size: 0.8rem; font-weight: 700; color: #ffb000 !important; white-space: nowrap; background: rgba(255, 176, 0, 0.15) !important; padding: 0.25rem 0.7rem; border-radius: 999px; border: 1px solid rgba(255, 176, 0, 0.3) !important; }
+        .sp-contact-text { font-size: 0.84rem; color: rgba(255, 255, 255, 0.75) !important; line-height: 1.5; }
+
+        /* ── RESTAURANTS & DISCOUNTS ── */
+        .sp-restaurants-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8rem; }
+        .sp-discount-pill { padding: 0.35rem 0.95rem; border-radius: 999px; background: linear-gradient(120deg, #ff8a3d, #ff5a1f) !important; color: #ffffff !important; font-size: 0.74rem; font-weight: 900; letter-spacing: 0.02em; }
+        .sp-code-box { display: flex; align-items: center; gap: 0.85rem; padding: 0.7rem 1.1rem; background: rgba(0, 0, 0, 0.55) !important; border: 1px solid rgba(255, 255, 255, 0.08) !important; border-radius: 12px; margin-top: 0.5rem; }
+        .sp-code-box span { font-size: 0.85rem; color: var(--text-muted) !important; }
+        .sp-code-box code { font-family: monospace; background: rgba(255, 189, 89, 0.18) !important; border: 1px solid rgba(255, 189, 89, 0.35) !important; padding: 0.3rem 0.75rem; border-radius: 7px; color: #ffbd59 !important; font-weight: 800; }
+
+        .sp-discounts-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+        .sp-discount-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 0.8rem; }
+        .sp-big-discount { font-family: 'Outfit', sans-serif; font-size: 1.45rem; font-weight: 900; color: #ffbd59 !important; }
+        .sp-code-pill { font-family: monospace; background: rgba(255, 255, 255, 0.1) !important; border: 1px solid rgba(255, 255, 255, 0.18) !important; padding: 0.35rem 0.8rem; border-radius: 8px; color: #ffffff !important; font-weight: 800; font-size: 0.85rem; }
+
+        /* ── FACILITIES ── */
+        .sp-facilities-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+        .sp-facility-card { text-align: center; padding: 2.2rem 1.6rem !important; }
+
+        /* ── SPONSORSHIP ── */
+        .sp-sponsorship-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
+        .sp-sponsor-card { display: flex; flex-direction: column; gap: 1.1rem; }
+        .sp-sponsor-perks { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; flex: 1; }
+        .sp-sponsor-perks li { display: flex; align-items: flex-start; gap: 0.7rem; font-size: 0.92rem; color: var(--text-muted) !important; line-height: 1.5; }
+        .sp-check { color: #ffbd59 !important; font-weight: 900; }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 1200px) {
+          .sp-celebrity-grid, .sp-facilities-grid, .sp-sponsorship-grid, .sp-discounts-grid { grid-template-columns: repeat(3, 1fr); gap: 1.2rem; }
+          .stats-inner-grid { grid-template-columns: repeat(2, 1fr); gap: 1.2rem; }
+        }
+
+        @media (max-width: 992px) {
+          .sp-celebrity-grid, .sp-facilities-grid, .sp-sponsorship-grid, .sp-discounts-grid,
+          .sp-hotels-grid, .sp-restaurants-grid, .sp-future-grid, .sp-pricing-grid { grid-template-columns: 1fr; gap: 1.6rem; }
+          .sp-featured-pricing { transform: none; }
+          .sp-featured-pricing:hover { transform: translateY(-4px); }
+          .sp-about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+          .sp-countdown-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 640px) {
+          .sp-section { padding: 4.5rem 0; }
+          .sp-container { width: min(100%, calc(100% - 1.5rem)); }
+          .stats-inner-grid { grid-template-columns: repeat(2, 1fr); gap: 0.85rem; }
+          .stat-card { padding: 1.2rem 0.9rem; }
+          .stat-val { font-size: 1.8rem; }
+          .sp-hero-title { font-size: 2.9rem; }
+          .sp-hero-content { padding: 4.5rem 1rem 2.5rem; }
+          .sp-hero-actions { flex-direction: column; width: 100%; max-width: 290px; gap: 0.85rem; }
+          .sp-btn-ember, .sp-btn-ghost { width: 100%; text-align: center; padding: 0.9rem 1.8rem; }
+          .sp-countdown-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
+          .sp-countdown-card { padding: 1rem 0.85rem; }
+          .sp-timeline::before { left: 1rem; }
+          .sp-timeline-icon { width: 36px; height: 36px; font-size: 0.9rem; }
+        }
+      `})]})}export{E as default};

@@ -268,6 +268,7 @@ function DashboardPage() {
                     src={p.image}
                     alt={p.name}
                     loading="lazy"
+                    decoding="async"
                     onError={e => { e.currentTarget.src = assetUrl('/assets/prism-auth-visual.jpg') }}
                   />
                   <div className="celeb-holo-sheen" />
@@ -483,7 +484,7 @@ function DashboardPage() {
               <div key={hotel.name} className={`sp-glass-card sp-hotel-card ${idx === 0 ? 'sp-featured-border' : ''}`}>
                 {hotel.showImage && (
                   <div className="sp-hotel-img-wrap">
-                    <img src={hotel.image} alt={hotel.name} loading="lazy"
+                    <img src={hotel.image} alt={hotel.name} loading="lazy" decoding="async"
                       onError={e => { e.currentTarget.src = assetUrl('/assets/prism-auth-visual.jpg') }} />
                   </div>
                 )}

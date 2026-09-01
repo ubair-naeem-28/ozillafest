@@ -17,5 +17,21 @@ export default defineConfig({
     host: true,
     port: 8080,
     strictPort: true
+  },
+  build: {
+    target: 'es2020',
+    cssCodeSplit: true,
+    minify: 'esbuild',
+    chunkSizeWarningLimit: 1200,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-motion': ['framer-motion'],
+          'vendor-utils': ['axios', 'qrcode.react']
+        }
+      }
+    }
   }
 })
+

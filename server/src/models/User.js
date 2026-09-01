@@ -7,6 +7,8 @@ const userSchema = new mongoose.Schema(
     name: { type: String, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     phone: { type: String, trim: true, sparse: true, unique: true },
+    googleId: { type: String, trim: true, sparse: true },
+    avatar: { type: String, trim: true },
     passwordHash: { type: String },
     role: { type: String, enum: ['user', 'admin'], default: 'user' },
     otpCode: { type: String },

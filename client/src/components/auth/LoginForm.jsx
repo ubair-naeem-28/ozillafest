@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { GoogleLogin } from '@react-oauth/google'
 import { useAuth } from '../../hooks/useAuth'
 import { authService } from '../../services/authService'
 import { tokenStorage } from '../../utils/tokenStorage.util'
@@ -56,6 +57,24 @@ function LoginForm() {
     }
   }
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+    setError('')
+    setSuccess('')
+    setGoogleLoading(true)
+    try {
+      const response = await authService.googleAuth(credentialResponse.credential)
+      tokenStorage.setToken(response.token)
+      await checkAuth()
+      setSuccess('Google sign-in successful. Preparing your festival workspace...')
+      await new Promise((resolve) => setTimeout(resolve, 450))
+      navigate(safeReturnTo)
+    } catch (err) {
+      setError(err.response?.data?.message || err.message || 'Google sign-in failed')
+    } finally {
+      setGoogleLoading(false)
+    }
+  }
+
   const handleGoogleLogin = async () => {
     setError('')
     setSuccess('')
@@ -102,20 +121,34 @@ function LoginForm() {
         </div>
       )}
 
-      <div className="auth-social-wrap">
-        <button
-          type="button"
-          className="auth-btn auth-btn-outline auth-btn-google"
-          onClick={handleGoogleLogin}
-          disabled={googleLoading || loading}
-        >
-          <img
-            src={GOOGLE_LOGO_DATA_URL}
-            alt="Google logo"
-            className="auth-google-logo"
-          />
-          <span>{googleLoading ? 'Opening Google...' : 'Sign in with Google'}</span>
-        </button>
+      <div className="auth-social-wrap" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+        {googleClientId ? (
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => setError('Google Sign-In failed. Please try again.')}
+              theme="filled_black"
+              shape="pill"
+              size="large"
+              width="100%"
+              text="signin_with"
+            />
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="auth-btn auth-btn-outline auth-btn-google"
+            onClick={handleGoogleLogin}
+            disabled={googleLoading || loading}
+          >
+            <img
+              src={GOOGLE_LOGO_DATA_URL}
+              alt="Google logo"
+              className="auth-google-logo"
+            />
+            <span>{googleLoading ? 'Opening Google...' : 'Sign in with Google'}</span>
+          </button>
+        )}
       </div>
 
       <div className="auth-divider">

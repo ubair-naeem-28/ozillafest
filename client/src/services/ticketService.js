@@ -633,6 +633,60 @@ export const ticketService = {
     }
   },
 
+  submitHiddenForm(url, fields = {}) {
+    const form = document.createElement('form')
+    form.method = 'POST'
+    form.action = url
+    Object.keys(fields).forEach((key) => {
+      const input = document.createElement('input')
+      input.type = 'hidden'
+      input.name = key
+      input.value = fields[key]
+      form.appendChild(input)
+    })
+    document.body.appendChild(form)
+    form.submit()
+  },
+
+  async initiateJazzCashCheckout(ticketId, returnUrl) {
+    try {
+      const response = await apiClient.post(`/tickets/${ticketId}/jazzcash-checkout`, { returnUrl })
+      return response.data
+    } catch (error) {
+      if (markLocalMode(error)) {
+        return {
+          postUrl: 'https://sandbox.jazzcash.com.pk/CustomerPortal/transactionmanagement/merchantform/',
+          payload: {
+            pp_Version: '1.1',
+            pp_TxnType: 'MWALLET',
+            pp_Amount: '100',
+            pp_TxnRefNo: `T${Date.now()}`
+          }
+        }
+      }
+      throw error
+    }
+  },
+
+  async initiateEasypaisaCheckout(ticketId, postBackUrl) {
+    try {
+      const response = await apiClient.post(`/tickets/${ticketId}/easypaisa-checkout`, { postBackUrl })
+      return response.data
+    } catch (error) {
+      if (markLocalMode(error)) {
+        return {
+          postUrl: 'https://easypay.easypaisa.com.pk/easypay-service/rest/v4/initiate-ma-transaction',
+          checkoutUrl: `${window.location.origin}/tickets/view/${ticketId}?payment=success`,
+          payload: {
+            orderId: `EP-OZ-${ticketId}`,
+            transactionAmount: '1.0'
+          }
+        }
+      }
+      throw error
+    }
+  },
+
   async initiatePayFastCheckout(ticketId) {
     if (forceLocalMode) {
       const tickets = readLocalTickets()
@@ -643,7 +697,7 @@ export const ticketService = {
         ticketId,
         checkout: {
           basket_id: `OZILLA-${ticketId}-${Date.now().toString().slice(-6)}`,
-          txnamt: String((ticket?.quantity || 1) * 1000),
+          txnamt: String((ticket?.quantity || 1) * 1),
           is_sandbox: true
         }
       }
@@ -661,7 +715,7 @@ export const ticketService = {
           ticketId,
           checkout: {
             basket_id: `OZILLA-${ticketId}-${Date.now().toString().slice(-6)}`,
-            txnamt: String((ticket?.quantity || 1) * 1000),
+            txnamt: String((ticket?.quantity || 1) * 1),
             is_sandbox: true
           }
         }

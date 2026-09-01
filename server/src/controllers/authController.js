@@ -1,9 +1,12 @@
 import bcrypt from 'bcryptjs'
 import crypto from 'crypto'
+import { OAuth2Client } from 'google-auth-library'
 import { env } from '../config/env.js'
 import { User } from '../models/User.js'
 import { sendOtpEmail, sendPasswordResetEmail } from '../utils/email.js'
 import { signAuthToken } from '../utils/jwt.js'
+
+const googleOAuthClient = new OAuth2Client(env.googleClientId)
 
 function generateOtp() {
   return String(Math.floor(100000 + Math.random() * 900000))
@@ -35,19 +38,47 @@ async function upsertUserFromGoogleProfile({ profile }) {
     throw new Error('missing_email')
   }
 
-  let user = await User.findOne({ email })
+  const googleId = profile.sub || profile.id || undefined
+  const avatar = profile.picture || undefined
+  const firstName = profile.given_name || (profile.name ? profile.name.split(' ')[0] : 'Google')
+  const lastName = profile.family_name || (profile.name && profile.name.split(' ').slice(1).join(' ') ? profile.name.split(' ').slice(1).join(' ') : 'User')
+  const name = profile.name || `${firstName} ${lastName}`.trim()
+
+  let user = await User.findOne({
+    $or: [
+      { email },
+      ...(googleId ? [{ googleId }] : [])
+    ]
+  })
+
   if (!user) {
     user = await User.create({
-      firstName: profile.given_name || 'Google',
-      lastName: profile.family_name || 'User',
-      name: profile.name || `${profile.given_name || 'Google'} ${profile.family_name || 'User'}`.trim(),
+      googleId,
+      avatar,
+      firstName,
+      lastName,
+      name,
       email,
       emailVerified: true,
       role: env.adminEmails.includes(email) ? 'admin' : 'user'
     })
-  } else if (!user.emailVerified) {
-    user.emailVerified = true
-    await user.save()
+  } else {
+    let changed = false
+    if (!user.googleId && googleId) {
+      user.googleId = googleId
+      changed = true
+    }
+    if (!user.avatar && avatar) {
+      user.avatar = avatar
+      changed = true
+    }
+    if (!user.emailVerified) {
+      user.emailVerified = true
+      changed = true
+    }
+    if (changed) {
+      await user.save()
+    }
   }
 
   return user
@@ -350,7 +381,8 @@ async function exchangeGoogleIdTokenForProfile(idToken) {
     email: profile.email,
     name: profile.name || `${profile.given_name || ''} ${profile.family_name || ''}`.trim(),
     given_name: profile.given_name,
-    family_name: profile.family_name
+    family_name: profile.family_name,
+    picture: profile.picture
   }
 }
 
@@ -451,13 +483,15 @@ export async function googleCodeLogin(req, res) {
   }
 }
 
-export async function googleTokenLogin(req, res) {
-  const { credential, profile: clientProfile } = req.body
-  if (!credential && !clientProfile) {
-    return res.status(400).json({ message: 'Google credential token is required' })
+export async function googleAuth(req, res) {
+  const token = req.body.token || req.body.credential
+  const clientProfile = req.body.profile
+
+  if (!token && !clientProfile) {
+    return res.status(400).json({ message: 'Google token is required' })
   }
 
-  if ((!env.googleClientId && clientProfile) || credential === 'local-dev-token') {
+  if ((!env.googleClientId && clientProfile) || token === 'local-dev-token') {
     const profile = clientProfile || {
       email: 'ubair1100@gmail.com',
       name: 'Ubair Naeem',
@@ -465,28 +499,54 @@ export async function googleTokenLogin(req, res) {
       family_name: 'Naeem'
     }
     const user = await upsertUserFromGoogleProfile({ profile })
-    const token = signAuthToken(user._id.toString())
-    return res.json({
-      token,
+    const appToken = signAuthToken(user._id.toString())
+    return res.status(200).json({
+      token: appToken,
       user: user.toJSON()
     })
   }
 
   try {
-    const profile = clientProfile || await exchangeGoogleIdTokenForProfile(credential)
-    const user = await upsertUserFromGoogleProfile({ profile })
-    const token = signAuthToken(user._id.toString())
+    let profile = clientProfile
+    if (!profile && token) {
+      if (env.googleClientId) {
+        const ticket = await googleOAuthClient.verifyIdToken({
+          idToken: String(token),
+          audience: env.googleClientId
+        })
+        const payload = ticket.getPayload()
+        profile = {
+          sub: payload.sub,
+          email: payload.email,
+          name: payload.name || `${payload.given_name || ''} ${payload.family_name || ''}`.trim(),
+          given_name: payload.given_name,
+          family_name: payload.family_name,
+          picture: payload.picture
+        }
+      } else {
+        profile = await exchangeGoogleIdTokenForProfile(token)
+      }
+    }
 
-    return res.json({
-      token,
+    const user = await upsertUserFromGoogleProfile({ profile })
+    const appToken = signAuthToken(user._id.toString())
+
+    return res.status(200).json({
+      token: appToken,
       user: user.toJSON()
     })
   } catch (error) {
     if (clientProfile) {
       const user = await upsertUserFromGoogleProfile({ profile: clientProfile })
-      const token = signAuthToken(user._id.toString())
-      return res.json({ token, user: user.toJSON() })
+      const appToken = signAuthToken(user._id.toString())
+      return res.status(200).json({ token: appToken, user: user.toJSON() })
     }
-    return res.status(401).json({ message: error.message || 'Google login failed' })
+    return res.status(400).json({
+      message: 'Google Authentication Failed',
+      error: error.message
+    })
   }
 }
+
+export const googleTokenLogin = googleAuth
+

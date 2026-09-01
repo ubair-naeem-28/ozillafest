@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
+import { GoogleLogin } from '@react-oauth/google'
 import { useAuth } from '../../hooks/useAuth'
 import { authService } from '../../services/authService'
 import { tokenStorage } from '../../utils/tokenStorage.util'
@@ -229,6 +230,23 @@ function RegisterForm() {
     }
   }
 
+  const handleGoogleSuccess = async (credentialResponse) => {
+    resetFeedback()
+    setGoogleLoading(true)
+    try {
+      const response = await authService.googleAuth(credentialResponse.credential)
+      tokenStorage.setToken(response.token)
+      await checkAuth()
+      setMessage('Google sign-up successful. Preparing your festival workspace...')
+      await pauseForTransition()
+      navigate(safeReturnTo)
+    } catch (err) {
+      setError(err.response?.data?.message || err.message || 'Google sign-up failed')
+    } finally {
+      setGoogleLoading(false)
+    }
+  }
+
   const handleGoogleRegister = async () => {
     resetFeedback()
     if (!googleClientId) {
@@ -264,16 +282,30 @@ function RegisterForm() {
       {error && <div className="auth-alert auth-alert-error register-alert">{error}</div>}
       {message && <div className="auth-alert auth-alert-success register-alert">{message}</div>}
 
-      <div className="auth-social-wrap">
-        <button
-          type="button"
-          className="auth-btn auth-btn-outline auth-btn-google register-google-btn"
-          onClick={handleGoogleRegister}
-          disabled={googleLoading || loading}
-        >
-          <img src={GOOGLE_LOGO_DATA_URL} alt="Google logo" className="auth-google-logo" />
-          <span>{googleLoading ? 'Opening Google...' : 'Sign up with Google'}</span>
-        </button>
+      <div className="auth-social-wrap" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
+        {googleClientId ? (
+          <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+            <GoogleLogin
+              onSuccess={handleGoogleSuccess}
+              onError={() => setError('Google Sign-Up failed. Please try again.')}
+              theme="filled_black"
+              shape="pill"
+              size="large"
+              width="100%"
+              text="signup_with"
+            />
+          </div>
+        ) : (
+          <button
+            type="button"
+            className="auth-btn auth-btn-outline auth-btn-google register-google-btn"
+            onClick={handleGoogleRegister}
+            disabled={googleLoading || loading}
+          >
+            <img src={GOOGLE_LOGO_DATA_URL} alt="Google logo" className="auth-google-logo" />
+            <span>{googleLoading ? 'Opening Google...' : 'Sign up with Google'}</span>
+          </button>
+        )}
       </div>
 
       <div className="auth-divider">

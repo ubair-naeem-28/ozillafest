@@ -1,6 +1,7 @@
 import { Router } from 'express'
 import {
   forgotPassword,
+  googleAuth,
   googleAuthCallback,
   googleAuthStart,
   googleCodeLogin,
@@ -27,6 +28,7 @@ router.post('/forgot-password', forgotPassword)
 router.post('/reset-password', resetPassword)
 router.get('/google/start', googleAuthStart)
 router.get('/google/callback', googleAuthCallback)
+router.post('/google', googleAuth)
 router.post('/google/code-login', googleCodeLogin)
 router.post('/google/token-login', googleTokenLogin)
 router.get('/me', requireAuth, me)

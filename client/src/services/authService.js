@@ -296,6 +296,29 @@ export const authService = {
     return response.data
   },
 
+  async googleAuth(token, profile) {
+    if (forceLocalMode) {
+      const p = profile || { email: 'ubair1100@gmail.com', firstName: 'Ubair', lastName: 'Naeem' }
+      const localUser = buildLocalUser(p)
+      const users = readLocalUsers()
+      if (!users.some((u) => u.email === localUser.email)) {
+        writeLocalUsers([localUser, ...users])
+      }
+      return createLocalAuthResponse(localUser)
+    }
+    try {
+      const response = await apiClient.post(API_ENDPOINTS.AUTH.GOOGLE, { token, profile })
+      return response.data
+    } catch (error) {
+      if (markLocalMode(error)) {
+        const p = profile || { email: 'ubair1100@gmail.com', firstName: 'Ubair', lastName: 'Naeem' }
+        const localUser = buildLocalUser(p)
+        return createLocalAuthResponse(localUser)
+      }
+      throw error
+    }
+  },
+
   async googleCodeLogin(code, redirectUri = 'postmessage', profile) {
     if (forceLocalMode) {
       const p = profile || { email: 'ubair1100@gmail.com', firstName: 'Ubair', lastName: 'Naeem' }
@@ -320,26 +343,7 @@ export const authService = {
   },
 
   async googleTokenLogin(credential, profile) {
-    if (forceLocalMode) {
-      const p = profile || { email: 'ubair1100@gmail.com', firstName: 'Ubair', lastName: 'Naeem' }
-      const localUser = buildLocalUser(p)
-      const users = readLocalUsers()
-      if (!users.some((u) => u.email === localUser.email)) {
-        writeLocalUsers([localUser, ...users])
-      }
-      return createLocalAuthResponse(localUser)
-    }
-    try {
-      const response = await apiClient.post(API_ENDPOINTS.AUTH.GOOGLE_TOKEN_LOGIN, { credential, profile })
-      return response.data
-    } catch (error) {
-      if (markLocalMode(error)) {
-        const p = profile || { email: 'ubair1100@gmail.com', firstName: 'Ubair', lastName: 'Naeem' }
-        const localUser = buildLocalUser(p)
-        return createLocalAuthResponse(localUser)
-      }
-      throw error
-    }
+    return this.googleAuth(credential, profile)
   },
 
   async updateProfile(payload) {

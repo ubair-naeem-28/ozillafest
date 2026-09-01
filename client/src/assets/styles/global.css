@@ -19,6 +19,22 @@ body {
   position: relative;
   line-height: 1.6;
   letter-spacing: -0.01em;
+  overflow-x: hidden;
+}
+
+/* GPU Hardware Acceleration & Smooth Rendering */
+.sp-celeb-card,
+.sp-glass-card,
+.sp-pricing-card,
+.stat-card {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Off-screen section rendering optimization (huge FPS boost on long pages) */
+.sp-section:not(#home) {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 700px;
 }
 
 h1,
@@ -45,6 +61,7 @@ button {
   cursor: pointer;
   border: none;
   outline: none;
+  user-select: none;
 }
 
 input,
@@ -57,9 +74,11 @@ select {
 img {
   max-width: 100%;
   height: auto;
+  content-visibility: auto;
 }
 
 #root {
   position: relative;
   z-index: 1;
 }
+

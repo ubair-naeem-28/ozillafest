@@ -22,7 +22,20 @@ await build({
   plugins: [react()],
   build: {
     outDir: distDir,
-    emptyOutDir: true
+    emptyOutDir: true,
+    target: 'es2020',
+    cssCodeSplit: true,
+    minify: 'esbuild',
+    chunkSizeWarningLimit: 1200,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom', 'react-router-dom'],
+          'vendor-motion': ['framer-motion'],
+          'vendor-utils': ['axios', 'qrcode.react']
+        }
+      }
+    }
   }
 })
 
