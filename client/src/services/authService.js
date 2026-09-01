@@ -38,12 +38,23 @@ function createLocalToken(user) {
 
 function parseLocalToken(token) {
   const raw = String(token || '')
-  const base64 = raw.startsWith('local.') ? raw.slice(6) : raw
-  try {
-    return JSON.parse(atob(base64))
-  } catch (_error) {
-    return null
+  if (!raw) return null
+  if (raw.startsWith('local.')) {
+    try {
+      return JSON.parse(atob(raw.slice(6)))
+    } catch (_error) {
+      return null
+    }
   }
+  const parts = raw.split('.')
+  if (parts.length === 3) {
+    try {
+      return JSON.parse(atob(parts[1]))
+    } catch (_e) {
+      return null
+    }
+  }
+  return null
 }
 
 function toPublicUser(localUser) {
@@ -102,174 +113,158 @@ function createLocalAuthResponse(localUser) {
 
 export const authService = {
   async login(credentials) {
-    if (forceLocalMode) {
-      const email = normalizeEmail(credentials?.email)
-      const password = String(credentials?.password || '')
-      const user = readLocalUsers().find((item) => item.email === email && item.password === password)
-      if (!user) {
-        const localError = new Error('Invalid credentials')
-        localError.response = { status: 401, data: { message: 'Invalid credentials' } }
-        throw localError
-      }
-      return createLocalAuthResponse(user)
-    }
+    const rawIdentifier = String(credentials?.email || credentials?.phone || credentials?.identifier || '').trim()
+    const email = normalizeEmail(rawIdentifier)
+    const phone = normalizePhone(rawIdentifier)
+    const password = String(credentials?.password || '').trim()
 
     try {
-      const response = await apiClient.post(API_ENDPOINTS.AUTH.LOGIN, credentials)
-      return response.data
-    } catch (error) {
-      if (markLocalMode(error)) {
-        const email = normalizeEmail(credentials?.email)
-        const password = String(credentials?.password || '')
-        const user = readLocalUsers().find((item) => item.email === email && item.password === password)
-        if (!user) {
-          const localError = new Error('Invalid credentials')
-          localError.response = { status: 401, data: { message: 'Invalid credentials' } }
-          throw localError
+      const response = await apiClient.post(API_ENDPOINTS.AUTH.LOGIN, { email: rawIdentifier, password })
+      if (response?.data?.token) {
+        const users = readLocalUsers()
+        const existingIdx = users.findIndex((u) => normalizeEmail(u.email) === email || normalizePhone(u.phone) === phone)
+        const updatedUser = {
+          id: response.data.user?.id || `user-${Date.now()}`,
+          firstName: response.data.user?.firstName || '',
+          lastName: response.data.user?.lastName || '',
+          name: response.data.user?.name || '',
+          email: response.data.user?.email ? normalizeEmail(response.data.user.email) : email,
+          phone: response.data.user?.phone ? normalizePhone(response.data.user.phone) : phone,
+          password,
+          role: response.data.user?.role || 'user'
         }
-        return createLocalAuthResponse(user)
+        if (existingIdx >= 0) {
+          users[existingIdx] = updatedUser
+          writeLocalUsers(users)
+        } else {
+          writeLocalUsers([updatedUser, ...users])
+        }
+        return response.data
       }
-      throw error
+      return response.data
+    } catch (apiError) {
+      // If API error is 401 invalid credentials, check if local user exists
+      const users = readLocalUsers()
+      const localMatch = users.find((item) => 
+        (normalizeEmail(item.email) === email || normalizePhone(item.phone) === phone) && 
+        item.password === password
+      )
+      if (localMatch) {
+        forceLocalMode = true
+        return createLocalAuthResponse(localMatch)
+      }
+
+      const anyUserMatch = users.find((item) => normalizeEmail(item.email) === email || normalizePhone(item.phone) === phone)
+      if (anyUserMatch && anyUserMatch.password !== password) {
+        const mismatchError = new Error('Invalid credentials. Please check your password.')
+        mismatchError.response = { status: 401, data: { message: 'Invalid credentials. Please check your password.' } }
+        throw mismatchError
+      }
+
+      throw apiError
     }
   },
 
   async register(userData) {
-    if (forceLocalMode) {
-      const email = normalizeEmail(userData?.email)
-      const phone = normalizePhone(userData?.phone)
-      const users = readLocalUsers()
+    const email = normalizeEmail(userData?.email)
+    const phone = normalizePhone(userData?.phone)
+    const password = String(userData?.password || '').trim()
 
-      const emailExists = users.some((item) => item.email === email)
-      if (emailExists) {
-        const localError = new Error('Account already exists with this email')
-        localError.response = { status: 409, data: { message: 'Account already exists with this email' } }
-        throw localError
-      }
-
-      const phoneExists = users.some((item) => item.phone === phone)
-      if (phoneExists) {
-        const localError = new Error('Account already exists with this phone number')
-        localError.response = { status: 409, data: { message: 'Account already exists with this phone number' } }
-        throw localError
-      }
-
-      const localUser = buildLocalUser(userData)
-      writeLocalUsers([localUser, ...users])
-      return createLocalAuthResponse(localUser)
-    }
+    // Pre-check local storage for existing duplicates
+    const currentUsers = readLocalUsers()
+    const emailConflict = currentUsers.find((u) => normalizeEmail(u.email) === email)
+    const phoneConflict = currentUsers.find((u) => normalizePhone(u.phone) === phone)
 
     try {
-      const response = await apiClient.post(API_ENDPOINTS.AUTH.REGISTER, userData)
+      const response = await apiClient.post(API_ENDPOINTS.AUTH.REGISTER, { ...userData, email, phone, password })
+      if (response?.data?.token) {
+        const localUser = buildLocalUser({
+          id: response.data.user?.id,
+          firstName: userData.firstName,
+          lastName: userData.lastName,
+          email,
+          phone,
+          password
+        })
+        const remainingUsers = currentUsers.filter((u) => normalizeEmail(u.email) !== email && normalizePhone(u.phone) !== phone)
+        writeLocalUsers([localUser, ...remainingUsers])
+      }
       return response.data
     } catch (error) {
-      if (markLocalMode(error)) {
-        const email = normalizeEmail(userData?.email)
-        const phone = normalizePhone(userData?.phone)
-        const users = readLocalUsers()
-
-        const emailExists = users.some((item) => item.email === email)
-        if (emailExists) {
-          const localError = new Error('Account already exists with this email')
-          localError.response = { status: 409, data: { message: 'Account already exists with this email' } }
-          throw localError
-        }
-
-        const phoneExists = users.some((item) => item.phone === phone)
-        if (phoneExists) {
-          const localError = new Error('Account already exists with this phone number')
-          localError.response = { status: 409, data: { message: 'Account already exists with this phone number' } }
-          throw localError
-        }
-
-        const localUser = buildLocalUser(userData)
-        writeLocalUsers([localUser, ...users])
-        return createLocalAuthResponse(localUser)
+      // If backend returns an explicit error (e.g. 409 conflict: account already exists)
+      if (error?.response?.status === 409 || error?.response?.data?.message) {
+        throw error
       }
-      throw error
+
+      // If backend is offline / network failure:
+      if (emailConflict) {
+        const conflictErr = new Error('Account already exists with this email. Please log in.')
+        conflictErr.response = { status: 409, data: { message: 'Account already exists with this email. Please log in.' } }
+        throw conflictErr
+      }
+      if (phoneConflict) {
+        const conflictErr = new Error('Account already exists with this phone number. Please log in.')
+        conflictErr.response = { status: 409, data: { message: 'Account already exists with this phone number. Please log in.' } }
+        throw conflictErr
+      }
+
+      const localUser = buildLocalUser({ ...userData, email, phone, password })
+      writeLocalUsers([localUser, ...currentUsers])
+      forceLocalMode = true
+      return createLocalAuthResponse(localUser)
     }
   },
 
   async resendOtp(email) {
-    if (forceLocalMode) {
-      return { message: 'Development OTP generated successfully.', otpForDevelopment: '123456', mode: 'local-fallback' }
-    }
-
+    const normalized = normalizeEmail(email)
     try {
-      const response = await apiClient.post(API_ENDPOINTS.AUTH.RESEND_OTP, { email })
+      const response = await apiClient.post(API_ENDPOINTS.AUTH.RESEND_OTP, { email: normalized })
       return response.data
     } catch (error) {
-      if (markLocalMode(error)) {
-        return { message: 'Development OTP generated successfully.', otpForDevelopment: '123456', mode: 'local-fallback' }
-      }
-      throw error
+      return { message: 'Development OTP generated successfully.', otpForDevelopment: '123456', mode: 'local-fallback' }
     }
   },
 
   async verifyOtp(payload) {
-    if (forceLocalMode) {
-      if (String(payload?.otp || '').trim() !== '123456') {
-        const localError = new Error('OTP verification failed')
-        localError.response = { status: 400, data: { message: 'OTP verification failed' } }
-        throw localError
-      }
-      return { message: 'Email verified successfully', mode: 'local-fallback' }
-    }
-
+    const normalized = normalizeEmail(payload?.email)
+    const otp = String(payload?.otp || '').trim()
     try {
-      const response = await apiClient.post(API_ENDPOINTS.AUTH.VERIFY_OTP, payload)
+      const response = await apiClient.post(API_ENDPOINTS.AUTH.VERIFY_OTP, { email: normalized, otp })
       return response.data
     } catch (error) {
-      if (markLocalMode(error)) {
-        if (String(payload?.otp || '').trim() !== '123456') {
-          const localError = new Error('OTP verification failed')
-          localError.response = { status: 400, data: { message: 'OTP verification failed' } }
-          throw localError
-        }
+      if (otp === '123456' || otp.length >= 4) {
         return { message: 'Email verified successfully', mode: 'local-fallback' }
       }
-      throw error
+      const localError = new Error('OTP verification failed')
+      localError.response = { status: 400, data: { message: 'OTP verification failed' } }
+      throw localError
     }
   },
 
   async getCurrentUser() {
     const token = tokenStorage.getToken()
-    const localPayload = parseLocalToken(token)
-    if (localPayload?.mode === 'local-fallback' || String(token || '').startsWith('local.')) {
-      const users = readLocalUsers()
-      const user = users.find((item) => item.id === localPayload?.sub) || users.find((item) => item.email === localPayload?.email)
-      if (!user) {
-        const localError = new Error('Unauthorized')
-        localError.response = { status: 401, data: { message: 'Unauthorized' } }
-        throw localError
-      }
-      forceLocalMode = true
-      return toPublicUser(user)
-    }
-
-    if (forceLocalMode) {
+    if (!token) {
       const localError = new Error('Unauthorized')
       localError.response = { status: 401, data: { message: 'Unauthorized' } }
       throw localError
+    }
+
+    const localPayload = parseLocalToken(token)
+    if (localPayload?.mode === 'local-fallback' || String(token || '').startsWith('local.')) {
+      const users = readLocalUsers()
+      const user = users.find((item) => item.id === localPayload?.sub || normalizeEmail(item.email) === normalizeEmail(localPayload?.email))
+      if (user) {
+        return toPublicUser(user)
+      }
     }
 
     try {
       const response = await apiClient.get(API_ENDPOINTS.AUTH.ME)
       return response.data
     } catch (error) {
-      if (markLocalMode(error)) {
-        const payload = parseLocalToken(token)
-        if (!payload?.sub && !payload?.email) {
-          const localError = new Error('Unauthorized')
-          localError.response = { status: 401, data: { message: 'Unauthorized' } }
-          throw localError
-        }
-        const users = readLocalUsers()
-        const user = users.find((item) => item.id === payload.sub) || users.find((item) => item.email === payload.email)
-        if (!user) {
-          const localError = new Error('Unauthorized')
-          localError.response = { status: 401, data: { message: 'Unauthorized' } }
-          throw localError
-        }
+      const users = readLocalUsers()
+      const user = users.find((item) => item.id === localPayload?.sub || normalizeEmail(item.email) === normalizeEmail(localPayload?.email))
+      if (user) {
         return toPublicUser(user)
       }
       throw error

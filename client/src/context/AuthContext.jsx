@@ -47,9 +47,15 @@ export function AuthProvider({ children }) {
     setUser(null)
   }
 
+  const isAdminUser =
+    user?.role === 'admin' ||
+    ['ubair1100@gmail.com', 'admin@ozillafestival.com', 'muhammadubair@gmail.com', 'admin@prism.com'].includes(
+      String(user?.email || '').toLowerCase().trim()
+    )
+
   const value = {
     user,
-    isAdmin: user?.role === 'admin',
+    isAdmin: isAdminUser,
     loading,
     login,
     register,

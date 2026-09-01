@@ -4,7 +4,7 @@ const ticketOptions = {
   regular: {
     label: 'General',
     value: 'regular',
-    price: 5000,
+    price: 1,
     seats: '1,200+',
     benefits: ['Festival entry', 'Food court access', 'Partner discount offers']
   },
@@ -78,9 +78,9 @@ function TicketRequestForm({ onSubmit, loading, profileDefaults, onBookingChange
   const maxQuantity = Math.max(1, Math.min(10, selectedRemaining || 10))
   const quantity = Number(formData.quantity) || 1
   const subtotal = selectedTicket.price * quantity
-  const serviceFee = Math.round(subtotal * 0.03)
+  const serviceFee = 0
   const discount = formData.ticketType === 'premium' ? 2500 : 0
-  const total = subtotal + serviceFee - discount
+  const total = Math.max(1, subtotal - discount)
   const loggedName = `${normalizedDefaults.firstName} ${normalizedDefaults.lastName}`.trim() || profileDefaults?.email
 
   useEffect(() => {
@@ -89,12 +89,12 @@ function TicketRequestForm({ onSubmit, loading, profileDefaults, onBookingChange
       day: formData.festivalDay === 'day1' ? 'Day 1' : 'Day 2',
       quantity,
       subtotal,
-      serviceFee,
+      serviceFee: 0,
       discount,
       total,
       benefits: selectedTicket.benefits
     })
-  }, [discount, formData.festivalDay, onBookingChange, quantity, selectedTicket, serviceFee, subtotal, total])
+  }, [discount, formData.festivalDay, onBookingChange, quantity, selectedTicket, subtotal, total])
 
   useEffect(() => {
     if (!availability?.byType || !selectedSoldOut) return
@@ -312,7 +312,7 @@ function TicketRequestForm({ onSubmit, loading, profileDefaults, onBookingChange
               <div><span>Ticket Type</span><strong>{selectedTicket.label}</strong></div>
               <div><span>Quantity</span><strong>{quantity}</strong></div>
               <div><span>Price</span><strong>PKR {subtotal.toLocaleString()}</strong></div>
-              <div><span>Service Fee</span><strong>PKR {serviceFee.toLocaleString()}</strong></div>
+              <div><span>Processing Fee</span><strong style={{ color: '#10b981' }}>Free (PKR 0)</strong></div>
               <div><span>Discount</span><strong>PKR {discount.toLocaleString()}</strong></div>
               <div className="ticket-total"><span>Total</span><strong>PKR {total.toLocaleString()}</strong></div>
             </aside>

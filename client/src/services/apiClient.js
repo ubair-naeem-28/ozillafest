@@ -32,9 +32,6 @@ apiClient.interceptors.response.use(
   (error) => {
     if (error.response?.status === 401) {
       tokenStorage.removeToken()
-      const returnTo = `${window.location.pathname}${window.location.search}`
-      const search = new URLSearchParams({ returnTo }).toString()
-      window.location.href = `/login?${search}`
     }
     return Promise.reject(error)
   }

@@ -22,7 +22,18 @@ export const env = {
     .split(',')
     .map((value) => value.trim())
     .filter(Boolean),
-  ibanAccount: process.env.IBAN_ACCOUNT || 'PK00-OZIL-1234567890',
+  ibanAccount: process.env.IBAN_ACCOUNT || '2205931265594411',
+  payoutBankName: process.env.PAYOUT_BANK_NAME || 'Mastercard Commercial Bank',
+  payoutAccountTitle: process.env.PAYOUT_ACCOUNT_TITLE || 'TALAL NASEER',
+  payfastMerchantId: process.env.PAYFAST_MERCHANT_ID || '10045',
+  payfastSecuredKey: process.env.PAYFAST_SECURED_KEY || 'test_secured_key_ozilla_2026',
+  payfastEnvironment: process.env.PAYFAST_ENV || 'sandbox',
+  payfastSandboxUrl: 'https://sandbox.payfast.com.pk/api/token',
+  payfastLiveUrl: 'https://ipg.payfast.com.pk/api/token',
+  jazzcashAccount: process.env.JAZZCASH_ACCOUNT || '0300-1234567',
+  jazzcashTitle: process.env.JAZZCASH_TITLE || 'TALAL NASEER',
+  easypaisaAccount: process.env.EASYPAISA_ACCOUNT || '0333-1234567',
+  easypaisaTitle: process.env.EASYPAISA_TITLE || 'TALAL NASEER',
   adminEmails: (process.env.ADMIN_EMAILS || '')
     .split(',')
     .map((email) => email.trim().toLowerCase())

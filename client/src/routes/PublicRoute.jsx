@@ -1,6 +1,7 @@
 import React from 'react'
 import { Navigate, Outlet, useLocation } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
+import { getSafeReturnTo } from '../utils/navigation.util'
 
 function PublicRoute({ children }) {
   const { user, loading } = useAuth()
@@ -13,7 +14,7 @@ function PublicRoute({ children }) {
   if (user) {
     const params = new URLSearchParams(location.search)
     const requested = params.get('returnTo')
-    const redirectTo = requested && requested.startsWith('/') ? requested : '/dashboard'
+    const redirectTo = getSafeReturnTo(requested, '/dashboard')
     return <Navigate to={redirectTo} replace />
   }
 

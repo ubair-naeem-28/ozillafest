@@ -63,6 +63,7 @@ function AppRouter() {
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
         <Route path="/account" element={<MainLayout><UserDashboardPage /></MainLayout>} />
+        <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
         <Route path="/admin/dashboard" element={<MainLayout><AdminDashboardPage /></MainLayout>} />
         <Route path="/tickets/my-tickets" element={<TicketLayout><MyTicketsPage /></TicketLayout>} />
         <Route path="/tickets/view/:ticketId" element={<TicketLayout><TicketViewPage /></TicketLayout>} />

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import { useAuth } from '../../hooks/useAuth'
 import { tokenStorage } from '../../utils/tokenStorage.util'
+import { getSafeReturnTo } from '../../utils/navigation.util'
 
 function GoogleAuthCallbackPage() {
   const [searchParams] = useSearchParams()
@@ -14,7 +15,7 @@ function GoogleAuthCallbackPage() {
       const token = searchParams.get('token')
       const error = searchParams.get('error')
       const returnTo = searchParams.get('returnTo')
-      const safeReturnTo = returnTo && returnTo.startsWith('/') ? returnTo : '/dashboard'
+      const safeReturnTo = getSafeReturnTo(returnTo, '/dashboard')
 
       if (error) {
         if (error === 'google_not_configured') {

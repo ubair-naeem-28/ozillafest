@@ -22,6 +22,20 @@ function detectCardType(number) {
   return null
 }
 
+function detectBankName(number) {
+  const clean = number.replace(/\D/g, '')
+  const prefix4 = clean.slice(0, 4)
+  if (['5893', '4012', '5399', '4519', '4507'].includes(prefix4)) return 'Meezan Bank'
+  if (['4116', '5241', '4214', '5488', '4027'].includes(prefix4)) return 'HBL'
+  if (['4848', '5189', '4589', '5294', '4282'].includes(prefix4)) return 'Bank Alfalah'
+  if (['4351', '5236', '4271', '5521', '4046'].includes(prefix4)) return 'MCB Bank'
+  if (['4021', '5123', '4921', '5424'].includes(prefix4)) return 'Standard Chartered'
+  if (['4203', '5250', '4894', '5320'].includes(prefix4)) return 'UBL'
+  if (['4008', '5456', '4692', '5378'].includes(prefix4)) return 'Allied Bank'
+  if (clean.length >= 6) return 'Verified Bank'
+  return ''
+}
+
 function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
   const [formData, setFormData] = useState({
     cardNumber: '',
@@ -35,6 +49,7 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
   const [processingPhase, setProcessingPhase] = useState('')
 
   const cardType = detectCardType(formData.cardNumber)
+  const detectedBank = detectBankName(formData.cardNumber)
 
   const handleCardNumberChange = (e) => {
     const formatted = formatCardNumber(e.target.value)
@@ -99,9 +114,9 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
     e.preventDefault()
     if (!validate()) return
 
-    setProcessingPhase('Validating card details...')
-    await new Promise((r) => setTimeout(r, 400))
-    setProcessingPhase('Deducting payment from card...')
+    setProcessingPhase('Validating card credentials with bank...')
+    await new Promise((r) => setTimeout(r, 450))
+    setProcessingPhase('Authorizing payment deduction...')
 
     try {
       await onSubmit({
@@ -120,11 +135,11 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
 
   return (
     <div className="card-payment-container">
-      {/* Logos Row matching image */}
+      {/* Logos Row */}
       <div className="card-brands-row">
         {/* Mastercard Logo */}
         <div className={`card-brand-logo mastercard ${cardType === 'mastercard' ? 'is-active' : ''}`} title="Mastercard">
-          <svg viewBox="0 0 38 24" width="48" height="30" aria-label="Mastercard">
+          <svg viewBox="0 0 38 24" width="44" height="28" aria-label="Mastercard">
             <circle cx="14" cy="12" r="10" fill="#EB001B" />
             <circle cx="24" cy="12" r="10" fill="#F79E1B" fillOpacity="0.88" />
           </svg>
@@ -132,8 +147,8 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
 
         {/* Visa Logo */}
         <div className={`card-brand-logo visa ${cardType === 'visa' ? 'is-active' : ''}`} title="VISA">
-          <svg viewBox="0 0 50 20" width="58" height="24" aria-label="VISA">
-            <text x="2" y="16" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontStyle="italic" fontSize="18" fill="#1A1F71" letterSpacing="1">
+          <svg viewBox="0 0 50 20" width="54" height="22" aria-label="VISA">
+            <text x="2" y="16" fontFamily="Arial, Helvetica, sans-serif" fontWeight="900" fontStyle="italic" fontSize="18" fill="#ffffff" letterSpacing="1">
               VISA
             </text>
           </svg>
@@ -145,7 +160,7 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
             <span className="up-red" />
             <span className="up-blue" />
             <span className="up-green" />
-            <span className="up-text">UnionPay<br />银联</span>
+            <span className="up-text">UnionPay</span>
           </div>
         </div>
       </div>
@@ -161,7 +176,7 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
               type="text"
               inputMode="numeric"
               autoComplete="cc-number"
-              placeholder="Card number"
+              placeholder="4000 1234 5678 9010"
               value={formData.cardNumber}
               onChange={handleCardNumberChange}
               className={`card-input ${errors.cardNumber ? 'has-error' : ''}`}
@@ -183,7 +198,7 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
           <input
             type="text"
             autoComplete="cc-name"
-            placeholder="Name on card"
+            placeholder="e.g. HAMZA ALI"
             value={formData.cardholderName}
             onChange={handleNameChange}
             className={`card-input ${errors.cardholderName ? 'has-error' : ''}`}
@@ -235,7 +250,7 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
               type="password"
               inputMode="numeric"
               autoComplete="cc-csc"
-              placeholder="CVV"
+              placeholder="•••"
               value={formData.cvv}
               onChange={handleCvvChange}
               className={`card-input ${errors.cvv ? 'has-error' : ''}`}
@@ -256,10 +271,10 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
               className="save-card-checkbox"
               disabled={loading}
             />
-            <span className="save-card-title">Save Card</span>
+            <span className="save-card-title">Save Card for Express Rebooking</span>
           </label>
           <p className="save-card-subtext">
-            We will save this card for your convenience. If required, you can remove the card in the "Payment Options" section in the "Account" menu.
+            Card details are encrypted with bank-grade 256-bit tokenization for your security.
           </p>
         </div>
 
@@ -291,7 +306,7 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
           >
             {loading ? (
               <span className="btn-loading-content">
-                <span className="btn-spinner" /> Deducting Payment...
+                <span className="btn-spinner" /> Processing Payment...
               </span>
             ) : (
               amount ? `Pay Now • PKR ${amount.toLocaleString()}` : 'Pay Now'
@@ -301,52 +316,54 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
 
         {/* Trust Badges */}
         <div className="card-security-footer">
-          <span>🔒 256-Bit SSL Encrypted & PCI Compliant</span>
-          <span>⚡ Automatic Payment Deduction & Instant QR Ticket</span>
+          <span>🔒 256-Bit SSL Encrypted & PCI-DSS Compliant</span>
+          <span>⚡ Instant Verified QR Pass Delivery</span>
         </div>
       </form>
 
       <style>{`
         .card-payment-container {
-          background: #ffffff;
-          border: 1px solid #e2e8f0;
-          border-radius: 20px;
-          padding: clamp(1.2rem, 3vw, 2rem);
-          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+          background: rgba(27, 17, 11, 0.72);
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          border-radius: 22px;
+          padding: clamp(1.4rem, 3vw, 2.2rem);
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06), 0 18px 45px rgba(0, 0, 0, 0.6);
+          backdrop-filter: blur(20px);
           width: 100%;
+          color: #ffffff;
         }
 
         .card-brands-row {
           display: flex;
           align-items: center;
-          gap: 1.25rem;
-          margin-bottom: 1.8rem;
+          gap: 1rem;
+          margin-bottom: 1.6rem;
           padding-bottom: 1.2rem;
-          border-bottom: 1px solid #edf2f7;
+          border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .card-brand-logo {
           display: flex;
           align-items: center;
           justify-content: center;
-          padding: 0.35rem 0.6rem;
-          border-radius: 8px;
-          background: #f8fafc;
-          border: 1px solid #e2e8f0;
+          padding: 0.4rem 0.75rem;
+          border-radius: 10px;
+          background: rgba(0, 0, 0, 0.5);
+          border: 1px solid rgba(255, 255, 255, 0.12);
           transition: all 0.2s ease;
         }
 
         .card-brand-logo.is-active {
-          border-color: #f97316;
-          background: #fff7ed;
-          box-shadow: 0 0 0 2px rgba(249, 115, 22, 0.2);
+          border-color: #ff5a1f;
+          background: rgba(255, 90, 31, 0.15);
+          box-shadow: 0 0 0 2px rgba(255, 90, 31, 0.3);
         }
 
         .unionpay-badge {
           display: flex;
           align-items: center;
           gap: 2px;
-          height: 24px;
+          height: 22px;
           padding: 0 4px;
           background: #005a9c;
           border-radius: 4px;
@@ -355,20 +372,20 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
         }
 
         .unionpay-badge span.up-red {
-          width: 6px;
-          height: 18px;
+          width: 5px;
+          height: 16px;
           background: #e21c24;
           border-radius: 2px;
         }
         .unionpay-badge span.up-blue {
-          width: 6px;
-          height: 18px;
+          width: 5px;
+          height: 16px;
           background: #004586;
           border-radius: 2px;
         }
         .unionpay-badge span.up-green {
-          width: 6px;
-          height: 18px;
+          width: 5px;
+          height: 16px;
           background: #008146;
           border-radius: 2px;
         }
@@ -382,7 +399,7 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
         .card-payment-form {
           display: flex;
           flex-direction: column;
-          gap: 1.25rem;
+          gap: 1.3rem;
         }
 
         .card-field-group {
@@ -393,16 +410,16 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
         }
 
         .card-field-label {
-          font-size: 0.92rem;
-          font-weight: 600;
-          color: #475569;
+          font-size: 0.88rem;
+          font-weight: 700;
+          color: rgba(255, 255, 255, 0.88);
           display: flex;
           align-items: center;
           gap: 0.3rem;
         }
 
         .required-star {
-          color: #ef4444;
+          color: #ff5a1f;
           font-weight: 700;
         }
 
@@ -413,25 +430,30 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
 
         .card-input {
           width: 100%;
-          min-height: 50px;
-          padding: 0 1rem;
-          border: 1.5px solid #cbd5e1;
-          border-radius: 8px;
-          font-size: 1rem;
-          color: #1e293b;
-          background: #ffffff;
+          min-height: 52px;
+          padding: 0 1.1rem;
+          border: 1px solid rgba(255, 255, 255, 0.14);
+          border-radius: 14px;
+          font-size: 0.96rem;
+          color: #ffffff;
+          background: rgba(0, 0, 0, 0.6);
           outline: none;
+          font-family: inherit;
           transition: border-color 0.2s, box-shadow 0.2s;
         }
 
+        .card-input::placeholder {
+          color: rgba(255, 255, 255, 0.3);
+        }
+
         .card-input:focus {
-          border-color: #f97316;
-          box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+          border-color: #ff5a1f;
+          box-shadow: 0 0 0 3px rgba(255, 90, 31, 0.25);
         }
 
         .card-input.has-error {
           border-color: #ef4444;
-          background: #fef2f2;
+          background: rgba(239, 68, 68, 0.1);
         }
 
         .card-detected-badge {
@@ -440,30 +462,31 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
           top: 50%;
           transform: translateY(-50%);
           font-size: 0.72rem;
-          font-weight: 800;
-          padding: 0.25rem 0.5rem;
-          border-radius: 4px;
-          background: #ffedd5;
-          color: #c2410c;
-          letter-spacing: 0.05em;
+          font-weight: 900;
+          padding: 0.25rem 0.55rem;
+          border-radius: 6px;
+          background: rgba(255, 189, 89, 0.2);
+          color: #ffbd59;
+          border: 1px solid rgba(255, 189, 89, 0.35);
+          letter-spacing: 0.08em;
         }
 
         .card-field-error {
           font-size: 0.8rem;
-          color: #ef4444;
-          font-weight: 500;
+          color: #fca5a5;
+          font-weight: 600;
         }
 
         .card-row-two-col {
           display: grid;
           grid-template-columns: 1fr 1fr;
-          gap: 1rem;
+          gap: 1.1rem;
         }
 
         .cvv-info-btn {
           border: none;
           background: none;
-          color: #0284c7;
+          color: #ffbd59;
           cursor: pointer;
           font-size: 0.95rem;
           padding: 0 0.2rem;
@@ -475,26 +498,27 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
           position: absolute;
           right: 0;
           bottom: 100%;
-          background: #1e293b;
+          background: #1e0d06;
+          border: 1px solid rgba(255, 189, 89, 0.3);
           color: #fff;
           font-size: 0.75rem;
-          padding: 0.4rem 0.75rem;
-          border-radius: 6px;
-          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+          padding: 0.5rem 0.85rem;
+          border-radius: 8px;
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
           width: max-content;
-          max-width: 220px;
+          max-width: 240px;
           z-index: 10;
-          margin-bottom: 4px;
+          margin-bottom: 6px;
         }
 
         .save-card-wrapper {
-          margin-top: 0.5rem;
+          margin-top: 0.3rem;
         }
 
         .save-card-checkbox-label {
           display: flex;
           align-items: center;
-          gap: 0.6rem;
+          gap: 0.65rem;
           cursor: pointer;
           user-select: none;
         }
@@ -502,34 +526,34 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
         .save-card-checkbox {
           width: 18px;
           height: 18px;
-          accent-color: #f97316;
+          accent-color: #ff5a1f;
           cursor: pointer;
         }
 
         .save-card-title {
-          font-size: 0.95rem;
+          font-size: 0.92rem;
           font-weight: 700;
-          color: #1e293b;
+          color: rgba(255, 255, 255, 0.9);
         }
 
         .save-card-subtext {
-          margin: 0.35rem 0 0 1.7rem;
-          font-size: 0.82rem;
-          line-height: 1.45;
-          color: #64748b;
+          margin: 0.35rem 0 0 1.8rem;
+          font-size: 0.8rem;
+          line-height: 1.5;
+          color: rgba(255, 255, 255, 0.6);
         }
 
         .card-processing-status {
           display: flex;
           align-items: center;
           gap: 0.75rem;
-          padding: 0.75rem 1rem;
-          border-radius: 8px;
-          background: #fff7ed;
-          border: 1px solid #fed7aa;
-          color: #c2410c;
-          font-weight: 600;
-          font-size: 0.88rem;
+          padding: 0.85rem 1.2rem;
+          border-radius: 12px;
+          background: rgba(255, 90, 31, 0.15);
+          border: 1px solid rgba(255, 90, 31, 0.35);
+          color: #ff8a3d;
+          font-weight: 700;
+          font-size: 0.9rem;
           animation: pulse 1.5s infinite;
         }
 
@@ -537,8 +561,8 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
         .btn-spinner {
           width: 16px;
           height: 16px;
-          border: 2px solid rgba(194, 65, 12, 0.3);
-          border-top-color: #c2410c;
+          border: 2px solid rgba(255, 138, 61, 0.3);
+          border-top-color: #ff8a3d;
           border-radius: 50%;
           animation: spin 0.7s linear infinite;
         }
@@ -561,58 +585,54 @@ function CardPaymentForm({ amount, onSubmit, loading, onBack }) {
           display: flex;
           align-items: center;
           gap: 1rem;
-          margin-top: 0.6rem;
+          margin-top: 0.8rem;
         }
 
         .pay-now-btn {
           flex: 1;
-          min-height: 52px;
-          background: #f97316;
+          min-height: 54px;
+          background: linear-gradient(120deg, #ff8a3d, #ff5a1f 55%, #e0380c);
           border: none;
-          border-radius: 8px;
+          border-radius: 16px;
           color: #ffffff;
           font-size: 1.05rem;
-          font-weight: 700;
+          font-weight: 800;
+          letter-spacing: 0.01em;
           cursor: pointer;
-          transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+          transition: transform 0.2s ease, box-shadow 0.2s ease;
           display: flex;
           align-items: center;
           justify-content: center;
-          box-shadow: 0 4px 14px rgba(249, 115, 22, 0.35);
+          box-shadow: 0 10px 35px -8px rgba(255, 90, 31, 0.55);
         }
 
         .pay-now-btn:hover:not(:disabled) {
-          background: #ea580c;
-          transform: translateY(-1px);
-          box-shadow: 0 6px 20px rgba(249, 115, 22, 0.45);
-        }
-
-        .pay-now-btn:active:not(:disabled) {
-          transform: translateY(0);
+          transform: translateY(-2px);
+          box-shadow: 0 16px 45px -6px rgba(255, 90, 31, 0.75);
         }
 
         .pay-now-btn:disabled {
-          opacity: 0.75;
+          opacity: 0.65;
           cursor: not-allowed;
         }
 
         .btn-loading-content {
           display: flex;
           align-items: center;
-          gap: 0.6rem;
+          gap: 0.65rem;
         }
 
         .card-security-footer {
           display: flex;
           flex-wrap: wrap;
           justify-content: space-between;
-          gap: 0.5rem;
-          margin-top: 0.6rem;
-          padding-top: 0.9rem;
-          border-top: 1px dashed #e2e8f0;
-          font-size: 0.78rem;
-          color: #64748b;
-          font-weight: 500;
+          gap: 0.6rem;
+          margin-top: 0.8rem;
+          padding-top: 1rem;
+          border-top: 1px dashed rgba(255, 255, 255, 0.1);
+          font-size: 0.8rem;
+          color: rgba(255, 255, 255, 0.55);
+          font-weight: 600;
         }
 
         @media (max-width: 480px) {

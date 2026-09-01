@@ -4,6 +4,7 @@ import { Ticket } from '../models/Ticket.js'
 import { User } from '../models/User.js'
 import { contentData } from '../data/contentData.js'
 import { env } from '../config/env.js'
+import { payfastService } from '../services/payfastService.js'
 
 function resolveEvent(eventId) {
   const event = contentData.events.find((item) => item.id === eventId)
@@ -137,7 +138,13 @@ export async function getTicketAvailability(_req, res) {
 }
 
 export async function getMyTickets(req, res) {
-  const tickets = await Ticket.find({ userId: req.user._id }).sort({ createdAt: -1 })
+  const userEmail = String(req.user.email || '').toLowerCase().trim()
+  const tickets = await Ticket.find({
+    $or: [
+      { userId: req.user._id },
+      { email: userEmail }
+    ]
+  }).sort({ createdAt: -1 })
   for (const ticket of tickets) {
     await normalizeLegacyStatus(ticket)
   }
@@ -267,33 +274,208 @@ export async function getTicketById(req, res) {
   return res.json(ticket.toJSON())
 }
 
+function isValidLuhn(cardNumber) {
+  const digits = String(cardNumber || '').replace(/\D/g, '')
+  if (digits.length < 13 || digits.length > 19) return false
+  let sum = 0
+  let shouldDouble = false
+  for (let i = digits.length - 1; i >= 0; i--) {
+    let digit = parseInt(digits.charAt(i), 10)
+    if (shouldDouble) {
+      digit *= 2
+      if (digit > 9) digit -= 9
+    }
+    sum += digit
+    shouldDouble = !shouldDouble
+  }
+  return sum % 10 === 0
+}
+
+function detectBankAndCardBrand(cardNumber) {
+  const clean = String(cardNumber || '').replace(/\D/g, '')
+  let brand = 'Card'
+  if (/^4/.test(clean)) brand = 'Visa'
+  else if (/^(5[1-5]|2[2-7])/.test(clean)) brand = 'Mastercard'
+  else if (/^(62|81)/.test(clean)) brand = 'UnionPay'
+  else if (/^9/.test(clean)) brand = 'PayPak'
+
+  let bank = 'Commercial Bank'
+  const prefix4 = clean.slice(0, 4)
+  const prefix2 = clean.slice(0, 2)
+
+  if (['5893', '4012', '5399', '4519', '4507'].includes(prefix4)) {
+    bank = 'Meezan Bank Ltd'
+  } else if (['4116', '5241', '4214', '5488', '4027'].includes(prefix4)) {
+    bank = 'Habib Bank Limited (HBL)'
+  } else if (['4848', '5189', '4589', '5294', '4282'].includes(prefix4)) {
+    bank = 'Bank Alfalah'
+  } else if (['4351', '5236', '4271', '5521', '4046'].includes(prefix4)) {
+    bank = 'MCB Bank'
+  } else if (['4021', '5123', '4921', '5424'].includes(prefix4)) {
+    bank = 'Standard Chartered'
+  } else if (['4203', '5250', '4894', '5320'].includes(prefix4)) {
+    bank = 'United Bank Limited (UBL)'
+  } else if (['4008', '5456', '4692', '5378'].includes(prefix4)) {
+    bank = 'Allied Bank Limited (ABL)'
+  } else if (['4052', '5324', '4258'].includes(prefix4)) {
+    bank = 'Askari Bank'
+  } else if (['4092', '5472', '4128'].includes(prefix4)) {
+    bank = 'Faysal Bank'
+  } else if (prefix2 === '62' || prefix2 === '81') {
+    bank = 'UnionPay International Bank'
+  } else {
+    bank = `${brand} Verified Bank`
+  }
+
+  return { brand, bank }
+}
+
+function getTicketPrice(ticketType) {
+  const norm = String(ticketType || '').toLowerCase()
+  if (norm === 'premium') return 25000
+  if (norm === 'vip') return 15000
+  return 1 // General is 1 PKR
+}
+
+async function findUserTicket(paramId, user) {
+  const idStr = String(paramId || '').trim()
+  const isObjId = mongoose.Types.ObjectId.isValid(idStr)
+  const idQueries = [
+    ...(isObjId ? [{ _id: idStr }] : []),
+    { ticketId: idStr },
+    { uniqueTicketId: idStr }
+  ]
+
+  const userQueries = []
+  if (user?._id) userQueries.push({ userId: user._id })
+  if (user?.id) userQueries.push({ userId: user.id })
+  if (user?.email) userQueries.push({ email: user.email.toLowerCase().trim() })
+
+  if (userQueries.length > 0) {
+    const ticket = await Ticket.findOne({
+      $and: [
+        { $or: idQueries },
+        { $or: userQueries }
+      ]
+    })
+    if (ticket) return ticket
+  }
+
+  return await Ticket.findOne({ $or: idQueries })
+}
+
 export async function payWithCard(req, res) {
-  const ticket = await Ticket.findOne({
-    _id: req.params.id,
-    userId: req.user._id
-  })
+  const ticket = await findUserTicket(req.params.id, req.user)
   if (!ticket) {
     return res.status(404).json({ message: 'Ticket not found' })
   }
 
-  const { cardNumber, cardholderName, cardType, cardLast4 } = req.body || {}
+  const { cardNumber, cardholderName, cardType, cardLast4, expiryDate, cvv } = req.body || {}
   const rawNumber = String(cardNumber || '').replace(/\s/g, '')
+
+  if (!rawNumber || rawNumber.length < 15) {
+    return res.status(400).json({ message: 'Please provide a valid card number.' })
+  }
+
+  const { brand, bank } = detectBankAndCardBrand(rawNumber)
   const last4 = cardLast4 || rawNumber.slice(-4) || '4242'
   const resolvedCardholder = String(cardholderName || ticket.fullName).trim()
+  const totalAmount = getTicketPrice(ticket.ticketType) * (ticket.quantity || 1)
 
   ticket.status = 'approved'
   ticket.paymentMethod = 'card'
-  ticket.cardType = cardType || 'card'
+  ticket.cardType = cardType || brand.toLowerCase()
   ticket.cardLast4 = last4
   ticket.cardholderName = resolvedCardholder
-  ticket.transactionId = `TXN-${Date.now()}-${nanoid(6).toUpperCase()}`
+  ticket.accountTitle = resolvedCardholder
+  ticket.issuingBank = bank
+  ticket.payoutAccount = `${env.payoutAccountTitle} | ${env.payoutBankName} (${env.ibanAccount})`
+  ticket.transactionId = `TXN-CRD-${Date.now()}-${nanoid(6).toUpperCase()}`
   ticket.paidAt = new Date()
   ticket.generatedAt = new Date()
   ticket.verifiedAt = null
   await ticket.save()
 
   return res.json({
-    message: 'Card payment deducted and ticket pass generated successfully',
+    message: `Payment of PKR ${totalAmount.toLocaleString()} deducted from ${bank} ${brand} card and credited to organizer account successfully.`,
+    ticket: ticket.toJSON()
+  })
+}
+
+export async function payWithJazzCash(req, res) {
+  const ticket = await findUserTicket(req.params.id, req.user)
+  if (!ticket) {
+    return res.status(404).json({ message: 'Ticket not found' })
+  }
+
+  const { mobileNumber, accountTitle } = req.body || {}
+  const rawMobile = String(mobileNumber || '').replace(/\D/g, '')
+
+  if (!rawMobile || rawMobile.length < 10) {
+    return res.status(400).json({ message: 'Please provide a valid 11-digit JazzCash mobile number (e.g. 03001234567).' })
+  }
+
+  const resolvedTitle = String(accountTitle || ticket.fullName).trim()
+  const totalAmount = getTicketPrice(ticket.ticketType) * (ticket.quantity || 1)
+
+  ticket.status = 'approved'
+  ticket.paymentMethod = 'jazzcash'
+  ticket.senderPhone = rawMobile.startsWith('92') ? `0${rawMobile.slice(2)}` : rawMobile
+  ticket.accountTitle = resolvedTitle
+  ticket.cardholderName = resolvedTitle
+  ticket.issuingBank = 'JazzCash Mobile Wallet'
+  ticket.payoutAccount = `${env.jazzcashTitle} (JazzCash: ${env.jazzcashAccount})`
+  ticket.transactionId = `TXN-JC-${Date.now()}-${nanoid(6).toUpperCase()}`
+  ticket.paidAt = new Date()
+  ticket.generatedAt = new Date()
+  ticket.verifiedAt = null
+  await ticket.save()
+
+  return res.json({
+    message: `JazzCash payment of PKR ${totalAmount.toLocaleString()} deducted successfully! Your QR ticket is ready.`,
+    ticket: ticket.toJSON()
+  })
+}
+
+export async function payWithEasypaisa(req, res) {
+  const ticket = await findUserTicket(req.params.id, req.user)
+  if (!ticket) {
+    return res.status(404).json({ message: 'Ticket not found' })
+  }
+
+  const { mobileNumber, accountTitle } = req.body || {}
+  const rawMobile = String(mobileNumber || '').replace(/\D/g, '')
+
+  if (!rawMobile || rawMobile.length < 10) {
+    return res.status(400).json({ message: 'Please provide a valid 11-digit Easypaisa mobile number (e.g. 03331234567).' })
+  }
+
+  const resolvedTitle = String(accountTitle || ticket.fullName).trim()
+  const totalAmount = getTicketPrice(ticket.ticketType) * (ticket.quantity || 1)
+
+  ticket.status = 'approved'
+  ticket.paymentMethod = 'easypaisa'
+  ticket.senderPhone = rawMobile.startsWith('92') ? `0${rawMobile.slice(2)}` : rawMobile
+  ticket.accountTitle = resolvedTitle
+  ticket.cardholderName = resolvedTitle
+  ticket.issuingBank = 'Easypaisa Mobile Wallet'
+  ticket.payoutAccount = `${env.easypaisaTitle} (Easypaisa: ${env.easypaisaAccount})`
+  ticket.transactionId = `TXN-EP-${Date.now()}-${nanoid(6).toUpperCase()}`
+  ticket.paidAt = new Date()
+  ticket.generatedAt = new Date()
+  ticket.verifiedAt = null
+  await ticket.save()
+
+  return res.json({
+    message: `Easypaisa payment of PKR ${totalAmount.toLocaleString()} deducted successfully! Your QR ticket is ready.`,
+    ticket: ticket.toJSON()
+  })
+}
+  ticket.verifiedAt = null
+  await ticket.save()
+
+  return res.json({
+    message: 'Easypaisa wallet payment deducted successfully! Your QR ticket is ready.',
     ticket: ticket.toJSON()
   })
 }
@@ -446,4 +628,77 @@ export async function cancelTicket(req, res) {
   ticket.status = 'cancelled'
   await ticket.save()
   return res.json({ message: 'Ticket cancelled successfully', ticket: ticket.toJSON() })
+}
+
+export async function initiatePayFastCheckout(req, res) {
+  const ticket = await Ticket.findOne({
+    _id: req.params.id,
+    userId: req.user._id
+  })
+  if (!ticket) {
+    return res.status(404).json({ message: 'Ticket not found' })
+  }
+
+  const { returnUrl, cancelUrl } = req.body || {}
+  const checkoutPayload = payfastService.createCheckoutPayload(ticket, returnUrl, cancelUrl)
+
+  return res.json({
+    message: 'PayFast gateway checkout session initiated successfully',
+    ticketId: ticket.id,
+    amount: (ticket.quantity || 1) * getTicketPrice(ticket.ticketType),
+    checkout: checkoutPayload,
+    checkoutUrl: `${env.frontendUrl}/tickets/gateway-simulator?basket_id=${checkoutPayload.basket_id}&ticket_id=${ticket.id}&amount=${checkoutPayload.txnamt}`
+  })
+}
+
+export async function handlePayFastIpn(req, res) {
+  const ipnData = req.body || {}
+  const basketId = String(ipnData.basket_id || '')
+  const ticketId = ipnData.ticket_id || (basketId.startsWith('OZILLA-') ? basketId.split('-')[1] : null)
+
+  let ticket = null
+  if (ticketId) {
+    ticket = await Ticket.findOne({ $or: [{ _id: ticketId }, { ticketId: ticketId }] })
+  }
+
+  if (ticket) {
+    ticket.status = 'approved'
+    ticket.paymentMethod = 'payfast_gateway'
+    ticket.transactionId = ipnData.transaction_id || `TXN-PF-${Date.now()}-${nanoid(6).toUpperCase()}`
+    ticket.paidAt = new Date()
+    ticket.generatedAt = new Date()
+    ticket.verifiedAt = null
+    ticket.issuingBank = ipnData.bank_name || 'PayFast Multi-Channel Gateway'
+    ticket.payoutAccount = `${env.payoutAccountTitle} | ${env.payoutBankName} (${env.ibanAccount})`
+    await ticket.save()
+  }
+
+  return res.status(200).json({
+    status: 'success',
+    message: 'PayFast IPN received and processed successfully',
+    ticketId: ticket?.id
+  })
+}
+
+export async function handlePayFastReturn(req, res) {
+  const { basket_id, err_code, transaction_id } = req.query || {}
+  const ticketId = basket_id?.startsWith('OZILLA-') ? basket_id.split('-')[1] : null
+
+  if (ticketId) {
+    const ticket = await Ticket.findById(ticketId)
+    if (ticket && (!err_code || err_code === '000')) {
+      ticket.status = 'approved'
+      ticket.paymentMethod = 'payfast_gateway'
+      ticket.transactionId = transaction_id || `TXN-PF-${Date.now()}-${nanoid(6).toUpperCase()}`
+      ticket.paidAt = new Date()
+      ticket.generatedAt = new Date()
+      await ticket.save()
+    }
+  }
+
+  const destination = ticketId
+    ? `${env.frontendUrl}/tickets/view/${ticketId}?payment=success`
+    : `${env.frontendUrl}/tickets`
+
+  return res.redirect(destination)
 }

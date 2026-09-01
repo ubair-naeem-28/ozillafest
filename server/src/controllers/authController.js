@@ -135,22 +135,22 @@ export async function register(req, res) {
   const normalizedPhone = normalizePhone(phone)
 
   const existingByEmail = await User.findOne({ email: normalizedEmail })
-  if (existingByEmail?.passwordHash) {
-    return res.status(409).json({ message: 'Account already exists with this email' })
+  if (existingByEmail && (existingByEmail.passwordHash || existingByEmail.emailVerified)) {
+    return res.status(409).json({ message: 'Account already exists with this email. Please log in.' })
   }
 
-  const phoneConflict = await User.findOne({
+  const existingByPhone = await User.findOne({
     phone: normalizedPhone,
     _id: { $ne: existingByEmail?._id },
     passwordHash: { $exists: true, $ne: null }
   })
-  if (phoneConflict) {
-    return res.status(409).json({ message: 'Account already exists with this phone number' })
+  if (existingByPhone) {
+    return res.status(409).json({ message: 'Account already exists with this phone number. Please log in.' })
   }
 
   const user = existingByEmail || new User({ email: normalizedEmail })
-  user.firstName = firstName
-  user.lastName = lastName
+  user.firstName = firstName.trim()
+  user.lastName = lastName.trim()
   user.name = name || `${firstName} ${lastName}`.trim()
   user.phone = normalizedPhone
   user.emailVerified = true
@@ -165,19 +165,30 @@ export async function register(req, res) {
 }
 
 export async function login(req, res) {
-  const { email, password } = req.body
-  if (!email || !password) {
-    return res.status(400).json({ message: 'Email and password are required' })
+  const { email, phone, password } = req.body
+  const rawIdentifier = email || phone
+  if (!rawIdentifier || !password) {
+    return res.status(400).json({ message: 'Email or phone number and password are required' })
   }
 
-  const user = await User.findOne({ email: normalizeEmail(email) })
+  const normalizedIdentifier = String(rawIdentifier).trim().toLowerCase()
+  const normalizedPhone = normalizePhone(rawIdentifier)
+
+  const user = await User.findOne({
+    $or: [
+      { email: normalizedIdentifier },
+      { phone: normalizedPhone },
+      { phone: rawIdentifier }
+    ]
+  })
+
   if (!user || !user.passwordHash) {
-    return res.status(401).json({ message: 'Invalid credentials' })
+    return res.status(401).json({ message: 'Invalid credentials. Please check your email/phone and password.' })
   }
 
   const match = await bcrypt.compare(password, user.passwordHash)
   if (!match) {
-    return res.status(401).json({ message: 'Invalid credentials' })
+    return res.status(401).json({ message: 'Invalid credentials. Please check your password.' })
   }
 
   const token = signAuthToken(user._id.toString())

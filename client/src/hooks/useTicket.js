@@ -75,6 +75,61 @@ export function useTicket() {
     }
   }, [fetchMyTickets])
 
+  const payWithJazzCash = useCallback(async (ticketId, jazzCashData) => {
+    setLoading(true)
+    try {
+      const response = await ticketService.payWithJazzCash(ticketId, jazzCashData)
+      await fetchMyTickets()
+      return response
+    } catch (err) {
+      setError(err.message)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }, [fetchMyTickets])
+
+  const payWithEasypaisa = useCallback(async (ticketId, easypaisaData) => {
+    setLoading(true)
+    try {
+      const response = await ticketService.payWithEasypaisa(ticketId, easypaisaData)
+      await fetchMyTickets()
+      return response
+    } catch (err) {
+      setError(err.message)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }, [fetchMyTickets])
+
+  const initiatePayFastCheckout = useCallback(async (ticketId) => {
+    setLoading(true)
+    try {
+      const response = await ticketService.initiatePayFastCheckout(ticketId)
+      return response
+    } catch (err) {
+      setError(err.message)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }, [])
+
+  const completePayFastGateway = useCallback(async (ticketId, gatewayData) => {
+    setLoading(true)
+    try {
+      const response = await ticketService.completePayFastGateway(ticketId, gatewayData)
+      await fetchMyTickets()
+      return response
+    } catch (err) {
+      setError(err.message)
+      throw err
+    } finally {
+      setLoading(false)
+    }
+  }, [fetchMyTickets])
+
   return {
     tickets,
     loading,
@@ -83,6 +138,10 @@ export function useTicket() {
     requestTicket,
     getTicketById,
     payWithCard,
+    payWithJazzCash,
+    payWithEasypaisa,
+    initiatePayFastCheckout,
+    completePayFastGateway,
     uploadPaymentProof
   }
 }

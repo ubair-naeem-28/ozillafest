@@ -169,22 +169,38 @@ function AdminDashboardPage() {
         </div>
 
         <div className="bg-black/35 backdrop-blur-xl border border-white/10 rounded-2xl p-6 shadow-2xl">
-          <h2 className="text-lg font-extrabold text-white mb-4 pb-2 border-b border-white/10">Latest Transactions</h2>
+          <h2 className="text-lg font-extrabold text-white mb-4 pb-2 border-b border-white/10">Payment Audit Log & Transferred Funds</h2>
           {payments.length === 0 ? (
-            <p className="text-white/50 text-sm py-4">No payment activity recorded.</p>
+            <p className="text-white/50 text-sm py-4">No payment activity recorded yet.</p>
           ) : (
-            <div className="space-y-2">
-              {payments.slice(0, 6).map((p) => (
-                <div key={p.id} className="p-3 bg-white/5 rounded-xl flex items-center justify-between">
-                  <div>
-                    <p className="font-bold text-white text-sm">PKR {Number(p.amount || 0).toLocaleString()}</p>
-                    <p className="text-xs text-white/50">{p.ticketId || p.id} · {p.status}</p>
+            <div className="space-y-3">
+              {payments.slice(0, 10).map((p) => {
+                const amount = p.quantity ? p.quantity * 1000 : 1000
+                const methodLabel = p.paymentMethod === 'card' ? '💳 Debit/Credit Card' : p.paymentMethod === 'jazzcash' ? '🟠 JazzCash' : p.paymentMethod === 'easypaisa' ? '🟢 Easypaisa' : '⚡ PayFast Gateway'
+                return (
+                  <div key={p.id} className="p-4 bg-white/5 rounded-xl border border-white/5 flex flex-col gap-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-sm font-black text-[#ffbd59]">PKR {amount.toLocaleString()}</span>
+                      <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 uppercase">
+                        {p.status || 'approved'}
+                      </span>
+                    </div>
+                    <div className="grid grid-cols-2 gap-2 text-xs text-white/70">
+                      <div><strong className="text-white">User:</strong> {p.fullName || 'Guest'}</div>
+                      <div><strong className="text-white">Email:</strong> {p.email || '-'}</div>
+                      <div><strong className="text-white">Phone:</strong> {p.phone || p.senderPhone || '-'}</div>
+                      <div><strong className="text-white">CNIC:</strong> {p.idCardNumber || '-'}</div>
+                      <div><strong className="text-white">Method:</strong> {methodLabel}</div>
+                      <div><strong className="text-white">Txn ID:</strong> <code className="text-[#EC4899]">{p.transactionId || p.ticketId}</code></div>
+                    </div>
+                    {p.payoutAccount && (
+                      <div className="text-xs text-emerald-400 bg-emerald-500/10 p-2 rounded-lg border border-emerald-500/20">
+                        <strong>Credited To:</strong> {p.payoutAccount}
+                      </div>
+                    )}
                   </div>
-                  <span className="text-xs font-bold uppercase px-2.5 py-1 rounded-full bg-green-500/20 text-green-400">
-                    {p.status}
-                  </span>
-                </div>
-              ))}
+                )
+              })}
             </div>
           )}
         </div>

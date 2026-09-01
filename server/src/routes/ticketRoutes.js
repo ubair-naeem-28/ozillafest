@@ -10,6 +10,11 @@ import {
   getMyTickets,
   getTicketById,
   payWithCard,
+  payWithJazzCash,
+  payWithEasypaisa,
+  initiatePayFastCheckout,
+  handlePayFastIpn,
+  handlePayFastReturn,
   requestTicket,
   uploadPaymentProof,
   verifyTicket,
@@ -37,6 +42,8 @@ const upload = multer({ storage })
 router.get('/availability', getTicketAvailability)
 router.post('/verify-qr', verifyTicketByQr)
 router.get('/view/:id', getTicketById)
+router.post('/payfast-ipn', handlePayFastIpn)
+router.get('/payfast-return', handlePayFastReturn)
 
 // Protected ticket actions
 router.use(requireAuth)
@@ -46,6 +53,9 @@ router.post('/admin/:id/decision', requireAdmin, decideTicketAdmin)
 router.get('/my-tickets', getMyTickets)
 router.post('/:id/cancel', cancelTicket)
 router.post('/:id/pay-card', payWithCard)
+router.post('/:id/pay-jazzcash', payWithJazzCash)
+router.post('/:id/pay-easypaisa', payWithEasypaisa)
+router.post('/:id/payfast-checkout', initiatePayFastCheckout)
 router.post('/:id/payment-proof', upload.single('paymentProof'), uploadPaymentProof)
 router.post('/:id/verify', verifyTicket)
 
