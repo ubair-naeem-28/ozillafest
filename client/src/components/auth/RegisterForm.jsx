@@ -137,13 +137,8 @@ function RegisterForm() {
       setOtpSent(true)
       setOtpVerified(false)
       setResendSeconds(60)
-      if (response.otpForDevelopment) {
-        setOtp(response.otpForDevelopment)
-        setMessage(`${response.message} Development OTP: ${response.otpForDevelopment}`)
-      } else {
-        setOtp('')
-        setMessage(response.message || 'OTP has been sent to your email address. Please check your inbox.')
-      }
+      setOtp('')
+      setMessage(response.message || 'OTP has been sent to your email address. Please check your inbox.')
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Unable to send OTP.')
     } finally {

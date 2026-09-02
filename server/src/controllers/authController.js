@@ -119,24 +119,16 @@ export async function sendOtp(req, res) {
   try {
     await sendOtpEmail({ to: normalizedEmail, otpCode: otpRaw })
   } catch (error) {
-    const isDev = process.env.NODE_ENV !== 'production'
-    if (env.otpExposeForDev || isDev) {
-      return res.json({
-        success: true,
-        message: 'OTP generated successfully, but email delivery failed. Use development OTP.',
-        otpForDevelopment: otpRaw,
-        emailDelivery: 'failed',
-        emailError: error.message || 'Failed to send OTP email'
-      })
-    }
-    return res.status(500).json({ success: false, message: error.message || 'Failed to send OTP email' })
+    return res.status(500).json({
+      success: false,
+      message: `Failed to send email to ${normalizedEmail}. Reason: ${error.message || 'SMTP delivery failed'}`
+    })
   }
 
-  const response = { success: true, message: 'OTP sent to your email address' }
-  if (env.otpExposeForDev) {
-    response.otpForDevelopment = otpRaw
-  }
-  return res.json(response)
+  return res.json({
+    success: true,
+    message: `OTP code has been sent to ${normalizedEmail}. Please check your email inbox.`
+  })
 }
 
 export const resendOtp = sendOtp
