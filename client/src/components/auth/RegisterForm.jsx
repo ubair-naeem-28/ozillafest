@@ -133,7 +133,7 @@ function RegisterForm() {
 
     setOtpLoading(true)
     try {
-      const response = await authService.resendOtp(formData.email)
+      const response = await authService.sendOtp(formData.email)
       setOtpSent(true)
       setOtpVerified(false)
       setResendSeconds(60)
@@ -141,7 +141,8 @@ function RegisterForm() {
         setOtp(response.otpForDevelopment)
         setMessage(`${response.message} Development OTP: ${response.otpForDevelopment}`)
       } else {
-        setMessage(response.message || 'OTP sent to your email address.')
+        setOtp('')
+        setMessage(response.message || 'OTP has been sent to your email address. Please check your inbox.')
       }
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Unable to send OTP.')

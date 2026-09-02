@@ -221,7 +221,15 @@ export const authService = {
       const response = await apiClient.post(API_ENDPOINTS.AUTH.SEND_OTP, { email: normalized })
       return response.data
     } catch (error) {
-      return { message: 'Development OTP generated successfully.', otpForDevelopment: '123456', mode: 'local-fallback' }
+      if (error?.response?.data?.message) {
+        throw error
+      }
+      if (isBackendUnreachable(error)) {
+        const netErr = new Error('Cannot connect to backend server at http://localhost:5000. Please ensure the backend server is running.')
+        netErr.response = { status: 503, data: { message: 'Cannot connect to backend server at http://localhost:5000. Please ensure the backend server is running.' } }
+        throw netErr
+      }
+      throw error
     }
   },
 
@@ -236,12 +244,15 @@ export const authService = {
       const response = await apiClient.post(API_ENDPOINTS.AUTH.VERIFY_OTP, { email: normalized, otp })
       return response.data
     } catch (error) {
-      if (otp === '123456' || otp.length >= 4) {
-        return { message: 'Email verified successfully', mode: 'local-fallback' }
+      if (error?.response?.data?.message) {
+        throw error
       }
-      const localError = new Error('OTP verification failed')
-      localError.response = { status: 400, data: { message: 'OTP verification failed' } }
-      throw localError
+      if (isBackendUnreachable(error)) {
+        const netErr = new Error('Cannot connect to backend server at http://localhost:5000. Please ensure the backend server is running.')
+        netErr.response = { status: 503, data: { message: 'Cannot connect to backend server at http://localhost:5000. Please ensure the backend server is running.' } }
+        throw netErr
+      }
+      throw error
     }
   },
 
