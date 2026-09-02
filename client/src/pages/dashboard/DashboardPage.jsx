@@ -190,10 +190,50 @@ const historyEvents = [
 ]
 
 const sponsorshipTiers = [
-  { tier: 'Title Sponsor',    price: 'Premium',  perks: ['Exclusive brand naming rights', 'Stage backdrop placement', 'VIP zone branding', '30-second ad slot', 'Social media features'] },
-  { tier: 'Gold Sponsor',     price: 'High',     perks: ['Brand activation zone', 'Banner placements', 'Digital features', 'Influencer mentions', 'On-ground presence'] },
-  { tier: 'Silver Sponsor',   price: 'Mid',      perks: ['Logo on all materials', 'Social shoutout', 'Booth at festival', 'Feature in email campaigns'] },
-  { tier: 'Media Partner',    price: 'Custom',   perks: ['Media coverage rights', 'Press passes', 'Collaborative content', 'Announcement placement'] }
+  {
+    tier: 'Title Sponsor',
+    price: 'PREMIUM',
+    icon: '👑',
+    badge: 'FLAGSHIP PARTNER',
+    accent: '#ffbd59',
+    tagline: 'Maximum Brand Dominance',
+    isFeatured: true,
+    ctaText: 'Claim Title Partnership 👑',
+    perks: ['Exclusive brand naming rights', 'Main stage backdrop placement', 'VIP lounge & deck co-branding', '30-second main stage video slot', 'Dedicated social & press campaigns']
+  },
+  {
+    tier: 'Gold Sponsor',
+    price: 'HIGH IMPACT',
+    icon: '🥇',
+    badge: 'STAGE ACTIVATION',
+    accent: '#ff8a3d',
+    tagline: 'High-Energy Ground Presence',
+    isFeatured: false,
+    ctaText: 'Become Gold Sponsor ⚡',
+    perks: ['Exclusive brand activation zone', 'Perimeter banner placements', 'Digital festival app features', 'Influencer co-branding & mentions', 'On-ground brand booth space']
+  },
+  {
+    tier: 'Silver Sponsor',
+    price: 'GROWTH',
+    icon: '🥈',
+    badge: 'BRAND PARTNER',
+    accent: '#cbd5e1',
+    tagline: 'Targeted Festival Engagement',
+    isFeatured: false,
+    ctaText: 'Join Silver Tier ✨',
+    perks: ['Official festival website branding', 'Social media shoutouts', 'Sampling booth at food street', 'Newsletter sponsor placement', '10 complimentary festival passes']
+  },
+  {
+    tier: 'Media Partner',
+    price: 'CUSTOM',
+    icon: '🎙️',
+    badge: 'BROADCAST & PRESS',
+    accent: '#ec4899',
+    tagline: 'Official Media Rights',
+    isFeatured: false,
+    ctaText: 'Apply For Press Pass 🎙️',
+    perks: ['Official media coverage rights', 'All-access artist press passes', 'Exclusive backstage interview access', 'Press release announcement feature', 'Dedicated creator lounge access']
+  }
 ]
 
 const facilitiesList = [
@@ -990,10 +1030,10 @@ function DashboardPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <span className="sp-eyebrow">Brand Partnerships</span>
-            <h2 className="sp-section-title">Sponsorship Packages</h2>
+            <span className="sp-eyebrow">⚡ BRAND COLLABORATIONS</span>
+            <h2 className="sp-section-title">Sponsorship & Brand Packages</h2>
             <p className="sp-section-subtitle" style={{ margin: '0 auto' }}>
-              Be part of Lahore's biggest music festival. Gain massive on-ground visibility and digital engagement.
+              Partner with Pakistan's biggest live music festival. Gain unparalleled on-ground brand presence, digital engagement, and VIP hospitality.
             </p>
           </motion.div>
 
@@ -1001,21 +1041,60 @@ function DashboardPage() {
             {sponsorshipTiers.map((tier, idx) => (
               <motion.div
                 key={tier.tier}
-                className={`sp-glass-card sp-sponsor-card ${idx === 0 ? 'sp-featured-border' : ''}`}
-                initial={{ opacity: 0, y: 30 }}
+                className={`sp-glass-card sp-sponsor-card ${tier.isFeatured ? 'sp-sponsor-featured' : ''}`}
+                initial={{ opacity: 0, y: 35 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: idx * 0.1 }}
-                whileHover={{ y: -6 }}
+                whileHover={{ y: -10, scale: 1.02 }}
               >
-                <div className="sp-card-header">
-                  <h3>{tier.tier}</h3>
-                  <span className="sp-pill-badge">{tier.price}</span>
+                {tier.isFeatured && (
+                  <div className="sp-sponsor-popular-tag">MOST PRESTIGIOUS TIER</div>
+                )}
+
+                <div className="sp-sponsor-top">
+                  <div className="sp-sponsor-icon-wrap" style={{ borderColor: `${tier.accent}55`, background: `${tier.accent}15` }}>
+                    <span className="sp-sponsor-icon">{tier.icon}</span>
+                  </div>
+                  <span className="sp-sponsor-badge" style={{ color: tier.accent, borderColor: `${tier.accent}44`, background: `${tier.accent}14` }}>
+                    {tier.badge}
+                  </span>
                 </div>
+
+                <div className="sp-sponsor-header">
+                  <h3>{tier.tier}</h3>
+                  <div className="sp-sponsor-price-tag" style={{ color: tier.accent }}>
+                    {tier.price}
+                  </div>
+                  <p className="sp-sponsor-tagline">{tier.tagline}</p>
+                </div>
+
+                <div className="sp-sponsor-divider" />
+
                 <ul className="sp-sponsor-perks">
-                  {tier.perks.map(perk => <li key={perk}><span className="sp-check">✓</span>{perk}</li>)}
+                  {tier.perks.map((perk) => (
+                    <li key={perk}>
+                      <span className="sp-check" style={{ color: tier.accent }}>✓</span>
+                      <span>{perk}</span>
+                    </li>
+                  ))}
                 </ul>
-                <Link to="/tickets" className="sp-btn-ghost" style={{ textAlign: 'center', marginTop: '1.2rem' }}>Get Partner Pass</Link>
+
+                <motion.div
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  style={{ marginTop: 'auto', paddingTop: '1.2rem' }}
+                >
+                  <Link
+                    to="/tickets"
+                    className={tier.isFeatured ? 'sp-btn-ember w-full' : 'sp-btn-ghost w-full'}
+                    style={{ textAlign: 'center' }}
+                  >
+                    {tier.ctaText}
+                  </Link>
+                </motion.div>
+
+                <div className="sp-sponsor-glow-bottom" style={{ background: `linear-gradient(90deg, ${tier.accent}, transparent)` }} />
               </motion.div>
             ))}
           </div>
@@ -2128,12 +2207,152 @@ function DashboardPage() {
           height: 4px;
         }
 
-        /* ── SPONSORSHIP ── */
-        .sp-sponsorship-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
-        .sp-sponsor-card { display: flex; flex-direction: column; gap: 1.1rem; }
-        .sp-sponsor-perks { list-style: none; display: flex; flex-direction: column; gap: 0.65rem; flex: 1; }
-        .sp-sponsor-perks li { display: flex; align-items: flex-start; gap: 0.7rem; font-size: 0.92rem; color: var(--text-muted) !important; line-height: 1.5; }
-        .sp-check { color: #ffbd59 !important; font-weight: 900; }
+        /* ── BRAND SPONSORSHIP PACKAGES ── */
+        .sp-sponsorship-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 1.6rem;
+        }
+
+        .sp-sponsor-card {
+          display: flex;
+          flex-direction: column;
+          padding: 2.2rem 1.8rem !important;
+          position: relative;
+          overflow: hidden;
+          background: rgba(27, 17, 11, 0.78) !important;
+          border: 1px solid rgba(255, 255, 255, 0.1) !important;
+          border-radius: 22px;
+          transition: transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1), border-color 300ms ease, box-shadow 300ms ease;
+        }
+
+        .sp-sponsor-featured {
+          border-color: rgba(255, 189, 89, 0.5) !important;
+          background: linear-gradient(180deg, rgba(45, 24, 15, 0.9) 0%, rgba(20, 12, 8, 0.85) 100%) !important;
+          box-shadow: 0 0 35px rgba(255, 90, 31, 0.25);
+          transform: translateY(-4px);
+        }
+
+        .sp-sponsor-card:hover {
+          border-color: rgba(255, 189, 89, 0.6) !important;
+          box-shadow: 0 18px 45px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 90, 31, 0.25);
+        }
+
+        .sp-sponsor-popular-tag {
+          position: absolute;
+          top: 0;
+          left: 50%;
+          transform: translateX(-50%);
+          background: linear-gradient(90deg, #ff5a1f, #ffbd59);
+          color: #0B0705;
+          font-family: 'Outfit', sans-serif;
+          font-size: 0.65rem;
+          font-weight: 900;
+          letter-spacing: 0.12em;
+          padding: 0.28rem 1rem;
+          border-radius: 0 0 10px 10px;
+          white-space: nowrap;
+          box-shadow: 0 2px 10px rgba(255, 90, 31, 0.5);
+        }
+
+        .sp-sponsor-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          margin-bottom: 1.2rem;
+        }
+
+        .sp-sponsor-icon-wrap {
+          width: 48px;
+          height: 48px;
+          border-radius: 14px;
+          display: grid;
+          place-items: center;
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+          transition: transform 300ms ease;
+        }
+
+        .sp-sponsor-card:hover .sp-sponsor-icon-wrap {
+          transform: scale(1.1) rotate(-6deg);
+        }
+
+        .sp-sponsor-icon {
+          font-size: 1.45rem;
+          line-height: 1;
+        }
+
+        .sp-sponsor-badge {
+          font-size: 0.68rem;
+          font-weight: 900;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          padding: 0.25rem 0.65rem;
+          border-radius: 999px;
+          border: 1px solid;
+        }
+
+        .sp-sponsor-header h3 {
+          font-family: 'Outfit', sans-serif;
+          font-size: 1.45rem;
+          font-weight: 800;
+          color: #ffffff !important;
+          margin-bottom: 0.25rem;
+        }
+
+        .sp-sponsor-price-tag {
+          font-family: 'Outfit', sans-serif;
+          font-size: 1.15rem;
+          font-weight: 900;
+          letter-spacing: 0.04em;
+        }
+
+        .sp-sponsor-tagline {
+          font-size: 0.82rem;
+          color: var(--text-muted) !important;
+          margin-top: 0.25rem;
+        }
+
+        .sp-sponsor-divider {
+          width: 100%;
+          height: 1px;
+          background: rgba(255, 255, 255, 0.1);
+          margin: 1.2rem 0;
+        }
+
+        .sp-sponsor-perks {
+          list-style: none;
+          display: flex;
+          flex-direction: column;
+          gap: 0.75rem;
+          flex: 1;
+          margin-bottom: 1rem;
+        }
+
+        .sp-sponsor-perks li {
+          display: flex;
+          align-items: flex-start;
+          gap: 0.65rem;
+          font-size: 0.9rem;
+          color: var(--text-muted) !important;
+          line-height: 1.45;
+        }
+
+        .sp-sponsor-glow-bottom {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 3px;
+          opacity: 0.7;
+          transition: opacity 300ms ease, height 300ms ease;
+        }
+
+        .sp-sponsor-card:hover .sp-sponsor-glow-bottom {
+          opacity: 1;
+          height: 4px;
+        }
 
         /* ── RESPONSIVE ── */
         @media (max-width: 1200px) {
