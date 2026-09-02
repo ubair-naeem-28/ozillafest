@@ -268,34 +268,66 @@ function DashboardPage() {
         <div className="sp-hero-ambient-glow" />
 
         <div className="sp-hero-content">
-          <div className="sp-hero-badge">
+          <motion.div
+            className="sp-hero-badge"
+            initial={{ opacity: 0, y: -20, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.6 }}
+          >
             <span>✨</span>
             <strong>OZILLA FESTIVAL 2026 · LAHORE</strong>
-          </div>
+          </motion.div>
 
-          <h1 className="sp-hero-title">
+          <motion.h1
+            className="sp-hero-title"
+            initial={{ opacity: 0, y: 25 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.12 }}
+          >
             OZILLA FESTIVAL
-          </h1>
+          </motion.h1>
 
-          <p className="sp-hero-subtitle">
+          <motion.p
+            className="sp-hero-subtitle"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.25 }}
+          >
             Pakistan's Premier Music, Cultural & Entertainment Festival Live in Lahore. Experience 4 Mega Stages, Headline Artists, Gourmet Dining & Unmatched Sound.
-          </p>
+          </motion.p>
 
-          <div className="sp-hero-meta-strip">
+          <motion.div
+            className="sp-hero-meta-strip"
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.4 }}
+          >
             <span>📅 November 1, 2026</span>
             <span>📍 Lahore, Pakistan</span>
             <span>⚡ 4 Mega Stages</span>
             <span>🎟️ Official QR Passes</span>
-          </div>
+          </motion.div>
 
-          <div className="sp-hero-actions">
-            <a className="sp-btn-ember" href="#celebrities">
-              Explore Lineup
-            </a>
-            <Link className="sp-btn-ghost" to="/tickets">
-              Get VIP Passes
-            </Link>
-          </div>
+          <motion.div
+            className="sp-hero-actions"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.55 }}
+          >
+            <motion.a
+              className="sp-btn-ember"
+              href="#celebrities"
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.97 }}
+            >
+              Explore Lineup ⚡
+            </motion.a>
+            <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+              <Link className="sp-btn-ghost" to="/tickets">
+                Get VIP Passes 🎟️
+              </Link>
+            </motion.div>
+          </motion.div>
         </div>
       </section>
 
@@ -307,10 +339,11 @@ function DashboardPage() {
               <motion.div
                 key={st.label}
                 className="stat-card"
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 25 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.4, delay: i * 0.08 }}
+                whileHover={{ y: -5, scale: 1.02 }}
               >
                 <strong className="stat-val">{st.value}</strong>
                 <span className="stat-label">{st.label}</span>
@@ -324,17 +357,31 @@ function DashboardPage() {
       {/* ══ SECTION 01: CELEBRITIES & LINEUP ══ */}
       <section id="celebrities" className="sp-section sp-section-celebrities" aria-label="Celebrities Lineup">
         <div className="sp-container">
-          <div className="sp-section-header">
+          <motion.div
+            className="sp-section-header"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
             <span className="sp-eyebrow">Live on the Ozilla Stage</span>
             <h2 className="sp-section-title">Celebrity Singers & Performers</h2>
             <p className="sp-section-subtitle">
               Four powerhouse headline performers, one premium Lahore festival atmosphere, and an amphitheatre built for unforgettable crowd moments.
             </p>
-          </div>
+          </motion.div>
 
           <div className="sp-celebrity-grid">
-            {performers.map(p => (
-              <article key={p.name} className={`sp-celeb-card ${p.isHeadliner ? 'sp-celeb-headliner' : ''}`}>
+            {performers.map((p, i) => (
+              <motion.article
+                key={p.name}
+                className={`sp-celeb-card ${p.isHeadliner ? 'sp-celeb-headliner' : ''}`}
+                initial={{ opacity: 0, y: 35 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.5, delay: i * 0.1 }}
+                whileHover={{ y: -8, scale: 1.02 }}
+              >
                 <div className="sp-celeb-frame">
                   <img
                     src={p.image}
@@ -365,41 +412,64 @@ function DashboardPage() {
                     </div>
                   </div>
                 </div>
-              </article>
+              </motion.article>
             ))}
           </div>
 
           {/* Countdown to Festival */}
-          <div className="sp-countdown">
+          <motion.div
+            className="sp-countdown"
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.55 }}
+          >
             <p className="sp-eyebrow" style={{ marginBottom: '1.4rem' }}>Countdown to the First Beat Drop</p>
             <div className="sp-countdown-grid">
               {[['Days', countdown.days], ['Hours', countdown.hours], ['Minutes', countdown.minutes], ['Seconds', countdown.seconds]].map(([label, val]) => (
-                <div key={label} className="sp-countdown-card">
+                <motion.div
+                  key={label}
+                  className="sp-countdown-card"
+                  whileHover={{ scale: 1.06, y: -3 }}
+                  transition={{ type: 'spring', stiffness: 350 }}
+                >
                   <strong>{String(val).padStart(2, '0')}</strong>
                   <span>{label}</span>
-                </div>
+                </motion.div>
               ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* ══ SECTION 02: VIP & TICKET TIERS (CreatorOS Style) ══ */}
       <section id="vip-experience" className="sp-section sp-section-pricing" aria-label="Festival Passes">
         <div className="sp-container">
-          <div className="sp-section-header" style={{ textAlign: 'center' }}>
+          <motion.div
+            className="sp-section-header"
+            style={{ textAlign: 'center' }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
             <span className="sp-eyebrow">CHOOSE YOUR ACCESS</span>
             <h2 className="sp-section-title">Festival Passes & VIP Tiers</h2>
             <p className="sp-section-subtitle" style={{ margin: '0 auto' }}>
               Select your festival experience tier. Instant dynamic QR pass generated upon reservation with guaranteed fast-track admission.
             </p>
-          </div>
+          </motion.div>
 
           <div className="sp-pricing-grid">
-            {ticketTiers.map((tier) => (
-              <div
+            {ticketTiers.map((tier, idx) => (
+              <motion.div
                 key={tier.id}
                 className={`sp-pricing-card ${tier.isFeatured ? 'sp-featured-pricing' : ''}`}
+                initial={{ opacity: 0, y: 35 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.12 }}
+                whileHover={{ y: -8 }}
               >
                 {tier.isFeatured && (
                   <div className="sp-pricing-popular-tag">MOST POPULAR ACCESS</div>
@@ -431,7 +501,7 @@ function DashboardPage() {
                 >
                   {tier.ctaText}
                 </Link>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -440,18 +510,32 @@ function DashboardPage() {
       {/* ══ SECTION 03: FESTIVAL EXPERIENCE & ATMOSPHERE ══ */}
       <section id="about" className="sp-section sp-section-about" aria-label="About Ozilla">
         <div className="sp-container">
-          <div className="sp-section-header">
+          <motion.div
+            className="sp-section-header"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
             <span className="sp-eyebrow">⚡ THE ULTIMATE LIVE EXPERIENCE</span>
             <h2 className="sp-section-title">The Ozilla Festival Atmosphere</h2>
             <p className="sp-section-subtitle">
               Pakistan's flagship open-air music & cultural festival. 4 electrified stages, 100kW concert sound, headline celebrity acts, gourmet food street, and unmatched crowd energy under the Lahore night sky.
             </p>
-          </div>
+          </motion.div>
 
           {/* 4 Concert Pillars Grid */}
           <div className="sp-pillars-grid">
-            {festivalPillars.map((pillar) => (
-              <div key={pillar.title} className="sp-glass-card sp-pillar-card">
+            {festivalPillars.map((pillar, idx) => (
+              <motion.div
+                key={pillar.title}
+                className="sp-glass-card sp-pillar-card"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                whileHover={{ y: -6, scale: 1.02 }}
+              >
                 <div className="sp-pillar-top">
                   <span className="sp-pillar-icon">{pillar.icon}</span>
                   <span className="sp-pillar-badge">{pillar.badge}</span>
@@ -459,54 +543,96 @@ function DashboardPage() {
                 <h3 className="sp-pillar-title">{pillar.title}</h3>
                 <p className="sp-pillar-desc">{pillar.desc}</p>
                 <div className="sp-pillar-glow-line" />
-              </div>
+              </motion.div>
             ))}
           </div>
 
           {/* Festival Vibe & Highlights Showcase */}
-          <div className="sp-festival-vibe-banner">
+          <motion.div
+            className="sp-festival-vibe-banner"
+            initial={{ opacity: 0, y: 35 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.6 }}
+          >
             <div className="sp-vibe-left">
               <span className="sp-vibe-eyebrow">✨ FESTIVAL HIGHLIGHTS</span>
               <h3>What Makes Ozilla Legendary</h3>
               <p>Non-stop beats from golden hour to midnight, surrounded by festival activations and pure music culture.</p>
               <div className="sp-vibe-actions">
-                <a href="#celebrities" className="sp-btn-ember">
+                <motion.a
+                  href="#celebrities"
+                  className="sp-btn-ember"
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.97 }}
+                >
                   Explore Lineup ⚡
-                </a>
-                <Link to="/tickets" className="sp-btn-ghost">
-                  Book Festival Passes 🎟️
-                </Link>
+                </motion.a>
+                <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
+                  <Link to="/tickets" className="sp-btn-ghost">
+                    Book Festival Passes 🎟️
+                  </Link>
+                </motion.div>
               </div>
             </div>
 
             <div className="sp-vibe-tags-grid">
-              <div className="sp-vibe-tag">🔥 4 Mega Music Stages</div>
-              <div className="sp-vibe-tag">⚡ 100kW Laser & Sound System</div>
-              <div className="sp-vibe-tag">🎤 20+ Star Performers</div>
-              <div className="sp-vibe-tag">👥 10,000+ Music Lovers</div>
-              <div className="sp-vibe-tag">🍔 50+ Food & Beats Stalls</div>
-              <div className="sp-vibe-tag">🍸 VIP Artist Lounge & Deck</div>
-              <div className="sp-vibe-tag">🎟️ Verified QR Instant Passes</div>
-              <div className="sp-vibe-tag">🏨 Exclusive Partner Discounts</div>
+              {[
+                '🔥 4 Mega Music Stages',
+                '⚡ 100kW Laser & Sound System',
+                '🎤 20+ Star Performers',
+                '👥 10,000+ Music Lovers',
+                '🍔 50+ Food & Beats Stalls',
+                '🍸 VIP Artist Lounge & Deck',
+                '🎟️ Verified QR Instant Passes',
+                '🏨 Exclusive Partner Discounts'
+              ].map((tag, tIdx) => (
+                <motion.div
+                  key={tag}
+                  className="sp-vibe-tag"
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.35, delay: tIdx * 0.05 }}
+                  whileHover={{ scale: 1.04, x: 4 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  {tag}
+                </motion.div>
+              ))}
             </div>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* ══ SECTION 04: PAST FESTIVAL EDITIONS ══ */}
       <section id="events" className="sp-section sp-section-events" aria-label="Past Events">
         <div className="sp-container">
-          <div className="sp-section-header">
+          <motion.div
+            className="sp-section-header"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
             <span className="sp-eyebrow">Previous Editions</span>
             <h2 className="sp-section-title">Past Festival Milestones</h2>
             <p className="sp-section-subtitle">
               A legacy of sold-out stadium energy, breakthrough artist sets, and unforgettable Lahore nights.
             </p>
-          </div>
+          </motion.div>
 
           <div className="sp-events-grid">
-            {pastEvents.map(event => (
-              <div key={event.name} className="sp-glass-card sp-past-event-card">
+            {pastEvents.map((event, idx) => (
+              <motion.div
+                key={event.name}
+                className="sp-glass-card sp-past-event-card"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.12 }}
+                whileHover={{ y: -6 }}
+              >
                 <div className="sp-card-header">
                   <h3>{event.name}</h3>
                   <span className="sp-pill-badge">{event.status}</span>
@@ -520,7 +646,7 @@ function DashboardPage() {
                     <span />
                   </div>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -529,23 +655,37 @@ function DashboardPage() {
       {/* ══ SECTION 05: UPCOMING FESTIVAL ROADMAP ══ */}
       <section id="future-events" className="sp-section sp-section-future" aria-label="Upcoming Events">
         <div className="sp-container">
-          <div className="sp-section-header">
+          <motion.div
+            className="sp-section-header"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
             <span className="sp-eyebrow">Upcoming Concert Tour</span>
             <h2 className="sp-section-title">Future Festival Editions</h2>
             <p className="sp-section-subtitle">
               Mark your calendar for upcoming major festival editions, celebrity concert nights, and arena dates.
             </p>
-          </div>
+          </motion.div>
 
           <div className="sp-future-grid">
-            {futureEvents.map(ev => (
-              <div key={ev.name} className="sp-glass-card sp-future-card">
+            {futureEvents.map((ev, idx) => (
+              <motion.div
+                key={ev.name}
+                className="sp-glass-card sp-future-card"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.12 }}
+                whileHover={{ y: -6 }}
+              >
                 <span className="sp-pill-badge">{ev.status}</span>
                 <h3 style={{ marginTop: '0.8rem' }}>{ev.name}</h3>
                 <p className="sp-meta-text">📍 {ev.date} · {ev.location}</p>
                 <p className="sp-card-desc" style={{ flex: 1 }}>{ev.description}</p>
                 <Link to="/tickets" className="sp-accent-link">Get Tickets →</Link>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -617,14 +757,28 @@ function DashboardPage() {
       {/* ══ SECTION 07: HOTELS ══ */}
       <section id="hotels" className="sp-section sp-section-hotels" aria-label="Partner Hotels">
         <div className="sp-container">
-          <div className="sp-section-header">
+          <motion.div
+            className="sp-section-header"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
             <span className="sp-eyebrow">Hospitality Partners</span>
             <h2 className="sp-section-title">Partner Hotels in Lahore</h2>
-          </div>
+          </motion.div>
 
           <div className="sp-hotels-grid">
             {ozillaProfessionalContent.hotels.map((hotel, idx) => (
-              <div key={hotel.name} className={`sp-glass-card sp-hotel-card ${idx === 0 ? 'sp-featured-border' : ''}`}>
+              <motion.div
+                key={hotel.name}
+                className={`sp-glass-card sp-hotel-card ${idx === 0 ? 'sp-featured-border' : ''}`}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                whileHover={{ y: -6 }}
+              >
                 {hotel.showImage && (
                   <div className="sp-hotel-img-wrap">
                     <img src={hotel.image} alt={hotel.name} loading="lazy" decoding="async"
@@ -646,7 +800,7 @@ function DashboardPage() {
                     <a href={hotel.website} target="_blank" rel="noopener noreferrer" className="sp-accent-link">Book Room →</a>
                   )}
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -655,14 +809,28 @@ function DashboardPage() {
       {/* ══ SECTION 08: RESTAURANTS ══ */}
       <section id="restaurants" className="sp-section sp-section-dining" aria-label="Dining Hub">
         <div className="sp-container">
-          <div className="sp-section-header">
+          <motion.div
+            className="sp-section-header"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
             <span className="sp-eyebrow">Food & Drinks</span>
             <h2 className="sp-section-title">Festival Dining Hub</h2>
-          </div>
+          </motion.div>
 
           <div className="sp-restaurants-grid">
-            {ozillaProfessionalContent.restaurants.map(r => (
-              <div key={r.name} className="sp-glass-card">
+            {ozillaProfessionalContent.restaurants.map((r, idx) => (
+              <motion.div
+                key={r.name}
+                className="sp-glass-card"
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, delay: idx * 0.1 }}
+                whileHover={{ y: -5, scale: 1.01 }}
+              >
                 <div className="sp-card-header">
                   <h3>{r.name}</h3>
                   <span className="sp-discount-pill">{r.discount}</span>
@@ -673,7 +841,7 @@ function DashboardPage() {
                   <span>Promo Code:</span>
                   <code>{r.code}</code>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -682,14 +850,28 @@ function DashboardPage() {
       {/* ══ SECTION 09: DISCOUNTS & VOUCHERS ══ */}
       <section id="discounts" className="sp-section sp-section-deals" aria-label="Promo Vouchers">
         <div className="sp-container">
-          <div className="sp-section-header">
+          <motion.div
+            className="sp-section-header"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
             <span className="sp-eyebrow">Exclusive Member Deals</span>
             <h2 className="sp-section-title">Festival Promo Vouchers</h2>
-          </div>
+          </motion.div>
 
           <div className="sp-discounts-grid">
-            {discountItems.map(d => (
-              <div key={d.brand} className="sp-glass-card sp-voucher-card">
+            {discountItems.map((d, idx) => (
+              <motion.div
+                key={d.brand}
+                className="sp-glass-card sp-voucher-card"
+                initial={{ opacity: 0, scale: 0.92, y: 20 }}
+                whileInView={{ opacity: 1, scale: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, delay: idx * 0.08 }}
+                whileHover={{ y: -6, scale: 1.02 }}
+              >
                 <span className="sp-eyebrow" style={{ fontSize: '0.75rem', marginBottom: '0.3rem' }}>{d.category}</span>
                 <h3 style={{ marginTop: '0.2rem', fontSize: '1.3rem' }}>{d.brand}</h3>
                 <p className="sp-card-desc" style={{ margin: '0.6rem 0 1.2rem' }}>{d.desc}</p>
@@ -697,7 +879,7 @@ function DashboardPage() {
                   <span className="sp-big-discount">{d.discount}</span>
                   <code className="sp-code-pill">{d.code}</code>
                 </div>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -706,17 +888,31 @@ function DashboardPage() {
       {/* ══ SECTION 10: VENUE FACILITIES ══ */}
       <section id="facilities" className="sp-section sp-section-facilities" aria-label="Facilities">
         <div className="sp-container">
-          <div className="sp-section-header">
+          <motion.div
+            className="sp-section-header"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
             <span className="sp-eyebrow">Festival Venue</span>
             <h2 className="sp-section-title">World-Class Facilities</h2>
-          </div>
+          </motion.div>
 
           <div className="sp-facilities-grid">
-            {facilitiesList.map(f => (
-              <div key={f.title} className="sp-glass-card sp-facility-card">
+            {facilitiesList.map((f, idx) => (
+              <motion.div
+                key={f.title}
+                className="sp-glass-card sp-facility-card"
+                initial={{ opacity: 0, y: 25 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.4, delay: idx * 0.07 }}
+                whileHover={{ y: -5, scale: 1.02 }}
+              >
                 <h3>{f.title}</h3>
                 <p className="sp-card-desc">{f.desc}</p>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
@@ -725,17 +921,32 @@ function DashboardPage() {
       {/* ══ SECTION 11: SPONSORSHIPS ══ */}
       <section id="sponsorship" className="sp-section sp-section-sponsorship" aria-label="Sponsorships">
         <div className="sp-container">
-          <div className="sp-section-header" style={{ textAlign: 'center' }}>
+          <motion.div
+            className="sp-section-header"
+            style={{ textAlign: 'center' }}
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+          >
             <span className="sp-eyebrow">Brand Partnerships</span>
             <h2 className="sp-section-title">Sponsorship Packages</h2>
             <p className="sp-section-subtitle" style={{ margin: '0 auto' }}>
               Be part of Lahore's biggest music festival. Gain massive on-ground visibility and digital engagement.
             </p>
-          </div>
+          </motion.div>
 
           <div className="sp-sponsorship-grid">
             {sponsorshipTiers.map((tier, idx) => (
-              <div key={tier.tier} className={`sp-glass-card sp-sponsor-card ${idx === 0 ? 'sp-featured-border' : ''}`}>
+              <motion.div
+                key={tier.tier}
+                className={`sp-glass-card sp-sponsor-card ${idx === 0 ? 'sp-featured-border' : ''}`}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, delay: idx * 0.1 }}
+                whileHover={{ y: -6 }}
+              >
                 <div className="sp-card-header">
                   <h3>{tier.tier}</h3>
                   <span className="sp-pill-badge">{tier.price}</span>
@@ -744,7 +955,7 @@ function DashboardPage() {
                   {tier.perks.map(perk => <li key={perk}><span className="sp-check">✓</span>{perk}</li>)}
                 </ul>
                 <Link to="/tickets" className="sp-btn-ghost" style={{ textAlign: 'center', marginTop: '1.2rem' }}>Get Partner Pass</Link>
-              </div>
+              </motion.div>
             ))}
           </div>
         </div>
