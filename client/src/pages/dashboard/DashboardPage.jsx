@@ -98,23 +98,50 @@ const ticketTiers = [
   }
 ]
 
+const festivalPillars = [
+  {
+    icon: '🔊',
+    badge: '100kW SOUND SYSTEM',
+    title: '4 Mega Sound Stages',
+    desc: 'Four explosive stage arenas curated for Indie Pop, Urban Punjabi Rap, Desi Hip-Hop, and non-stop Electronic Dance beats.'
+  },
+  {
+    icon: '⚡',
+    badge: 'HEADLINE CELEBRITIES',
+    title: 'Star-Studded Lineup',
+    desc: 'Unforgettable live stadium sets by Talwinder, Imran Khan, Bohemia, Hassan Raheem, and rising independent artists.'
+  },
+  {
+    icon: '🍔',
+    badge: 'CULINARY & NIGHT BAZAAR',
+    title: 'Food & Beats Street',
+    desc: '50+ curated gourmet food stalls, wood-fired artisan eats, craft mocktail lounges, and late-night dessert hubs.'
+  },
+  {
+    icon: '👑',
+    badge: 'ALL-ACCESS HOSPITALITY',
+    title: 'VIP Lounge & Deck Access',
+    desc: 'Elevated front-stage viewing decks, private artist lounges, fast-track priority gates, and official collectible passes.'
+  }
+]
+
 const futureEvents = [
-  { name: 'Ozilla Festival 2026',  date: 'November 1, 2026', location: 'Lahore, Pakistan', status: 'FEATURED EVENT',  description: 'The flagship Ozilla experience with live music, food culture, partner activations, and premium crowd moments.' },
-  { name: 'Celebrity Night',       date: 'Coming Soon',      location: 'Lahore, Pakistan', status: 'LIVE EVENT',      description: 'A high-energy night built around headline artists, stage lights, social moments, and unforgettable performances.' },
-  { name: 'Brand Experience Zone', date: 'Coming Soon',      location: 'Lahore, Pakistan', status: 'LIMITED SEATS',   description: 'Immersive sponsor zones, creator content, giveaways, product trials, and interactive festival experiences.' }
+  { name: 'Ozilla Festival 2026: The Flagship', date: 'November 1, 2026', location: 'Lahore, Pakistan', status: 'FEATURED FESTIVAL', description: 'The monumental music, cultural & entertainment festival in Lahore featuring 4 mega stages, 20+ star artists, and 10,000+ live crowd.' },
+  { name: 'Celebrity Night Live Concert',        date: 'February 2027',    location: 'Lahore, Pakistan', status: 'UPCOMING CONCERT',  description: 'A high-octane stadium night built around headline urban Punjabi artists, 360° stage laser shows, and crowd moments.' },
+  { name: 'Ozilla Basant Beats Season 2',        date: 'March 2027',       location: 'Lahore, Pakistan', status: 'SEASONAL FESTIVAL', description: 'Cultural music fusion festival featuring live pop sets, color-themed activations, and open-air food streets.' }
 ]
 
 const pastEvents = [
-  { name: 'Ozilla Strategy Module', status: 'Completed', detail: 'Audience journey and activation playbook finalized.' },
-  { name: 'Ozilla Scale Module',    status: 'Completed', detail: 'Multi-channel visibility model and sponsor packages benchmarked.' }
+  { name: 'Ozilla Season 1: The Bass Awakening', status: 'Sold Out · 6,500+ Fans', detail: 'Debut open-air music festival in Lahore featuring indie fusion acts, 2 mega stages, and immersive sound production.' },
+  { name: 'Ozilla Season 2: Neon Nights',         status: 'Sold Out · 8,500+ Fans', detail: 'High-energy night festival featuring headline celebrity performers, night food street, and creator activation zones.' }
 ]
 
 const historyEvents = [
-  { name: 'Ozilla Strategy Module',                     year: '2023', description: 'Campaign strategy foundation focused on brand positioning, audience mapping, and activation planning.',                                                    highlights: ['Brand Positioning', 'Audience Research', 'Partner Onboarding'],            venue: 'Lahore Expo Center',            date: 'December 12, 2023' },
-  { name: 'Ozilla Scale Module',                        year: '2024', description: 'Scale phase with creator collaborations, sponsor visibility lanes, and larger audience engagement programs.',                                                 highlights: ['Creator Collaborations', 'Sponsor Visibility', 'Live Entertainment Blocks'], venue: 'DHA Sports Club, Lahore',        date: 'November 9, 2024' },
-  { name: 'Ozilla Festival Website Brief 2026',         year: '2025', description: 'Pre-launch phase covering website content, ticketing workflow, and full experience readiness for the main festival.',                                          highlights: ['Ticketing Workflow', 'Experience Mapping', 'Marketing Readiness'],           venue: 'Gulberg Event District, Lahore', date: 'October 18, 2025' },
-  { name: 'Ozilla Basand Festival',                     year: '2026', description: 'Seasonal cultural festival featuring live entertainment, color-themed experiences, and partner activations.',                                                    highlights: ['Cultural Performances', 'Live Music', 'Brand Activation Zones'],            venue: 'Lahore, Punjab',                date: 'March 07, 2026' },
-  { name: 'Ozilla Festival 2027 Season 2',              year: '2027', description: 'Second season expansion with larger audience engagement, celebrity performances, and upgraded event production.',                                               highlights: ['Celebrity Performances', 'Expanded Audience Program', 'Premium Experience Zones'], venue: 'Lahore, Punjab', date: 'November 14, 2027' }
+  { name: 'Ozilla Festival Debut Edition',              year: '2023', description: 'The launch of Ozilla Festival in Lahore, uniting 6,000+ music lovers for an electrifying night of live indie music, beats, and food culture.', highlights: ['6,000+ Attendees', '2 Live Stages', 'Indie & Fusion Acts'], venue: 'Lahore Expo Center', date: 'December 12, 2023' },
+  { name: 'Ozilla Season 2: Neon Nights',               year: '2024', description: 'Massive second season expansion with 4 live stages, headline celebrity artists, creator lounges, and partner brand activation zones.', highlights: ['8,500+ Attendees', 'Celebrity Headliners', 'Food & Beats Carnival'], venue: 'DHA Sports Club, Lahore', date: 'November 9, 2024' },
+  { name: 'Ozilla Basant Cultural Beats',               year: '2025', description: 'Seasonal cultural music festival celebrating Lahore with live acoustic sets, DJ arenas, food stalls, and vibrant spring activations.', highlights: ['Cultural Performances', 'Live DJ Sets', 'Artisan Food Hub'], venue: 'Gulberg Cultural District, Lahore', date: 'March 15, 2025' },
+  { name: 'Ozilla Festival 2026 (The Grand Edition)',   year: '2026', description: 'The flagship mega festival featuring 4 distinct music stages, 20+ celebrity singers, VIP hospitality decks, and 10,000+ capacity crowd.', highlights: ['10,000+ Crowd', '4 Mega Music Stages', 'Talwinder & Imran Khan'], venue: 'Lahore, Punjab', date: 'November 1, 2026' },
+  { name: 'Ozilla Festival 2027: Arena Tour',           year: '2027', description: 'Nationwide multi-city arena tour expansion bringing the signature Ozilla festival energy to major stadium venues across Pakistan.', highlights: ['Arena Stage Setup', 'Multi-City Tour', 'International Collabs'], venue: 'Lahore, Punjab', date: 'November 14, 2027' }
 ]
 
 const sponsorshipTiers = [
@@ -365,69 +392,104 @@ function DashboardPage() {
         </div>
       </section>
 
-      {/* ══ SECTION 03: ABOUT US ══ */}
+      {/* ══ SECTION 03: FESTIVAL EXPERIENCE & ATMOSPHERE ══ */}
       <section id="about" className="sp-section sp-section-about" aria-label="About Ozilla">
         <div className="sp-container">
           <div className="sp-section-header">
-            <span className="sp-eyebrow">The Festival Experience</span>
-            <h2 className="sp-section-title">Who We Are</h2>
+            <span className="sp-eyebrow">⚡ THE ULTIMATE LIVE EXPERIENCE</span>
+            <h2 className="sp-section-title">The Ozilla Festival Atmosphere</h2>
+            <p className="sp-section-subtitle">
+              Pakistan's flagship open-air music & cultural festival. 4 electrified stages, 100kW concert sound, headline celebrity acts, gourmet food street, and unmatched crowd energy under the Lahore night sky.
+            </p>
           </div>
 
-          <div className="sp-about-grid">
-            <div className="sp-about-text">
-              <p className="sp-lead">{ozillaProfessionalContent.about}</p>
-              <p>The platform is designed around discovery, curated stage experiences, hospitality partnerships, exclusive discount access, and long-term brand collaborations.</p>
-              <div className="sp-journey-steps">
-                {ozillaProfessionalContent.journey.map((step, idx) => (
-                  <div key={step} className="sp-journey-step">
-                    <span className="sp-step-num">{idx + 1}</span>
-                    <span>{step}</span>
-                  </div>
-                ))}
+          {/* 4 Concert Pillars Grid */}
+          <div className="sp-pillars-grid">
+            {festivalPillars.map((pillar) => (
+              <div key={pillar.title} className="sp-glass-card sp-pillar-card">
+                <div className="sp-pillar-top">
+                  <span className="sp-pillar-icon">{pillar.icon}</span>
+                  <span className="sp-pillar-badge">{pillar.badge}</span>
+                </div>
+                <h3 className="sp-pillar-title">{pillar.title}</h3>
+                <p className="sp-pillar-desc">{pillar.desc}</p>
+                <div className="sp-pillar-glow-line" />
+              </div>
+            ))}
+          </div>
+
+          {/* Festival Vibe & Highlights Showcase */}
+          <div className="sp-festival-vibe-banner">
+            <div className="sp-vibe-left">
+              <span className="sp-vibe-eyebrow">✨ FESTIVAL HIGHLIGHTS</span>
+              <h3>What Makes Ozilla Legendary</h3>
+              <p>Non-stop beats from golden hour to midnight, surrounded by festival activations and pure music culture.</p>
+              <div className="sp-vibe-actions">
+                <a href="#celebrities" className="sp-btn-ember">
+                  Explore Lineup ⚡
+                </a>
+                <Link to="/tickets" className="sp-btn-ghost">
+                  Book Festival Passes 🎟️
+                </Link>
               </div>
             </div>
-            <div className="sp-about-features">
-              <h3>Festival Highlights</h3>
-              <div className="sp-tag-cloud">
-                {ozillaProfessionalContent.festivalExperience.map(f => <span key={f} className="sp-tag">{f}</span>)}
-              </div>
-              <h3 style={{ marginTop: '2rem' }}>Partner Benefits</h3>
-              <div className="sp-tag-cloud">
-                {ozillaProfessionalContent.partnerBenefits.map(b => <span key={b} className="sp-tag sp-tag-accent">{b}</span>)}
-              </div>
+
+            <div className="sp-vibe-tags-grid">
+              <div className="sp-vibe-tag">🔥 4 Mega Music Stages</div>
+              <div className="sp-vibe-tag">⚡ 100kW Laser & Sound System</div>
+              <div className="sp-vibe-tag">🎤 20+ Star Performers</div>
+              <div className="sp-vibe-tag">👥 10,000+ Music Lovers</div>
+              <div className="sp-vibe-tag">🍔 50+ Food & Beats Stalls</div>
+              <div className="sp-vibe-tag">🍸 VIP Artist Lounge & Deck</div>
+              <div className="sp-vibe-tag">🎟️ Verified QR Instant Passes</div>
+              <div className="sp-vibe-tag">🏨 Exclusive Partner Discounts</div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ══ SECTION 04: PAST EVENTS ══ */}
+      {/* ══ SECTION 04: PAST FESTIVAL EDITIONS ══ */}
       <section id="events" className="sp-section sp-section-events" aria-label="Past Events">
         <div className="sp-container">
           <div className="sp-section-header">
-            <span className="sp-eyebrow">Completed Milestones</span>
-            <h2 className="sp-section-title">Past Event Modules</h2>
+            <span className="sp-eyebrow">Previous Editions</span>
+            <h2 className="sp-section-title">Past Festival Milestones</h2>
+            <p className="sp-section-subtitle">
+              A legacy of sold-out stadium energy, breakthrough artist sets, and unforgettable Lahore nights.
+            </p>
           </div>
 
           <div className="sp-events-grid">
             {pastEvents.map(event => (
-              <div key={event.name} className="sp-glass-card">
+              <div key={event.name} className="sp-glass-card sp-past-event-card">
                 <div className="sp-card-header">
                   <h3>{event.name}</h3>
                   <span className="sp-pill-badge">{event.status}</span>
                 </div>
                 <p className="sp-card-desc">{event.detail}</p>
+                <div className="sp-card-footer-eq">
+                  <span>LIVE ARCHIVE</span>
+                  <div className="celeb-mini-eq">
+                    <span />
+                    <span />
+                    <span />
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* ══ SECTION 05: UPCOMING ROADMAP ══ */}
+      {/* ══ SECTION 05: UPCOMING FESTIVAL ROADMAP ══ */}
       <section id="future-events" className="sp-section sp-section-future" aria-label="Upcoming Events">
         <div className="sp-container">
           <div className="sp-section-header">
-            <span className="sp-eyebrow">Upcoming Roadmap</span>
-            <h2 className="sp-section-title">Upcoming Experiences</h2>
+            <span className="sp-eyebrow">Upcoming Concert Tour</span>
+            <h2 className="sp-section-title">Future Festival Editions</h2>
+            <p className="sp-section-subtitle">
+              Mark your calendar for upcoming major festival editions, celebrity concert nights, and arena dates.
+            </p>
           </div>
 
           <div className="sp-future-grid">
@@ -444,12 +506,15 @@ function DashboardPage() {
         </div>
       </section>
 
-      {/* ══ SECTION 06: HISTORY TIMELINE ══ */}
+      {/* ══ SECTION 06: HISTORY & EDITIONS TIMELINE ══ */}
       <section id="history" className="sp-section sp-section-history" aria-label="Festival History">
         <div className="sp-container">
           <div className="sp-section-header">
-            <span className="sp-eyebrow">Festival Journey</span>
-            <h2 className="sp-section-title">Our Legacy & Timeline</h2>
+            <span className="sp-eyebrow">Festival Legacy</span>
+            <h2 className="sp-section-title">Our Editions & Timeline</h2>
+            <p className="sp-section-subtitle">
+              From our underground debut to Pakistan's biggest stadium concert experience.
+            </p>
           </div>
 
           <div className="sp-timeline">
@@ -1278,20 +1343,174 @@ function DashboardPage() {
           margin-top: 2px;
         }
 
-        /* ── ABOUT ── */
-        .sp-about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 3.5rem; align-items: start; }
-        .sp-lead { font-size: 1.2rem; line-height: 1.78; color: #ffffff !important; margin-bottom: 1.2rem; word-spacing: 0.02em; }
-        .sp-about-text p { color: var(--text-muted) !important; line-height: 1.78; margin-bottom: 1.6rem; word-spacing: 0.02em; }
-        .sp-journey-steps { display: flex; flex-direction: column; gap: 0.95rem; }
-        .sp-journey-step { display: flex; align-items: center; gap: 1.1rem; padding: 0.95rem 1.3rem; background: rgba(27, 17, 11, 0.65) !important; border: 1px solid rgba(255, 255, 255, 0.08) !important; border-radius: 16px; }
-        .sp-step-num { width: 30px; height: 30px; background: #ffbd59 !important; border-radius: 50%; display: grid; place-items: center; font-weight: 800; font-size: 0.88rem; color: #101819 !important; flex-shrink: 0; }
-        .sp-about-features h3 { font-family: 'Outfit', sans-serif; font-size: 1.15rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #ffffff !important; margin-bottom: 0.9rem; }
-        .sp-tag-cloud { display: flex; flex-wrap: wrap; gap: 0.6rem; }
-        .sp-tag { display: inline-block; padding: 0.45rem 1rem; border-radius: 999px; background: rgba(255, 255, 255, 0.06) !important; border: 1px solid rgba(255, 255, 255, 0.1) !important; color: #ffffff !important; font-size: 0.85rem; font-weight: 600; }
-        .sp-tag-accent { background: rgba(255, 90, 31, 0.15) !important; border: 1px solid rgba(255, 90, 31, 0.35) !important; color: #ff8a3d !important; }
+        /* ── CONCERT FESTIVAL PILLARS & EXPERIENCE ── */
+        .sp-pillars-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 1.8rem;
+          margin-bottom: 3.5rem;
+        }
 
-        /* ── EVENTS ── */
+        .sp-pillar-card {
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          padding: 2.2rem 2rem !important;
+          border-radius: 24px !important;
+          overflow: hidden;
+          background: rgba(27, 17, 11, 0.75) !important;
+          border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        }
+
+        .sp-pillar-card:hover {
+          border-color: rgba(255, 90, 31, 0.55) !important;
+          box-shadow: 0 16px 45px rgba(255, 90, 31, 0.25);
+        }
+
+        .sp-pillar-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 1.2rem;
+        }
+
+        .sp-pillar-icon {
+          font-size: 2rem;
+          filter: drop-shadow(0 4px 12px rgba(255, 90, 31, 0.4));
+        }
+
+        .sp-pillar-badge {
+          font-size: 0.72rem;
+          font-weight: 900;
+          color: #ffbd59;
+          letter-spacing: 0.12em;
+          background: rgba(255, 189, 89, 0.12);
+          border: 1px solid rgba(255, 189, 89, 0.3);
+          padding: 0.3rem 0.8rem;
+          border-radius: 999px;
+        }
+
+        .sp-pillar-title {
+          font-family: 'Outfit', sans-serif;
+          font-size: 1.5rem;
+          font-weight: 800;
+          color: #ffffff !important;
+          margin-bottom: 0.75rem;
+          letter-spacing: -0.02em;
+        }
+
+        .sp-pillar-desc {
+          font-size: 0.96rem;
+          color: rgba(255, 255, 255, 0.82) !important;
+          line-height: 1.7;
+          margin-bottom: 0.5rem;
+        }
+
+        .sp-pillar-glow-line {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 2px;
+          background: linear-gradient(90deg, transparent, #ff5a1f, #ffbd59, transparent);
+          opacity: 0;
+          transition: opacity 300ms ease;
+        }
+
+        .sp-pillar-card:hover .sp-pillar-glow-line {
+          opacity: 1;
+        }
+
+        /* ── FESTIVAL VIBE SHOWCASE BANNER ── */
+        .sp-festival-vibe-banner {
+          display: grid;
+          grid-template-columns: 1fr 1.2fr;
+          gap: 2.5rem;
+          align-items: center;
+          background: linear-gradient(135deg, rgba(45, 18, 12, 0.75) 0%, rgba(18, 10, 7, 0.85) 100%) !important;
+          border: 1px solid rgba(255, 90, 31, 0.3) !important;
+          border-radius: 28px;
+          padding: clamp(2rem, 3.5vw, 3rem);
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65);
+        }
+
+        .sp-vibe-left {
+          display: flex;
+          flex-direction: column;
+          gap: 0.9rem;
+        }
+
+        .sp-vibe-eyebrow {
+          font-size: 0.78rem;
+          font-weight: 800;
+          color: #ffbd59;
+          letter-spacing: 0.16em;
+        }
+
+        .sp-vibe-left h3 {
+          font-family: 'Outfit', sans-serif;
+          font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+          font-weight: 900;
+          color: #ffffff;
+          line-height: 1.15;
+          letter-spacing: -0.03em;
+        }
+
+        .sp-vibe-left p {
+          font-size: 0.98rem;
+          color: rgba(255, 255, 255, 0.8);
+          line-height: 1.65;
+          margin-bottom: 0.6rem;
+        }
+
+        .sp-vibe-actions {
+          display: flex;
+          align-items: center;
+          gap: 1rem;
+          flex-wrap: wrap;
+        }
+
+        .sp-vibe-tags-grid {
+          display: grid;
+          grid-template-columns: repeat(2, 1fr);
+          gap: 0.85rem;
+        }
+
+        .sp-vibe-tag {
+          display: flex;
+          align-items: center;
+          gap: 0.5rem;
+          padding: 0.85rem 1.1rem;
+          border-radius: 14px;
+          background: rgba(0, 0, 0, 0.45);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: #ffffff;
+          font-size: 0.86rem;
+          font-weight: 700;
+          transition: transform 200ms ease, border-color 200ms ease, background 200ms ease;
+        }
+
+        .sp-vibe-tag:hover {
+          transform: translateX(3px);
+          border-color: rgba(255, 189, 89, 0.45);
+          background: rgba(255, 90, 31, 0.15);
+        }
+
+        /* ── PAST EVENTS ── */
         .sp-events-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.8rem; }
+        .sp-past-event-card { display: flex; flex-direction: column; }
+        .sp-card-footer-eq {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-top: 1.4rem;
+          padding-top: 0.9rem;
+          border-top: 1px solid rgba(255, 255, 255, 0.08);
+          font-size: 0.74rem;
+          font-weight: 800;
+          letter-spacing: 0.1em;
+          color: #ffbd59;
+        }
         .sp-future-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.8rem; }
 
         /* ── TIMELINE ── */
@@ -1344,10 +1563,11 @@ function DashboardPage() {
 
         @media (max-width: 992px) {
           .sp-celebrity-grid, .sp-facilities-grid, .sp-sponsorship-grid, .sp-discounts-grid,
-          .sp-hotels-grid, .sp-restaurants-grid, .sp-future-grid, .sp-pricing-grid { grid-template-columns: 1fr; gap: 1.6rem; }
+          .sp-hotels-grid, .sp-restaurants-grid, .sp-future-grid, .sp-pricing-grid,
+          .sp-pillars-grid, .sp-events-grid { grid-template-columns: 1fr; gap: 1.6rem; }
+          .sp-festival-vibe-banner { grid-template-columns: 1fr; gap: 2rem; }
           .sp-featured-pricing { transform: none; }
           .sp-featured-pricing:hover { transform: translateY(-4px); }
-          .sp-about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
           .sp-countdown-grid { grid-template-columns: repeat(2, 1fr); }
         }
 
@@ -1361,6 +1581,7 @@ function DashboardPage() {
           .sp-hero-content { padding: 4.5rem 1rem 2.5rem; }
           .sp-hero-actions { flex-direction: column; width: 100%; max-width: 290px; gap: 0.85rem; }
           .sp-btn-ember, .sp-btn-ghost { width: 100%; text-align: center; padding: 0.9rem 1.8rem; }
+          .sp-vibe-tags-grid { grid-template-columns: 1fr; gap: 0.65rem; }
           .sp-countdown-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
           .sp-countdown-card { padding: 1rem 0.85rem; }
           .sp-timeline::before { left: 1rem; }
