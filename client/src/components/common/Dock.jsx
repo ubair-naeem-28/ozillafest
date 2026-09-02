@@ -6,32 +6,22 @@ import './Dock.css';
 
 function DockItem({ children, className = '', onClick, mouseX, spring, distance, magnification, baseItemSize, label }) {
   const ref = useRef(null);
-  const centerRef = useRef(null);
   const isHovered = useMotionValue(0);
-
-  const getCenter = () => {
-    if (centerRef.current !== null) return centerRef.current;
-    if (ref.current) {
-      const rect = ref.current.getBoundingClientRect();
-      centerRef.current = rect.left + rect.width / 2;
-      return centerRef.current;
-    }
-    return 0;
-  };
 
   const mouseDistance = useTransform(mouseX, val => {
     if (val === Infinity || !ref.current) return distance;
-    const itemCenter = getCenter();
+    const rect = ref.current.getBoundingClientRect();
+    const itemCenter = rect.left + rect.width / 2;
     return val - itemCenter;
   });
 
-  const targetScale = useTransform(
+  const targetSize = useTransform(
     mouseDistance,
     [-distance, 0, distance],
-    [1, magnification / baseItemSize, 1]
+    [baseItemSize, magnification, baseItemSize]
   );
   
-  const scale = useSpring(targetScale, spring);
+  const size = useSpring(targetSize, spring);
 
   const handleKeyDown = e => {
     if (e.key === 'Enter' || e.key === ' ') {
@@ -41,15 +31,10 @@ function DockItem({ children, className = '', onClick, mouseX, spring, distance,
   };
 
   const handleMouseEnter = () => {
-    if (ref.current) {
-      const rect = ref.current.getBoundingClientRect();
-      centerRef.current = rect.left + rect.width / 2;
-    }
     isHovered.set(1);
   };
 
   const handleMouseLeave = () => {
-    centerRef.current = null;
     isHovered.set(0);
   };
 
@@ -57,9 +42,8 @@ function DockItem({ children, className = '', onClick, mouseX, spring, distance,
     <motion.div
       ref={ref}
       style={{
-        width: baseItemSize,
-        height: baseItemSize,
-        scale
+        width: size,
+        height: size
       }}
       onHoverStart={handleMouseEnter}
       onHoverEnd={handleMouseLeave}

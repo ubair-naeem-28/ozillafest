@@ -135,10 +135,11 @@ function DockNavbar() {
             <Dock
               items={dockItems}
               className="dock-nav"
-              magnification={56}
-              distance={120}
-              panelHeight={52}
-              baseItemSize={40}
+              magnification={50}
+              distance={130}
+              panelHeight={58}
+              baseItemSize={38}
+              spring={{ mass: 0.1, stiffness: 260, damping: 19 }}
             />
           </div>
 
