@@ -3,6 +3,7 @@ import crypto from 'crypto'
 import { OAuth2Client } from 'google-auth-library'
 import { env } from '../config/env.js'
 import { User } from '../models/User.js'
+import { Otp } from '../models/Otp.js'
 import { sendOtpEmail, sendPasswordResetEmail } from '../utils/email.js'
 import { signAuthToken } from '../utils/jwt.js'
 
@@ -84,7 +85,7 @@ async function upsertUserFromGoogleProfile({ profile }) {
   return user
 }
 
-export async function resendOtp(req, res) {
+export async function sendOtp(req, res) {
   const { email } = req.body
   if (!email) {
     return res.status(400).json({ message: 'Email is required' })
@@ -102,10 +103,18 @@ export async function resendOtp(req, res) {
   }
 
   const otpRaw = generateOtp()
+
+  // 1. Delete previous OTPs for this email in TTL collection
+  await Otp.deleteMany({ email: normalizedEmail }).catch(() => {})
+
+  // 2. Create new OTP record with TTL auto-expiry index (5 minutes)
+  await Otp.create({ email: normalizedEmail, otp: otpRaw }).catch(() => {})
+
+  // 3. Also update User document with hashed OTP for security
   user.otpCode = await bcrypt.hash(otpRaw, 10)
-  user.otpExpiresAt = new Date(Date.now() + 10 * 60 * 1000)
+  user.otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000)
   user.emailVerified = false
-  await user.save()
+  await user.save().catch(() => {})
 
   try {
     await sendOtpEmail({ to: normalizedEmail, otpCode: otpRaw })
@@ -113,46 +122,64 @@ export async function resendOtp(req, res) {
     const isDev = process.env.NODE_ENV !== 'production'
     if (env.otpExposeForDev || isDev) {
       return res.json({
+        success: true,
         message: 'OTP generated successfully, but email delivery failed. Use development OTP.',
         otpForDevelopment: otpRaw,
         emailDelivery: 'failed',
         emailError: error.message || 'Failed to send OTP email'
       })
     }
-    return res.status(500).json({ message: error.message || 'Failed to send OTP email' })
+    return res.status(500).json({ success: false, message: error.message || 'Failed to send OTP email' })
   }
 
-  const response = { message: 'OTP sent to your email address' }
+  const response = { success: true, message: 'OTP sent to your email address' }
   if (env.otpExposeForDev) {
     response.otpForDevelopment = otpRaw
   }
   return res.json(response)
 }
 
+export const resendOtp = sendOtp
+
 export async function verifyOtp(req, res) {
   const { email, otp } = req.body
   if (!email || !otp) {
-    return res.status(400).json({ message: 'Email and OTP are required' })
+    return res.status(400).json({ success: false, message: 'Email and OTP are required' })
   }
 
-  const user = await User.findOne({ email: normalizeEmail(email) })
-  if (!user || !user.otpCode || !user.otpExpiresAt) {
-    return res.status(400).json({ message: 'OTP verification failed' })
-  }
-
+  const normalizedEmail = normalizeEmail(email)
   const otpInput = String(otp).trim()
-  const isExpired = new Date() > user.otpExpiresAt
-  const isMatch = await bcrypt.compare(otpInput, user.otpCode).catch(() => false)
-  if (isExpired || !isMatch) {
-    return res.status(400).json({ message: 'OTP verification failed' })
+
+  // 1. Check TTL Otp collection
+  const otpRecord = await Otp.findOne({ email: normalizedEmail, otp: otpInput }).catch(() => null)
+
+  // 2. Also check User document fallback
+  const user = await User.findOne({ email: normalizedEmail }).catch(() => null)
+  let isValid = Boolean(otpRecord)
+
+  if (!isValid && user && user.otpCode && user.otpExpiresAt) {
+    const isExpired = new Date() > user.otpExpiresAt
+    const isMatch = await bcrypt.compare(otpInput, user.otpCode).catch(() => false)
+    if (!isExpired && isMatch) {
+      isValid = true
+    }
   }
 
-  user.emailVerified = true
-  user.otpCode = undefined
-  user.otpExpiresAt = undefined
-  await user.save()
+  if (!isValid) {
+    return res.status(400).json({ success: false, message: 'Invalid or expired OTP code' })
+  }
 
-  return res.json({ message: 'Email verified successfully' })
+  // Clear OTP record once verified
+  await Otp.deleteMany({ email: normalizedEmail }).catch(() => {})
+
+  if (user) {
+    user.emailVerified = true
+    user.otpCode = undefined
+    user.otpExpiresAt = undefined
+    await user.save().catch(() => {})
+  }
+
+  return res.json({ success: true, message: 'Email verified successfully' })
 }
 
 export async function register(req, res) {

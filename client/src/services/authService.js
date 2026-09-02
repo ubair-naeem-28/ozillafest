@@ -215,14 +215,18 @@ export const authService = {
     }
   },
 
-  async resendOtp(email) {
+  async sendOtp(email) {
     const normalized = normalizeEmail(email)
     try {
-      const response = await apiClient.post(API_ENDPOINTS.AUTH.RESEND_OTP, { email: normalized })
+      const response = await apiClient.post(API_ENDPOINTS.AUTH.SEND_OTP, { email: normalized })
       return response.data
     } catch (error) {
       return { message: 'Development OTP generated successfully.', otpForDevelopment: '123456', mode: 'local-fallback' }
     }
+  },
+
+  async resendOtp(email) {
+    return this.sendOtp(email)
   },
 
   async verifyOtp(payload) {
