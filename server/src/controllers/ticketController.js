@@ -518,14 +518,6 @@ export async function payWithEasypaisa(req, res) {
     ticket: ticket.toJSON()
   })
 }
-  ticket.verifiedAt = null
-  await ticket.save()
-
-  return res.json({
-    message: 'Easypaisa wallet payment deducted successfully! Your QR ticket is ready.',
-    ticket: ticket.toJSON()
-  })
-}
 
 export async function uploadPaymentProof(req, res) {
   const ticket = await Ticket.findOne({
