@@ -100,25 +100,21 @@ const ticketTiers = [
 
 const festivalPillars = [
   {
-    icon: '🔊',
     badge: '100kW SOUND SYSTEM',
     title: '4 Mega Sound Stages',
     desc: 'Four explosive stage arenas curated for Indie Pop, Urban Punjabi Rap, Desi Hip-Hop, and non-stop Electronic Dance beats.'
   },
   {
-    icon: '⚡',
     badge: 'HEADLINE CELEBRITIES',
     title: 'Star-Studded Lineup',
     desc: 'Unforgettable live stadium sets by Talwinder, Imran Khan, Bohemia, Hassan Raheem, and rising independent artists.'
   },
   {
-    icon: '🍔',
     badge: 'CULINARY & NIGHT BAZAAR',
     title: 'Food & Beats Street',
     desc: '50+ curated gourmet food stalls, wood-fired artisan eats, craft mocktail lounges, and late-night dessert hubs.'
   },
   {
-    icon: '👑',
     badge: 'ALL-ACCESS HOSPITALITY',
     title: 'VIP Lounge & Deck Access',
     desc: 'Elevated front-stage viewing decks, private artist lounges, fast-track priority gates, and official collectible passes.'
@@ -140,7 +136,6 @@ const historyEvents = [
   {
     name: 'Ozilla Debut: The Sound Awakening',
     year: '2023',
-    icon: '⚡',
     badge: 'SOLD OUT DEBUT',
     description: 'The historic launch of Ozilla Festival in Lahore, uniting 6,000+ passionate music lovers for a breakthrough night of live indie music, bass drops, and night market culture.',
     highlights: ['6,000+ Attendees', '2 Live Mega Stages', 'Indie & Desi Fusion'],
@@ -150,7 +145,6 @@ const historyEvents = [
   {
     name: 'Ozilla Season 2: Neon Nights',
     year: '2024',
-    icon: '🎆',
     badge: 'RECORD 8,500+ CROWD',
     description: 'Massive second season expansion with 4 live stages, headline celebrity artists, 360° laser canopy, creator lounges, and artisan food street.',
     highlights: ['8,500+ Music Fans', '4 Live Stages', 'Celebrity Headliners', 'Food & Beats Carnival'],
@@ -160,7 +154,6 @@ const historyEvents = [
   {
     name: 'Ozilla Basant Cultural Beats',
     year: '2025',
-    icon: '🌸',
     badge: 'SPRING FESTIVAL',
     description: 'Seasonal cultural music festival celebrating Lahore with live acoustic sets, electronic DJ arenas, rooftop stage blocks, and vibrant spring food bazaar.',
     highlights: ['Cultural Performances', 'Live DJ Sets', 'Artisan Food Hub', '50+ Creator Stalls'],
@@ -170,7 +163,6 @@ const historyEvents = [
   {
     name: 'Ozilla Festival 2026 (The Grand Edition)',
     year: '2026',
-    icon: '🔥',
     badge: 'FLAGSHIP 10,000+ EDITION',
     description: 'The monumental flagship festival with 4 distinct music stages, 20+ celebrity singers, 100kW laser sound system, and VIP hospitality viewing decks.',
     highlights: ['10,000+ Packed Crowd', '4 Mega Music Stages', 'Talwinder & Imran Khan', 'Holographic QR Passes'],
@@ -180,7 +172,6 @@ const historyEvents = [
   {
     name: 'Ozilla Festival 2027: Arena Tour',
     year: '2027',
-    icon: '👑',
     badge: 'NATIONWIDE TOUR',
     description: 'Nationwide multi-city arena tour expansion bringing the signature Ozilla concert festival experience to major stadium venues across Pakistan.',
     highlights: ['Arena Stage Setup', 'Multi-City Stadium Tour', 'International Acts'],
@@ -193,101 +184,89 @@ const sponsorshipTiers = [
   {
     tier: 'Title Sponsor',
     price: 'PREMIUM',
-    icon: '👑',
     badge: 'FLAGSHIP PARTNER',
     accent: '#ffbd59',
     tagline: 'Maximum Brand Dominance',
     isFeatured: true,
-    ctaText: 'Claim Title Partnership 👑',
+    ctaText: 'Claim Title Partnership',
     perks: ['Exclusive brand naming rights', 'Main stage backdrop placement', 'VIP lounge & deck co-branding', '30-second main stage video slot', 'Dedicated social & press campaigns']
   },
   {
     tier: 'Gold Sponsor',
     price: 'HIGH IMPACT',
-    icon: '🥇',
     badge: 'STAGE ACTIVATION',
     accent: '#ff8a3d',
     tagline: 'High-Energy Ground Presence',
     isFeatured: false,
-    ctaText: 'Become Gold Sponsor ⚡',
+    ctaText: 'Become Gold Sponsor',
     perks: ['Exclusive brand activation zone', 'Perimeter banner placements', 'Digital festival app features', 'Influencer co-branding & mentions', 'On-ground brand booth space']
   },
   {
     tier: 'Silver Sponsor',
     price: 'GROWTH',
-    icon: '🥈',
     badge: 'BRAND PARTNER',
     accent: '#cbd5e1',
     tagline: 'Targeted Festival Engagement',
     isFeatured: false,
-    ctaText: 'Join Silver Tier ✨',
+    ctaText: 'Join Silver Tier',
     perks: ['Official festival website branding', 'Social media shoutouts', 'Sampling booth at food street', 'Newsletter sponsor placement', '10 complimentary festival passes']
   },
   {
     tier: 'Media Partner',
     price: 'CUSTOM',
-    icon: '🎙️',
     badge: 'BROADCAST & PRESS',
     accent: '#ec4899',
     tagline: 'Official Media Rights',
     isFeatured: false,
-    ctaText: 'Apply For Press Pass 🎙️',
+    ctaText: 'Apply For Press Pass',
     perks: ['Official media coverage rights', 'All-access artist press passes', 'Exclusive backstage interview access', 'Press release announcement feature', 'Dedicated creator lounge access']
   }
 ]
 
 const facilitiesList = [
   {
-    icon: '🔊',
     badge: '100kW SOUND ARRAY',
     title: 'Main Concert Arena',
     desc: 'Stadium-grade concert sound system, 360° laser canopy, cryogenic jets, and immersive sub-bass arrays engineered for live music.',
     accent: '#ff5a1f'
   },
   {
-    icon: '🍔',
     badge: '50+ FOOD SPOTS',
     title: 'Food & Beats Street',
     desc: 'Curated night food carnival featuring artisan street eats, wood-fired pizzas, gourmet smash burgers, and live mocktail bars.',
     accent: '#ffbd59'
   },
   {
-    icon: '🚑',
     badge: '24/7 RAPID CARE',
     title: 'Medical & First Aid Hub',
     desc: 'Fully equipped medical stations, certified paramedic teams, ambulance support, and rapid emergency response across all zones.',
     accent: '#ef4444'
   },
   {
-    icon: '🚗',
     badge: 'VALET & VIP GATES',
     title: 'Managed VIP Parking',
     desc: 'Dedicated fast-track valet lanes, secured perimeter parking bays, and direct express entry for VIP and Platinum pass holders.',
     accent: '#f59e0b'
   },
   {
-    icon: '📸',
     badge: 'CREATOR LIGHTING',
     title: 'Holographic Photo Booths',
     desc: 'Interactive neon backdrops, festival prism lighting rigs, 360° video spinners, and photo moments for social sharing.',
     accent: '#ec4899'
   },
   {
-    icon: '♿',
     badge: 'INCLUSIVE VENUE',
     title: 'Full Venue Accessibility',
     desc: 'Dedicated elevated viewing decks, step-free ramps, accessible hospitality pathways, and on-ground guest assistance teams.',
     accent: '#3b82f6'
   },
   {
-    icon: '🛡️',
     badge: 'PROFESSIONAL SQUAD',
     title: 'Crowd Safety & Security',
     desc: 'Trained festival security personnel, CCTV surveillance, RFID entry verification, and smooth crowd circulation management.',
     accent: '#10b981'
   },
   {
-    icon: '⚡',
     badge: 'GIGABIT HIGH-SPEED',
     title: 'Ultra-Fast Festival Wi-Fi',
     desc: 'High-density gigabit wireless zones covering all stages and food courts for seamless live streaming, stories, and payments.',
@@ -625,7 +604,6 @@ function DashboardPage() {
                 whileHover={{ y: -6, scale: 1.02 }}
               >
                 <div className="sp-pillar-top">
-                  <span className="sp-pillar-icon">{pillar.icon}</span>
                   <span className="sp-pillar-badge">{pillar.badge}</span>
                 </div>
                 <h3 className="sp-pillar-title">{pillar.title}</h3>
@@ -644,7 +622,7 @@ function DashboardPage() {
             transition={{ duration: 0.6 }}
           >
             <div className="sp-vibe-left">
-              <span className="sp-vibe-eyebrow">✨ FESTIVAL HIGHLIGHTS</span>
+              <span className="sp-vibe-eyebrow">FESTIVAL HIGHLIGHTS</span>
               <h3>What Makes Ozilla Legendary</h3>
               <p>Non-stop beats from golden hour to midnight, surrounded by festival activations and pure music culture.</p>
               <div className="sp-vibe-actions">
@@ -654,11 +632,11 @@ function DashboardPage() {
                   whileHover={{ scale: 1.04 }}
                   whileTap={{ scale: 0.97 }}
                 >
-                  Explore Lineup ⚡
+                  Explore Lineup →
                 </motion.a>
                 <motion.div whileHover={{ scale: 1.04 }} whileTap={{ scale: 0.97 }}>
                   <Link to="/tickets" className="sp-btn-ghost">
-                    Book Festival Passes 🎟️
+                    Book Festival Passes
                   </Link>
                 </motion.div>
               </div>
@@ -666,14 +644,14 @@ function DashboardPage() {
 
             <div className="sp-vibe-tags-grid">
               {[
-                '🔥 4 Mega Music Stages',
-                '⚡ 100kW Laser & Sound System',
-                '🎤 20+ Star Performers',
-                '👥 10,000+ Music Lovers',
-                '🍔 50+ Food & Beats Stalls',
-                '🍸 VIP Artist Lounge & Deck',
-                '🎟️ Verified QR Instant Passes',
-                '🏨 Exclusive Partner Discounts'
+                '4 Mega Music Stages',
+                '100kW Laser & Sound System',
+                '20+ Star Performers',
+                '10,000+ Music Lovers',
+                '50+ Food & Beats Stalls',
+                'VIP Artist Lounge & Deck',
+                'Verified QR Instant Passes',
+                'Exclusive Partner Discounts'
               ].map((tag, tIdx) => (
                 <motion.div
                   key={tag}
@@ -802,7 +780,6 @@ function DashboardPage() {
               >
                 <div className="sp-timeline-node-wrap">
                   <div className="sp-timeline-icon">
-                    <span className="sp-timeline-icon-emoji">{ev.icon}</span>
                     <span className="sp-timeline-year-pill">{ev.year}</span>
                   </div>
                   <div className="sp-timeline-pulse-ring" />
@@ -811,7 +788,7 @@ function DashboardPage() {
                 <div className="sp-glass-card sp-timeline-content">
                   <div className="sp-timeline-top-row">
                     <div className="sp-meta-text">
-                      <span className="sp-year-highlight">📅 {ev.date}</span>
+                      <span className="sp-year-highlight">{ev.date}</span>
                     </div>
                     <span className="sp-timeline-badge">{ev.badge}</span>
                   </div>
@@ -822,13 +799,13 @@ function DashboardPage() {
                   <div className="sp-tag-cloud">
                     {ev.highlights.map(h => (
                       <span key={h} className="sp-tag sp-timeline-tag">
-                        ⚡ {h}
+                        {h}
                       </span>
                     ))}
                   </div>
 
                   <div className="sp-timeline-footer">
-                    <p className="sp-venue-text">📍 {ev.venue}</p>
+                    <p className="sp-venue-text">{ev.venue}</p>
                     <div className="celeb-mini-eq">
                       <span />
                       <span />
@@ -1002,9 +979,6 @@ function DashboardPage() {
                 whileHover={{ y: -8, scale: 1.02 }}
               >
                 <div className="sp-facility-top">
-                  <div className="sp-facility-icon-orb" style={{ borderColor: `${f.accent}55`, background: `${f.accent}18` }}>
-                    <span className="sp-facility-icon">{f.icon}</span>
-                  </div>
                   <span className="sp-facility-badge" style={{ color: f.accent, borderColor: `${f.accent}44`, background: `${f.accent}14` }}>
                     {f.badge}
                   </span>
@@ -1030,7 +1004,7 @@ function DashboardPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <span className="sp-eyebrow">⚡ BRAND COLLABORATIONS</span>
+            <span className="sp-eyebrow">BRAND COLLABORATIONS</span>
             <h2 className="sp-section-title">Sponsorship & Brand Packages</h2>
             <p className="sp-section-subtitle" style={{ margin: '0 auto' }}>
               Partner with Pakistan's biggest live music festival. Gain unparalleled on-ground brand presence, digital engagement, and VIP hospitality.
@@ -1053,9 +1027,6 @@ function DashboardPage() {
                 )}
 
                 <div className="sp-sponsor-top">
-                  <div className="sp-sponsor-icon-wrap" style={{ borderColor: `${tier.accent}55`, background: `${tier.accent}15` }}>
-                    <span className="sp-sponsor-icon">{tier.icon}</span>
-                  </div>
                   <span className="sp-sponsor-badge" style={{ color: tier.accent, borderColor: `${tier.accent}44`, background: `${tier.accent}14` }}>
                     {tier.badge}
                   </span>

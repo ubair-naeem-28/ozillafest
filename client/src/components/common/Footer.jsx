@@ -98,19 +98,19 @@ function Footer() {
             <h4>Festival Venue</h4>
             <div className="oz-event-info">
               <div className="oz-info-box">
-                <span className="oz-info-label">📅 FESTIVAL DATE</span>
+                <span className="oz-info-label">FESTIVAL DATE</span>
                 <strong>November 1, 2026</strong>
               </div>
               <div className="oz-info-box">
-                <span className="oz-info-label">📍 LOCATION</span>
+                <span className="oz-info-label">LOCATION</span>
                 <strong>Lahore, Pakistan</strong>
               </div>
               <div className="oz-info-box">
-                <span className="oz-info-label">⚡ OFFICIAL INQUIRIES</span>
+                <span className="oz-info-label">OFFICIAL INQUIRIES</span>
                 <strong>ozillafestival@gmail.com</strong>
               </div>
               <div className="oz-info-box">
-                <span className="oz-info-label">🎟️ TICKET PASSES</span>
+                <span className="oz-info-label">TICKET PASSES</span>
                 <strong className="oz-text-glow">Instant Dynamic QR Mobile Passes</strong>
               </div>
             </div>
@@ -124,7 +124,7 @@ function Footer() {
             <span>OZILLA 2026 ADMISSION PORTAL ACTIVE · LAHORE</span>
           </div>
           <Link to="/tickets" className="oz-footer-cta-link">
-            Get Your Festival Passes ⚡
+            Get Your Festival Passes →
           </Link>
         </div>
 
