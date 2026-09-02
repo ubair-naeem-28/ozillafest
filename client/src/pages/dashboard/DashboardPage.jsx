@@ -197,14 +197,62 @@ const sponsorshipTiers = [
 ]
 
 const facilitiesList = [
-  { title: 'Main Concert Stage', desc: 'World-class 100kW concert sound system, 360° laser array, and immersive sub-bass arrays.' },
-  { title: 'Food & Beats Court', desc: 'Curated food street featuring artisan fusion eats, mocktails, coffee and desserts.' },
-  { title: '24/7 Medical Hub',   desc: 'On-site first aid stations, paramedic support, and emergency rapid response teams.' },
-  { title: 'Secure VIP Parking', desc: 'Valet and managed parking zones for general festival attendees and VIP ticket holders.' },
-  { title: 'Neon Photo Booths',  desc: 'Interactive holographic backdrops, creator lighting rigs, and festival photo moments.' },
-  { title: 'Full Accessibility', desc: 'Dedicated accessible viewing decks, pathways, and on-ground hospitality assistance.' },
-  { title: 'Crowd Safety Squad', desc: 'Trained professional security and crowd flow management across all festival zones.' },
-  { title: 'Ultra-Fast WiFi',    desc: 'High-speed gigabit Wi-Fi zones for seamless streaming, posting, and sharing moments.' }
+  {
+    icon: '🔊',
+    badge: '100kW SOUND ARRAY',
+    title: 'Main Concert Arena',
+    desc: 'Stadium-grade concert sound system, 360° laser canopy, cryogenic jets, and immersive sub-bass arrays engineered for live music.',
+    accent: '#ff5a1f'
+  },
+  {
+    icon: '🍔',
+    badge: '50+ FOOD SPOTS',
+    title: 'Food & Beats Street',
+    desc: 'Curated night food carnival featuring artisan street eats, wood-fired pizzas, gourmet smash burgers, and live mocktail bars.',
+    accent: '#ffbd59'
+  },
+  {
+    icon: '🚑',
+    badge: '24/7 RAPID CARE',
+    title: 'Medical & First Aid Hub',
+    desc: 'Fully equipped medical stations, certified paramedic teams, ambulance support, and rapid emergency response across all zones.',
+    accent: '#ef4444'
+  },
+  {
+    icon: '🚗',
+    badge: 'VALET & VIP GATES',
+    title: 'Managed VIP Parking',
+    desc: 'Dedicated fast-track valet lanes, secured perimeter parking bays, and direct express entry for VIP and Platinum pass holders.',
+    accent: '#f59e0b'
+  },
+  {
+    icon: '📸',
+    badge: 'CREATOR LIGHTING',
+    title: 'Holographic Photo Booths',
+    desc: 'Interactive neon backdrops, festival prism lighting rigs, 360° video spinners, and photo moments for social sharing.',
+    accent: '#ec4899'
+  },
+  {
+    icon: '♿',
+    badge: 'INCLUSIVE VENUE',
+    title: 'Full Venue Accessibility',
+    desc: 'Dedicated elevated viewing decks, step-free ramps, accessible hospitality pathways, and on-ground guest assistance teams.',
+    accent: '#3b82f6'
+  },
+  {
+    icon: '🛡️',
+    badge: 'PROFESSIONAL SQUAD',
+    title: 'Crowd Safety & Security',
+    desc: 'Trained festival security personnel, CCTV surveillance, RFID entry verification, and smooth crowd circulation management.',
+    accent: '#10b981'
+  },
+  {
+    icon: '⚡',
+    badge: 'GIGABIT HIGH-SPEED',
+    title: 'Ultra-Fast Festival Wi-Fi',
+    desc: 'High-density gigabit wireless zones covering all stages and food courts for seamless live streaming, stories, and payments.',
+    accent: '#06b6d4'
+  }
 ]
 
 const discountItems = [
@@ -895,8 +943,11 @@ function DashboardPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <span className="sp-eyebrow">Festival Venue</span>
-            <h2 className="sp-section-title">World-Class Facilities</h2>
+            <span className="sp-eyebrow">⚡ FESTIVAL VENUE & PRODUCTION</span>
+            <h2 className="sp-section-title">World-Class Festival Facilities</h2>
+            <p className="sp-section-subtitle">
+              Built for a seamless 10,000+ attendee experience with concert-grade sound, medical support, VIP hospitality, and creator amenities.
+            </p>
           </motion.div>
 
           <div className="sp-facilities-grid">
@@ -904,14 +955,24 @@ function DashboardPage() {
               <motion.div
                 key={f.title}
                 className="sp-glass-card sp-facility-card"
-                initial={{ opacity: 0, y: 25 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.07 }}
-                whileHover={{ y: -5, scale: 1.02 }}
+                transition={{ duration: 0.45, delay: idx * 0.07 }}
+                whileHover={{ y: -8, scale: 1.02 }}
               >
-                <h3>{f.title}</h3>
+                <div className="sp-facility-top">
+                  <div className="sp-facility-icon-orb" style={{ borderColor: `${f.accent}55`, background: `${f.accent}18` }}>
+                    <span className="sp-facility-icon">{f.icon}</span>
+                  </div>
+                  <span className="sp-facility-badge" style={{ color: f.accent, borderColor: `${f.accent}44`, background: `${f.accent}14` }}>
+                    {f.badge}
+                  </span>
+                </div>
+
+                <h3 className="sp-facility-title">{f.title}</h3>
                 <p className="sp-card-desc">{f.desc}</p>
+                <div className="sp-facility-glow-bar" style={{ background: `linear-gradient(90deg, ${f.accent}, transparent)` }} />
               </motion.div>
             ))}
           </div>
@@ -1979,9 +2040,93 @@ function DashboardPage() {
         .sp-big-discount { font-family: 'Outfit', sans-serif; font-size: 1.45rem; font-weight: 900; color: #ffbd59 !important; }
         .sp-code-pill { font-family: monospace; background: rgba(255, 255, 255, 0.1) !important; border: 1px solid rgba(255, 255, 255, 0.18) !important; padding: 0.35rem 0.8rem; border-radius: 8px; color: #ffffff !important; font-weight: 800; font-size: 0.85rem; }
 
-        /* ── FACILITIES ── */
-        .sp-facilities-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
-        .sp-facility-card { text-align: center; padding: 2.2rem 1.6rem !important; }
+        /* ── WORLD-CLASS FESTIVAL FACILITIES ── */
+        .sp-facilities-grid {
+          display: grid;
+          grid-template-columns: repeat(4, 1fr);
+          gap: 1.6rem;
+        }
+
+        .sp-facility-card {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          text-align: left;
+          padding: 2rem 1.7rem !important;
+          position: relative;
+          overflow: hidden;
+          background: rgba(27, 17, 11, 0.78) !important;
+          border: 1px solid rgba(255, 255, 255, 0.1) !important;
+          border-radius: 20px;
+          transition: transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1), border-color 300ms ease, box-shadow 300ms ease;
+        }
+
+        .sp-facility-card:hover {
+          border-color: rgba(255, 189, 89, 0.45) !important;
+          box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(255, 90, 31, 0.15);
+        }
+
+        .sp-facility-top {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          width: 100%;
+          margin-bottom: 1.2rem;
+        }
+
+        .sp-facility-icon-orb {
+          width: 48px;
+          height: 48px;
+          border-radius: 14px;
+          display: grid;
+          place-items: center;
+          border: 1px solid rgba(255, 255, 255, 0.15);
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+          transition: transform 300ms ease;
+        }
+
+        .sp-facility-card:hover .sp-facility-icon-orb {
+          transform: scale(1.1) rotate(5deg);
+        }
+
+        .sp-facility-icon {
+          font-size: 1.45rem;
+          line-height: 1;
+        }
+
+        .sp-facility-badge {
+          font-size: 0.68rem;
+          font-weight: 900;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          padding: 0.25rem 0.65rem;
+          border-radius: 999px;
+          border: 1px solid;
+        }
+
+        .sp-facility-title {
+          font-family: 'Outfit', sans-serif;
+          font-size: 1.25rem;
+          font-weight: 800;
+          color: #ffffff !important;
+          margin-bottom: 0.6rem;
+          letter-spacing: -0.01em;
+        }
+
+        .sp-facility-glow-bar {
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          height: 3px;
+          opacity: 0.7;
+          transition: opacity 300ms ease, height 300ms ease;
+        }
+
+        .sp-facility-card:hover .sp-facility-glow-bar {
+          opacity: 1;
+          height: 4px;
+        }
 
         /* ── SPONSORSHIP ── */
         .sp-sponsorship-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
