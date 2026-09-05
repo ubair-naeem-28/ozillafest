@@ -2363,6 +2363,7 @@ function DashboardPage() {
         }
 
         @media (max-width: 640px) {
+          #hotels.sp-section-hotels { display: none !important; }
           .sp-section { padding: 4.5rem 0; }
           .sp-container { width: min(100%, calc(100% - 1.5rem)); }
           .stats-inner-grid { grid-template-columns: repeat(2, 1fr); gap: 0.85rem; }

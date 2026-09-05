@@ -8,7 +8,7 @@ const festivalLinks = [
   { label: 'The Festival Vibe', href: '/#about', isMain: true },
   { label: 'World-Class Facilities', href: '/#facilities', isMain: true },
   { label: 'Milestones & History', href: '/#history', isSecondary: true },
-  { label: 'Hotel & Travel Partners', href: '/#hotels', isSecondary: true }
+  { label: 'Hotel & Travel Partners', href: '/hotels', isSecondary: true }
 ]
 
 const supportLinks = [

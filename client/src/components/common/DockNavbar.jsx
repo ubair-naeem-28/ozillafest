@@ -51,7 +51,7 @@ const navGroups = [
   { label: 'Atmosphere', to: '/#about', icon: 'sparkle' },
   { label: 'Editions', to: '/#events', icon: 'calendar' },
   { label: 'Timeline', to: '/#history', icon: 'history' },
-  { label: 'Hotels & Dining', to: '/#hotels', icon: 'hotels' },
+  { label: 'Hotels', to: '/hotels', icon: 'hotels' },
   { label: 'Facilities', to: '/#facilities', icon: 'facilities' },
   { label: 'Sponsorship', to: '/#sponsorship', icon: 'sponsorship' },
   { label: 'My Tickets', to: '/tickets/my-tickets', icon: 'ticket' }
