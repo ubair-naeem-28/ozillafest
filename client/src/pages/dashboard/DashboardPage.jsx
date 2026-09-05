@@ -1188,23 +1188,44 @@ function DashboardPage() {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 1.1rem;
+          gap: 0.75rem;
           flex-wrap: wrap;
-          margin-bottom: 2.8rem;
+          margin: 0 auto 2.8rem;
+          max-width: 720px;
         }
 
         .sp-hero-meta-strip span {
           display: inline-flex;
           align-items: center;
+          justify-content: center;
           gap: 0.45rem;
           padding: 0.45rem 1.15rem;
           border-radius: 999px;
           background: rgba(0, 0, 0, 0.65);
-          border: 1px solid rgba(255, 255, 255, 0.12);
+          border: 1px solid rgba(255, 255, 255, 0.14);
           color: #ffffff;
           font-size: 0.85rem;
           font-weight: 700;
           letter-spacing: 0.01em;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        @media (max-width: 640px) {
+          .sp-hero-meta-strip {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.55rem;
+            width: 100%;
+            max-width: 360px;
+            margin: 0 auto 2.2rem;
+          }
+          .sp-hero-meta-strip span {
+            font-size: 0.76rem;
+            padding: 0.45rem 0.4rem;
+            width: 100%;
+            text-align: center;
+            white-space: nowrap;
+          }
         }
 
         .sp-hero-actions {
