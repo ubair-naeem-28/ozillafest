@@ -102,34 +102,34 @@ const festivalPillars = [
   {
     badge: '100kW SOUND SYSTEM',
     title: '4 Mega Sound Stages',
-    desc: 'Four explosive stage arenas curated for Indie Pop, Urban Punjabi Rap, Desi Hip-Hop, and non-stop Electronic Dance beats.'
+    desc: 'Explosive stage arenas for Indie Pop, Punjabi Rap, Desi Hip-Hop, and non-stop EDM beats.'
   },
   {
     badge: 'HEADLINE CELEBRITIES',
     title: 'Star-Studded Lineup',
-    desc: 'Unforgettable live stadium sets by Talwinder, Imran Khan, Bohemia, Hassan Raheem, and rising independent artists.'
+    desc: 'Live stadium sets by Talwinder, Imran Khan, Bohemia, Hassan Raheem, and top artists.'
   },
   {
     badge: 'CULINARY & NIGHT BAZAAR',
     title: 'Food & Beats Street',
-    desc: '50+ curated gourmet food stalls, wood-fired artisan eats, craft mocktail lounges, and late-night dessert hubs.'
+    desc: '50+ curated gourmet food stalls, wood-fired artisan eats, and craft mocktail lounges.'
   },
   {
     badge: 'ALL-ACCESS HOSPITALITY',
     title: 'VIP Lounge & Deck Access',
-    desc: 'Elevated front-stage viewing decks, private artist lounges, fast-track priority gates, and official collectible passes.'
+    desc: 'Elevated front-stage viewing decks, private artist lounges, and fast-track VIP gates.'
   }
 ]
 
 const futureEvents = [
-  { name: 'Ozilla Festival 2026: The Flagship', date: 'November 1, 2026', location: 'Lahore, Pakistan', status: 'FEATURED FESTIVAL', description: 'The monumental music, cultural & entertainment festival in Lahore featuring 4 mega stages, 20+ star artists, and 10,000+ live crowd.' },
-  { name: 'Celebrity Night Live Concert',        date: 'February 2027',    location: 'Lahore, Pakistan', status: 'UPCOMING CONCERT',  description: 'A high-octane stadium night built around headline urban Punjabi artists, 360° stage laser shows, and crowd moments.' },
-  { name: 'Ozilla Basant Beats Season 2',        date: 'March 2027',       location: 'Lahore, Pakistan', status: 'SEASONAL FESTIVAL', description: 'Cultural music fusion festival featuring live pop sets, color-themed activations, and open-air food streets.' }
+  { name: 'Ozilla Festival 2026: The Flagship', date: 'November 1, 2026', location: 'Lahore, Pakistan', status: 'FEATURED FESTIVAL', description: 'Flagship festival with 4 mega stages, 20+ star artists, and 10,000+ live crowd.' },
+  { name: 'Celebrity Night Live Concert',        date: 'February 2027',    location: 'Lahore, Pakistan', status: 'UPCOMING CONCERT',  description: 'High-octane stadium night with headline Punjabi artists and 360° laser shows.' },
+  { name: 'Ozilla Basant Beats Season 2',        date: 'March 2027',       location: 'Lahore, Pakistan', status: 'SEASONAL FESTIVAL', description: 'Cultural music fusion festival with live pop sets, color activations, and street eats.' }
 ]
 
 const pastEvents = [
-  { name: 'Ozilla Season 1: The Bass Awakening', status: 'Sold Out · 6,500+ Fans', detail: 'Debut open-air music festival in Lahore featuring indie fusion acts, 2 mega stages, and immersive sound production.' },
-  { name: 'Ozilla Season 2: Neon Nights',         status: 'Sold Out · 8,500+ Fans', detail: 'High-energy night festival featuring headline celebrity performers, night food street, and creator activation zones.' }
+  { name: 'Ozilla Season 1: The Bass Awakening', status: 'Sold Out · 6,500+ Fans', detail: 'Debut open-air music festival in Lahore featuring indie fusion acts and 2 live mega stages.' },
+  { name: 'Ozilla Season 2: Neon Nights',         status: 'Sold Out · 8,500+ Fans', detail: 'High-energy night festival with headline celebrity acts and artisan night food street.' }
 ]
 
 const historyEvents = [
@@ -137,8 +137,8 @@ const historyEvents = [
     name: 'Ozilla Debut: The Sound Awakening',
     year: '2023',
     badge: 'SOLD OUT DEBUT',
-    description: 'The historic launch of Ozilla Festival in Lahore, uniting 6,000+ passionate music lovers for a breakthrough night of live indie music, bass drops, and night market culture.',
-    highlights: ['6,000+ Attendees', '2 Live Mega Stages', 'Indie & Desi Fusion'],
+    description: 'Historic launch in Lahore uniting 6,000+ fans for live indie music and night market culture.',
+    highlights: ['6,000+ Attendees', '2 Live Stages', 'Indie & Desi Fusion'],
     venue: 'Lahore Expo Center',
     date: 'December 12, 2023'
   },
@@ -146,8 +146,8 @@ const historyEvents = [
     name: 'Ozilla Season 2: Neon Nights',
     year: '2024',
     badge: 'RECORD 8,500+ CROWD',
-    description: 'Massive second season expansion with 4 live stages, headline celebrity artists, 360° laser canopy, creator lounges, and artisan food street.',
-    highlights: ['8,500+ Music Fans', '4 Live Stages', 'Celebrity Headliners', 'Food & Beats Carnival'],
+    description: 'Season 2 expansion with 4 live stages, celebrity headliners, and 360° laser canopy.',
+    highlights: ['8,500+ Fans', '4 Live Stages', 'Celebrity Headliners'],
     venue: 'DHA Sports Complex, Lahore',
     date: 'November 9, 2024'
   },
@@ -155,8 +155,8 @@ const historyEvents = [
     name: 'Ozilla Basant Cultural Beats',
     year: '2025',
     badge: 'SPRING FESTIVAL',
-    description: 'Seasonal cultural music festival celebrating Lahore with live acoustic sets, electronic DJ arenas, rooftop stage blocks, and vibrant spring food bazaar.',
-    highlights: ['Cultural Performances', 'Live DJ Sets', 'Artisan Food Hub', '50+ Creator Stalls'],
+    description: 'Seasonal spring music festival with live acoustic sets, DJ arenas, and artisan bazaar.',
+    highlights: ['Cultural Sets', 'Live DJ Stages', 'Food Hub'],
     venue: 'Gulberg Cultural District, Lahore',
     date: 'March 15, 2025'
   },
@@ -164,8 +164,8 @@ const historyEvents = [
     name: 'Ozilla Festival 2026 (The Grand Edition)',
     year: '2026',
     badge: 'FLAGSHIP 10,000+ EDITION',
-    description: 'The monumental flagship festival with 4 distinct music stages, 20+ celebrity singers, 100kW laser sound system, and VIP hospitality viewing decks.',
-    highlights: ['10,000+ Packed Crowd', '4 Mega Music Stages', 'Talwinder & Imran Khan', 'Holographic QR Passes'],
+    description: 'Monumental flagship edition with 4 stages, 20+ star artists, and 100kW laser sound arrays.',
+    highlights: ['10,000+ Crowd', '4 Mega Stages', 'Talwinder & Imran Khan'],
     venue: 'Lahore, Punjab',
     date: 'November 1, 2026'
   },
@@ -173,8 +173,8 @@ const historyEvents = [
     name: 'Ozilla Festival 2027: Arena Tour',
     year: '2027',
     badge: 'NATIONWIDE TOUR',
-    description: 'Nationwide multi-city arena tour expansion bringing the signature Ozilla concert festival experience to major stadium venues across Pakistan.',
-    highlights: ['Arena Stage Setup', 'Multi-City Stadium Tour', 'International Acts'],
+    description: 'Nationwide arena tour expansion bringing the signature Ozilla concert experience across Pakistan.',
+    highlights: ['Arena Tour', 'Multi-City Stages', 'Star Acts'],
     venue: 'Lahore, Karachi & Islamabad',
     date: 'November 14, 2027'
   }
@@ -227,49 +227,49 @@ const facilitiesList = [
   {
     badge: '100kW SOUND ARRAY',
     title: 'Main Concert Arena',
-    desc: 'Stadium-grade concert sound system, 360° laser canopy, cryogenic jets, and immersive sub-bass arrays engineered for live music.',
+    desc: 'Stadium-grade concert sound arrays, 360° lasers, and cryogenic live jets.',
     accent: '#ff5a1f'
   },
   {
     badge: '50+ FOOD SPOTS',
     title: 'Food & Beats Street',
-    desc: 'Curated night food carnival featuring artisan street eats, wood-fired pizzas, gourmet smash burgers, and live mocktail bars.',
+    desc: '50+ night food stalls, wood-fired artisan eats, and gourmet smash burgers.',
     accent: '#ffbd59'
   },
   {
     badge: '24/7 RAPID CARE',
     title: 'Medical & First Aid Hub',
-    desc: 'Fully equipped medical stations, certified paramedic teams, ambulance support, and rapid emergency response across all zones.',
+    desc: 'Fully equipped medical stations and certified paramedic response teams.',
     accent: '#ef4444'
   },
   {
     badge: 'VALET & VIP GATES',
     title: 'Managed VIP Parking',
-    desc: 'Dedicated fast-track valet lanes, secured perimeter parking bays, and direct express entry for VIP and Platinum pass holders.',
+    desc: 'Fast-track valet lanes and direct express entry for VIP pass holders.',
     accent: '#f59e0b'
   },
   {
     badge: 'CREATOR LIGHTING',
     title: 'Holographic Photo Booths',
-    desc: 'Interactive neon backdrops, festival prism lighting rigs, 360° video spinners, and photo moments for social sharing.',
+    desc: 'Interactive neon backdrops and 360° video spinners for creator moments.',
     accent: '#ec4899'
   },
   {
     badge: 'INCLUSIVE VENUE',
     title: 'Full Venue Accessibility',
-    desc: 'Dedicated elevated viewing decks, step-free ramps, accessible hospitality pathways, and on-ground guest assistance teams.',
+    desc: 'Elevated viewing decks, step-free ramps, and on-ground guest assistance.',
     accent: '#3b82f6'
   },
   {
     badge: 'PROFESSIONAL SQUAD',
     title: 'Crowd Safety & Security',
-    desc: 'Trained festival security personnel, CCTV surveillance, RFID entry verification, and smooth crowd circulation management.',
+    desc: 'Trained festival security squad, CCTV monitoring, and RFID gate checks.',
     accent: '#10b981'
   },
   {
     badge: 'GIGABIT HIGH-SPEED',
     title: 'Ultra-Fast Festival Wi-Fi',
-    desc: 'High-density gigabit wireless zones covering all stages and food courts for seamless live streaming, stories, and payments.',
+    desc: 'High-density wireless zones across all stages and food streets.',
     accent: '#06b6d4'
   }
 ]
@@ -2375,15 +2375,22 @@ function DashboardPage() {
           .sp-vibe-tag.sp-vibe-secondary { display: none !important; }
           .sp-vibe-tags-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 0.6rem !important; }
           .sp-vibe-tag { font-size: 0.76rem !important; padding: 0.6rem 0.4rem !important; text-align: center; justify-content: center; }
-          .sp-countdown-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
-          .sp-countdown-card { padding: 1rem 0.85rem; }
+          .sp-section-title { font-size: 1.75rem !important; }
+          .sp-section-subtitle { font-size: 0.84rem !important; line-height: 1.45 !important; margin-bottom: 1.4rem !important; }
+          .sp-card-desc, .sp-pillar-desc { font-size: 0.8rem !important; line-height: 1.4 !important; }
+          .sp-pillar-card { padding: 1.2rem 1rem !important; }
+          .sp-facility-card { padding: 1.1rem 0.95rem !important; }
+          .sp-future-card { padding: 1.2rem 1rem !important; }
+          .sp-timeline-content { padding: 1.1rem 1rem !important; }
+          .sp-timeline-content p.sp-card-desc { font-size: 0.8rem !important; line-height: 1.4 !important; margin-bottom: 0.6rem !important; }
+          .sp-timeline-tag:nth-child(n+3) { display: none !important; }
+          .sp-timeline-heading { font-size: 1.05rem !important; }
+          .sp-pillar-title, .sp-facility-title { font-size: 1.05rem !important; }
           .sp-timeline::before { left: 1.3rem; }
           .sp-timeline-item { gap: 1rem; }
           .sp-timeline-node-wrap { width: 42px; height: 42px; }
           .sp-timeline-icon { width: 42px; height: 42px; }
-          .sp-timeline-icon-emoji { font-size: 0.95rem; }
-          .sp-timeline-year-pill { font-size: 0.55rem; }
-          .sp-timeline-content { padding: 1.4rem 1.2rem !important; }
+          .sp-timeline-year-pill { font-size: 0.75rem; }
         }
       `}</style>
     </main>
