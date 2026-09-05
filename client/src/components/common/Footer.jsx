@@ -3,21 +3,21 @@ import { Link } from 'react-router-dom'
 import { assetUrl } from '../../utils/assetUrl.util'
 
 const festivalLinks = [
-  { label: 'Headline Artists', href: '/#celebrities' },
-  { label: 'VIP & Ticket Passes', href: '/tickets' },
-  { label: 'The Festival Vibe', href: '/#about' },
-  { label: 'Milestones & History', href: '/#history' },
-  { label: 'World-Class Facilities', href: '/#facilities' },
-  { label: 'Hotel & Travel Partners', href: '/#hotels' }
+  { label: 'Headline Artists', href: '/#celebrities', isMain: true },
+  { label: 'VIP & Ticket Passes', href: '/tickets', isMain: true },
+  { label: 'The Festival Vibe', href: '/#about', isMain: true },
+  { label: 'World-Class Facilities', href: '/#facilities', isMain: true },
+  { label: 'Milestones & History', href: '/#history', isSecondary: true },
+  { label: 'Hotel & Travel Partners', href: '/#hotels', isSecondary: true }
 ]
 
 const supportLinks = [
-  { label: 'My Digital Passes', href: '/tickets/my-tickets' },
-  { label: 'QR Ticket Verification', href: '/verification/OZ-2026-PREVIEW' },
-  { label: 'Sponsorship Inquiries', href: '/#sponsorship' },
-  { label: 'Festival Dining Hub', href: '/#restaurants' },
-  { label: 'Privacy Policy', href: '/privacy' },
-  { label: 'Terms & Conditions', href: '/terms' }
+  { label: 'My Digital Passes', href: '/tickets/my-tickets', isMain: true },
+  { label: 'QR Ticket Verification', href: '/verification/OZ-2026-PREVIEW', isMain: true },
+  { label: 'Sponsorship Inquiries', href: '/#sponsorship', isMain: true },
+  { label: 'Festival Dining Hub', href: '/#restaurants', isSecondary: true },
+  { label: 'Privacy Policy', href: '/privacy', isSecondary: true },
+  { label: 'Terms & Conditions', href: '/terms', isSecondary: true }
 ]
 
 function Footer() {
@@ -68,7 +68,7 @@ function Footer() {
             <h4>Festival Guide</h4>
             <ul className="oz-footer-nav">
               {festivalLinks.map((item) => (
-                <li key={item.label}>
+                <li key={item.label} className={item.isSecondary ? 'oz-footer-secondary' : ''}>
                   <Link to={item.href}>
                     <span className="oz-nav-arrow">→</span>
                     {item.label}
@@ -83,7 +83,7 @@ function Footer() {
             <h4>Passes & Support</h4>
             <ul className="oz-footer-nav">
               {supportLinks.map((item) => (
-                <li key={item.label}>
+                <li key={item.label} className={item.isSecondary ? 'oz-footer-secondary' : ''}>
                   <Link to={item.href}>
                     <span className="oz-nav-arrow">→</span>
                     {item.label}
@@ -425,9 +425,15 @@ function Footer() {
         }
 
         @media (max-width: 640px) {
+          .oz-footer-nav li.oz-footer-secondary {
+            display: none !important;
+          }
           .oz-footer-grid {
             grid-template-columns: 1fr;
-            gap: 2rem;
+            gap: 1.6rem;
+          }
+          .oz-footer-nav {
+            gap: 0.55rem;
           }
           .oz-footer-status-bar {
             flex-direction: column;

@@ -644,18 +644,18 @@ function DashboardPage() {
 
             <div className="sp-vibe-tags-grid">
               {[
-                '4 Mega Music Stages',
-                '100kW Laser & Sound System',
-                '20+ Star Performers',
-                '10,000+ Music Lovers',
-                '50+ Food & Beats Stalls',
-                'VIP Artist Lounge & Deck',
-                'Verified QR Instant Passes',
-                'Exclusive Partner Discounts'
+                { text: '4 Mega Music Stages', isMain: true },
+                { text: '100kW Laser & Sound', isMain: true },
+                { text: '20+ Star Performers', isMain: true },
+                { text: 'Verified QR Instant Passes', isMain: true },
+                { text: '10,000+ Music Lovers', isMain: false },
+                { text: '50+ Food & Beats Stalls', isMain: false },
+                { text: 'VIP Artist Lounge & Deck', isMain: false },
+                { text: 'Exclusive Partner Discounts', isMain: false }
               ].map((tag, tIdx) => (
                 <motion.div
-                  key={tag}
-                  className="sp-vibe-tag"
+                  key={tag.text}
+                  className={`sp-vibe-tag ${tag.isMain ? 'sp-vibe-main' : 'sp-vibe-secondary'}`}
                   initial={{ opacity: 0, scale: 0.9 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
@@ -663,7 +663,7 @@ function DashboardPage() {
                   whileHover={{ scale: 1.04, x: 4 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  {tag}
+                  {tag.text}
                 </motion.div>
               ))}
             </div>
@@ -2372,7 +2372,9 @@ function DashboardPage() {
           .sp-hero-content { padding: 4.5rem 1rem 2.5rem; }
           .sp-hero-actions { flex-direction: column; width: 100%; max-width: 290px; gap: 0.85rem; }
           .sp-btn-ember, .sp-btn-ghost { width: 100%; text-align: center; padding: 0.9rem 1.8rem; }
-          .sp-vibe-tags-grid { grid-template-columns: 1fr; gap: 0.65rem; }
+          .sp-vibe-tag.sp-vibe-secondary { display: none !important; }
+          .sp-vibe-tags-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 0.6rem !important; }
+          .sp-vibe-tag { font-size: 0.76rem !important; padding: 0.6rem 0.4rem !important; text-align: center; justify-content: center; }
           .sp-countdown-grid { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
           .sp-countdown-card { padding: 1rem 0.85rem; }
           .sp-timeline::before { left: 1.3rem; }
