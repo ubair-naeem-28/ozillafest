@@ -326,6 +326,33 @@
   color: #ffbd59;
 }
 
+.dock-mobile-links a.dock-mobile-link-cta {
+  background: linear-gradient(135deg, rgba(255, 90, 31, 0.22), rgba(255, 189, 89, 0.18));
+  border: 1px solid rgba(255, 189, 89, 0.45);
+  color: #ffbd59;
+  font-weight: 700;
+  box-shadow: 0 4px 16px rgba(255, 90, 31, 0.2);
+}
+
+.dock-mobile-links a.dock-mobile-link-cta:hover,
+.dock-mobile-links a.dock-mobile-link-cta.active {
+  background: linear-gradient(135deg, rgba(255, 90, 31, 0.4), rgba(255, 189, 89, 0.35));
+  border-color: #ffbd59;
+  color: #ffffff;
+}
+
+.dock-mobile-badge {
+  margin-left: auto;
+  font-size: 0.62rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  padding: 0.2rem 0.55rem;
+  border-radius: 999px;
+  background: linear-gradient(135deg, #ff5a1f, #ffbd59);
+  color: #0f0d14;
+  box-shadow: 0 2px 8px rgba(255, 90, 31, 0.3);
+}
+
 .dock-mobile-link-icon {
   width: 26px;
   height: 26px;

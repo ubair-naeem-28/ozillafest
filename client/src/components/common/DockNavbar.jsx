@@ -45,6 +45,7 @@ const icons = {
 
 const navGroups = [
   { label: 'Home', to: '/#home', icon: 'home' },
+  { label: 'Ticket Portal', to: '/tickets', icon: 'ticket', cta: true },
   { label: 'Lineup', to: '/#celebrities', icon: 'mic' },
   { label: 'VIP Passes', to: '/#vip-experience', icon: 'ticket' },
   { label: 'Atmosphere', to: '/#about', icon: 'sparkle' },
@@ -53,7 +54,7 @@ const navGroups = [
   { label: 'Hotels & Dining', to: '/#hotels', icon: 'hotels' },
   { label: 'Facilities', to: '/#facilities', icon: 'facilities' },
   { label: 'Sponsorship', to: '/#sponsorship', icon: 'sponsorship' },
-  { label: 'My Tickets', to: '/tickets/my-tickets', icon: 'ticket', cta: true }
+  { label: 'My Tickets', to: '/tickets/my-tickets', icon: 'ticket' }
 ]
 
 function userName(user) {
@@ -196,9 +197,15 @@ function DockNavbar() {
 
           <div className="dock-mobile-links">
             {navItems.map((item) => (
-              <NavLink key={item.to} to={item.to} onClick={() => setMobileOpen(false)}>
+              <NavLink
+                key={item.to}
+                to={item.to}
+                className={item.cta ? 'dock-mobile-link-cta' : ''}
+                onClick={() => setMobileOpen(false)}
+              >
                 <span className="dock-mobile-link-icon">{icons[item.icon]}</span>
                 <span>{item.label}</span>
+                {item.cta && <span className="dock-mobile-badge">PASSES</span>}
               </NavLink>
             ))}
           </div>
