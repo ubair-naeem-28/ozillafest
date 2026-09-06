@@ -9,8 +9,17 @@ const packages = [
     badge: 'Executive Rights',
     recommended: false,
     details:
-      'Naming rights, main stage/SMD dominance, media wall title branding, host mentions, promo code rights, and 20% screen time.',
+      'Exclusive naming rights, main stage/SMD dominance, media wall title branding, host mentions, promo code rights, and 20% screen time.',
     benefits: ['Naming Rights', 'Main Stage Branding', 'Media Wall Dominance', 'VIP Access', 'Host Mentions']
+  },
+  {
+    tier: 'Co-Powered By Sponsor',
+    amount: 'PKR 18 Million',
+    badge: 'Premier Partner',
+    recommended: false,
+    details:
+      'Prominent Co-Powered By title branding across all festival teasers, stage screens, LED entry arch, wristbands, and dedicated 20x20ft experiential zone.',
+    benefits: ['Co-Powered By Title', 'Stage LED Placement', 'Entrance Arch Branding', 'VIP Wristband Logo', 'Experiential Zone']
   },
   {
     tier: 'Platinum Sponsor',

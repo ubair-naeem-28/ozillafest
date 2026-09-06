@@ -46,14 +46,13 @@ const icons = {
 const navGroups = [
   { label: 'Home', to: '/#home', icon: 'home' },
   { label: 'Ticket Portal', to: '/tickets', icon: 'ticket', cta: true },
+  { label: 'Schedule', to: '/schedule', icon: 'calendar' },
   { label: 'Lineup', to: '/#celebrities', icon: 'mic' },
   { label: 'VIP Passes', to: '/#vip-experience', icon: 'ticket' },
-  { label: 'Atmosphere', to: '/#about', icon: 'sparkle' },
-  { label: 'Editions', to: '/#events', icon: 'calendar' },
-  { label: 'Timeline', to: '/#history', icon: 'history' },
   { label: 'Hotels', to: '/hotels', icon: 'hotels' },
   { label: 'Facilities', to: '/#facilities', icon: 'facilities' },
   { label: 'Sponsorship', to: '/#sponsorship', icon: 'sponsorship' },
+  { label: 'Atmosphere', to: '/#about', icon: 'sparkle' },
   { label: 'My Tickets', to: '/tickets/my-tickets', icon: 'ticket' }
 ]
 

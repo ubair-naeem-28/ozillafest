@@ -129,6 +129,113 @@ function FacilitiesPage() {
         ))}
       </section>
 
+      {/* ══ VENUE & ON-GROUND BRANDING PLACEMENTS ══ */}
+      <section className="facility-branding-map" style={{ padding: '60px 20px', maxWidth: '1200px', margin: '0 auto' }}>
+        <div style={{ textAlign: 'center', marginBottom: '40px' }}>
+          <span style={{ color: '#d4af37', textTransform: 'uppercase', letterSpacing: '2px', fontSize: '13px', fontWeight: '700' }}>
+            SPONSOR BRAND VISIBILITY TOUCHPOINTS
+          </span>
+          <h2 style={{ fontSize: 'clamp(24px, 4vw, 36px)', fontWeight: '800', margin: '10px 0 16px', color: '#ffffff' }}>
+            Where Will Your Brand Be Positioned?
+          </h2>
+          <p style={{ color: '#d1d5db', maxWidth: '720px', margin: '0 auto', fontSize: '15px', lineHeight: '1.6' }}>
+            Explore the exact on-ground and digital locations where partner logos, activation booths, and immersive branded moments take center stage.
+          </p>
+        </div>
+
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px' }}>
+          {[
+            {
+              title: 'Main Arena & 80ft SMD Screens',
+              icon: '🎤',
+              location: 'Main Stage Center',
+              reach: '10,000+ Concert Attendees',
+              desc: 'Continuous loop video ads, live artist backdrop integration, top stage header branding, and side LED towers.'
+            },
+            {
+              title: 'Grand Entrance & Security Arches',
+              icon: '🚪',
+              location: 'Venue Ingress Gates',
+              reach: '100% Guaranteed Footfall',
+              desc: 'High-impact 360° illuminated archways, queue control barricade wraps, and welcome signage.'
+            },
+            {
+              title: 'VIP & Celebrity Hospitality Lounge',
+              icon: '🍸',
+              location: 'Exclusive Executive Zone',
+              reach: 'C-Suite, Artists & VIP Guests',
+              desc: 'Luxury branded table runners, step-and-repeat press boards, private bar branding, and dedicated host recognition.'
+            },
+            {
+              title: 'Red Carpet & Media Wall',
+              icon: '📸',
+              location: 'Media & Creator Pavilion',
+              reach: 'National Media & Social Viral',
+              desc: 'Step-and-repeat photo backdrop for all celebrity arrivals, TV interviews, digital creator content, and press conferences.'
+            },
+            {
+              title: 'Experiential Stalls & Activation Zones',
+              icon: '🎪',
+              location: 'Central Promenade',
+              reach: 'High-Engagement Interactions',
+              desc: 'Custom 20x20ft branded experiential pavilions for interactive sampling, product demos, giveaways, and customer onboarding.'
+            },
+            {
+              title: 'Food Court & Dining Canopies',
+              icon: '🍔',
+              location: 'Food Street Promenade',
+              reach: 'Peak Dwell-Time Zone',
+              desc: 'Branded umbrella canopies, table tent cards, eco-friendly food packaging cobranding, and food pavilion arches.'
+            },
+            {
+              title: 'Smart RFID Wristbands & VIP Lanyards',
+              icon: '🎫',
+              location: 'Worn by All Attendees',
+              reach: '100% Tangible Retention',
+              desc: 'Official fabric RFID festival wristbands and premium satin VIP lanyards printed with partner brand logos.'
+            },
+            {
+              title: '4K Digital Livestream & Broadcast Overlays',
+              icon: '📱',
+              location: 'Digital & Live Stream',
+              reach: '500,000+ Online Viewers',
+              desc: 'Lower-third screen graphics, sponsor bugs during high-energy musical sets, and digital stream intermission ads.'
+            }
+          ].map((item) => (
+            <div
+              key={item.title}
+              style={{
+                background: 'rgba(255, 255, 255, 0.03)',
+                border: '1px solid rgba(212, 175, 55, 0.25)',
+                borderRadius: '16px',
+                padding: '24px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                transition: 'all 0.3s ease',
+                position: 'relative',
+                overflow: 'hidden'
+              }}
+            >
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
+                  <span style={{ fontSize: '28px' }}>{item.icon}</span>
+                  <span style={{ fontSize: '11px', fontWeight: '700', textTransform: 'uppercase', background: 'rgba(212,175,55,0.15)', color: '#ffd700', padding: '4px 10px', borderRadius: '9999px' }}>
+                    {item.location}
+                  </span>
+                </div>
+                <h3 style={{ fontSize: '18px', fontWeight: '700', color: '#ffffff', margin: '0 0 8px' }}>{item.title}</h3>
+                <p style={{ fontSize: '13px', color: '#9ca3af', lineHeight: '1.6', margin: '0 0 16px' }}>{item.desc}</p>
+              </div>
+              <div style={{ borderTop: '1px solid rgba(255,255,255,0.08)', paddingTop: '12px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span style={{ fontSize: '12px', color: '#6b7280' }}>Estimated Reach:</span>
+                <span style={{ fontSize: '12px', fontWeight: '700', color: '#34d399' }}>{item.reach}</span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section className="facility-showcase" aria-label="Facility showcase">
         <div className="facilities-section-heading">
           <p className="facilities-eyebrow">Premium Facility Showcase</p>

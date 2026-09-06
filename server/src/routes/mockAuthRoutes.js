@@ -98,21 +98,24 @@ router.post('/logout', (_req, res) => {
   res.json({ message: 'Logged out successfully', mode: 'no-db' })
 })
 
-router.post('/resend-otp', (req, res) => {
+router.post(['/send-otp', '/resend-otp'], (req, res) => {
   const email = normalizeEmail(req.body?.email)
   if (!email) {
     return res.status(400).json({ message: 'Email is required' })
   }
 
   const existing = [...users.values()].find((user) => user.email === email)
-  if (existing) {
+  if (existing && existing.password) {
     return res.status(409).json({ message: 'Account already exists with this email' })
   }
 
-  otps.set(email, { otp: '123456', expiresAt: Date.now() + 10 * 60 * 1000 })
+  const otpCode = String(Math.floor(100000 + Math.random() * 900000))
+  otps.set(email, { otp: otpCode, expiresAt: Date.now() + 10 * 60 * 1000 })
   res.json({
-    message: 'Development OTP generated successfully.',
-    otpForDevelopment: '123456',
+    success: true,
+    message: `OTP code generated for ${email}. (Verification code: ${otpCode})`,
+    devOtp: otpCode,
+    otpForDevelopment: otpCode,
     mode: 'no-db'
   })
 })

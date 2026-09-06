@@ -251,9 +251,61 @@ function TicketPortalPage() {
         </div>
 
         {soldOut ? (
-          <div className="ticket-sold-out-box">
-            <h2>Tickets Sold Out</h2>
-            <p>All available Ozilla Festival passes have been reserved.</p>
+          <div
+            className="ticket-sold-out-box"
+            style={{
+              background: 'linear-gradient(135deg, rgba(239, 68, 68, 0.15) 0%, rgba(30, 10, 15, 0.95) 100%)',
+              border: '2px solid #ef4444',
+              borderRadius: '24px',
+              padding: '48px 24px',
+              textAlign: 'center',
+              boxShadow: '0 20px 50px rgba(239, 68, 68, 0.25)',
+              margin: '20px 0 40px'
+            }}
+          >
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#ef4444', color: '#ffffff', padding: '6px 16px', borderRadius: '9999px', fontSize: '13px', fontWeight: '800', letterSpacing: '2px', textTransform: 'uppercase', marginBottom: '16px' }}>
+              🔒 PORTAL LOCKED
+            </div>
+            <h2 style={{ fontSize: 'clamp(26px, 5vw, 40px)', fontWeight: '900', color: '#ffffff', margin: '0 0 12px' }}>
+              Tickets Are Officially Sold Out!
+            </h2>
+            <p style={{ color: '#d1d5db', maxWidth: '600px', margin: '0 auto 24px', fontSize: '16px', lineHeight: '1.6' }}>
+              All General, VIP, and Premium passes for <strong>Ozilla Festival 2026</strong> have been fully booked. The ticket booking system is locked to prevent overbooking.
+            </p>
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '14px', flexWrap: 'wrap' }}>
+              <button
+                type="button"
+                onClick={() => navigate('/#sponsorship')}
+                style={{
+                  background: 'linear-gradient(135deg, #d4af37 0%, #aa8420 100%)',
+                  color: '#111827',
+                  padding: '12px 28px',
+                  borderRadius: '12px',
+                  fontWeight: '700',
+                  fontSize: '14px',
+                  border: 'none',
+                  cursor: 'pointer'
+                }}
+              >
+                Inquire Corporate / Sponsor Passes
+              </button>
+              <button
+                type="button"
+                onClick={() => navigate('/schedule')}
+                style={{
+                  background: 'rgba(255,255,255,0.08)',
+                  color: '#ffffff',
+                  border: '1px solid rgba(255,255,255,0.2)',
+                  padding: '12px 24px',
+                  borderRadius: '12px',
+                  fontWeight: '600',
+                  fontSize: '14px',
+                  cursor: 'pointer'
+                }}
+              >
+                View Festival Schedule
+              </button>
+            </div>
           </div>
         ) : !user ? (
           <div className="ticket-auth-prompt">

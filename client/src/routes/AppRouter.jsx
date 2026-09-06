@@ -24,6 +24,7 @@ const TicketVerificationPage = lazy(() => import('../pages/verification/TicketVe
 const AdminDashboardPage = lazy(() => import('../pages/admin/AdminDashboardPage'))
 const AdminTicketReviewPage = lazy(() => import('../pages/admin/AdminTicketReviewPage'))
 const HotelsPage = lazy(() => import('../pages/hotels/HotelsPage'))
+const FestivalSchedulePage = lazy(() => import('../pages/schedule/FestivalSchedulePage'))
 const LegalPage = lazy(() => import('../pages/legal/LegalPage'))
 const NotFound = lazy(() => import('../components/common/NotFound'))
 
@@ -53,6 +54,8 @@ function AppRouter() {
         <Route path="/contact" element={<Navigate to="/#contact" replace />} />
         <Route path="/facilities" element={<Navigate to="/#facilities" replace />} />
         <Route path="/hotels" element={<MainLayout><HotelsPage /></MainLayout>} />
+        <Route path="/schedule" element={<MainLayout><FestivalSchedulePage /></MainLayout>} />
+        <Route path="/lineup" element={<MainLayout><FestivalSchedulePage /></MainLayout>} />
         <Route path="/restaurants" element={<Navigate to="/#restaurants" replace />} />
         <Route path="/discounts" element={<Navigate to="/#discounts" replace />} />
         <Route path="/partner" element={<Navigate to="/#about" replace />} />

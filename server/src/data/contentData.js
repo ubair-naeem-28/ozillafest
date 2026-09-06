@@ -33,6 +33,7 @@ export const contentData = {
   ],
   sponsors: [
     { tier: 'Title Sponsor', amount: 'PKR 40 Million' },
+    { tier: 'Co-Powered By Sponsor', amount: 'PKR 18 Million' },
     { tier: 'Platinum Sponsor', amount: 'PKR 4.5 Million' },
     { tier: 'Gold Sponsor', amount: 'PKR 3.5 Million' },
     { tier: 'Silver Sponsor', amount: 'PKR 2.5 Million' }
