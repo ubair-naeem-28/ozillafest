@@ -1,6 +1,7 @@
 import { connectDb } from './config/db.js'
 import { env, validateEnv } from './config/env.js'
 import { app } from './app.js'
+import { seedDatabase } from './data/seedDatabase.js'
 
 function printDivider() {
   console.log('------------------------------------------------------------')
@@ -50,6 +51,7 @@ async function start() {
       dbStatus = await connectDb()
       app.locals.databaseName = dbStatus.databaseName
       app.locals.noDbMode = false
+      await seedDatabase()
     } catch (error) {
       if (!env.allowNoDbFallback) {
         throw error

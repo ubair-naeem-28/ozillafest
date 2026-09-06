@@ -8,9 +8,37 @@ import { payfastService } from '../services/payfastService.js'
 import { jazzcashService } from '../services/jazzcashService.js'
 import { easypaisaService } from '../services/easypaisaService.js'
 import { stripeService } from '../services/stripeService.js'
+import {
+  sendPaymentReceivedEmail,
+  sendTicketApprovedEmail,
+  sendTicketRejectedEmail
+} from '../utils/email.js'
+
+function notifyTicketApproval(ticket) {
+  if (!ticket || !ticket.email) return
+  const totalAmount = getTicketPrice(ticket.ticketType) * (ticket.quantity || 1)
+  sendPaymentReceivedEmail({
+    to: ticket.email,
+    name: ticket.fullName,
+    ticketId: ticket.ticketId || ticket._id,
+    tierName: ticket.ticketType,
+    amount: totalAmount,
+    paymentMethod: ticket.paymentMethod || 'Online Transfer'
+  }).catch(() => {})
+
+  sendTicketApprovedEmail({
+    to: ticket.email,
+    name: ticket.fullName,
+    ticketId: ticket.ticketId || ticket._id,
+    tierName: ticket.ticketType,
+    eventName: ticket.eventName || 'Ozilla Festival 2026',
+    eventDate: ticket.eventDate || 'November 1-2, 2026',
+    quantity: ticket.quantity || 1,
+    verificationUrl: `${env.frontendUrl}/verification/${ticket.ticketId || ticket._id}`
+  }).catch(() => {})
+}
 
 function resolveEvent(eventId) {
-  const event = contentData.events.find((item) => item.id === eventId)
   if (event) {
     return {
       id: event.id,
@@ -417,6 +445,8 @@ export async function payWithCard(req, res) {
   ticket.verifiedAt = null
   await ticket.save()
 
+  notifyTicketApproval(ticket)
+
   return res.json({
     message: `Payment of PKR ${totalAmount.toLocaleString()} deducted from ${bank} ${brand} card via Stripe and credited to organizer account successfully.`,
     ticket: ticket.toJSON(),
@@ -478,6 +508,8 @@ export async function payWithJazzCash(req, res) {
   ticket.verifiedAt = null
   await ticket.save()
 
+  notifyTicketApproval(ticket)
+
   return res.json({
     message: `JazzCash payment of PKR ${totalAmount.toLocaleString()} deducted successfully! Your QR ticket is ready.`,
     ticket: ticket.toJSON()
@@ -513,6 +545,8 @@ export async function payWithEasypaisa(req, res) {
   ticket.verifiedAt = null
   await ticket.save()
 
+  notifyTicketApproval(ticket)
+
   return res.json({
     message: `Easypaisa payment of PKR ${totalAmount.toLocaleString()} deducted successfully! Your QR ticket is ready.`,
     ticket: ticket.toJSON()
@@ -539,6 +573,8 @@ export async function uploadPaymentProof(req, res) {
   ticket.generatedAt = new Date()
   ticket.verifiedAt = null
   await ticket.save()
+
+  notifyTicketApproval(ticket)
 
   return res.json({ message: 'Payment proof uploaded and ticket generated successfully', ticket: ticket.toJSON() })
 }
@@ -644,8 +680,19 @@ export async function decideTicketAdmin(req, res) {
   if (ticket.status === 'approved') {
     ticket.generatedAt = new Date()
     ticket.verifiedAt = null
+    await ticket.save()
+    notifyTicketApproval(ticket)
+  } else {
+    await ticket.save()
+    if (ticket.email) {
+      sendTicketRejectedEmail({
+        to: ticket.email,
+        name: ticket.fullName,
+        ticketId: ticket.ticketId || ticket._id,
+        reason: req.body.reason || 'Payment verification failed'
+      }).catch(() => {})
+    }
   }
-  await ticket.save()
 
   return res.json({ message: `Ticket ${ticket.status}`, ticket: ticket.toJSON() })
 }
@@ -710,6 +757,7 @@ export async function handlePayFastIpn(req, res) {
     ticket.issuingBank = ipnData.bank_name || 'PayFast Multi-Channel Gateway'
     ticket.payoutAccount = `${env.payoutAccountTitle} | ${env.payoutBankName} (${env.ibanAccount})`
     await ticket.save()
+    notifyTicketApproval(ticket)
   }
 
   return res.status(200).json({
@@ -732,6 +780,7 @@ export async function handlePayFastReturn(req, res) {
       ticket.paidAt = new Date()
       ticket.generatedAt = new Date()
       await ticket.save()
+      notifyTicketApproval(ticket)
     }
   }
 
@@ -779,6 +828,7 @@ export async function handleJazzCashIpn(req, res) {
     ticket.generatedAt = new Date()
     ticket.payoutAccount = `${env.jazzcashTitle} (JazzCash: ${env.jazzcashAccount})`
     await ticket.save()
+    notifyTicketApproval(ticket)
   }
 
   return res.status(200).json({
@@ -825,6 +875,7 @@ export async function handleEasypaisaIpn(req, res) {
     ticket.generatedAt = new Date()
     ticket.payoutAccount = `${env.easypaisaTitle} (Easypaisa: ${env.easypaisaAccount})`
     await ticket.save()
+    notifyTicketApproval(ticket)
   }
 
   return res.status(200).json({

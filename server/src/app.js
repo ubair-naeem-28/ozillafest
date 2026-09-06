@@ -9,8 +9,11 @@ import mockTicketRoutes from './routes/mockTicketRoutes.js'
 import contentRoutes from './routes/contentRoutes.js'
 import adminRoutes from './routes/adminRoutes.js'
 import mockAdminRoutes from './routes/mockAdminRoutes.js'
+import { globalLimiter, authLimiter } from './middleware/rateLimiter.js'
 
 export const app = express()
+
+app.use(globalLimiter)
 
 app.use(
   cors({
@@ -71,7 +74,7 @@ app.get('/api/health', (_req, res) => {
   })
 })
 
-app.use('/api/auth', (req, res, next) => {
+app.use('/api/auth', authLimiter, (req, res, next) => {
   const router = req.app.locals.noDbMode ? mockAuthRoutes : authRoutes
   router(req, res, next)
 })

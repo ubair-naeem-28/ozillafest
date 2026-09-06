@@ -28,20 +28,37 @@ import {
 import { requireAdmin } from '../middleware/adminMiddleware.js'
 import { requireAuth } from '../middleware/authMiddleware.js'
 
+import { ticketLimiter } from '../middleware/rateLimiter.js'
+
 const router = Router()
 
 const uploadsDir = path.resolve(process.cwd(), 'uploads', 'payment-proofs')
 fs.mkdirSync(uploadsDir, { recursive: true })
 
+const ALLOWED_MIME_TYPES = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp', 'image/heic']
+
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => cb(null, uploadsDir),
   filename: (_req, file, cb) => {
-    const ext = path.extname(file.originalname || '.png')
-    cb(null, `${Date.now()}-${Math.random().toString(16).slice(2)}${ext}`)
+    const safeBase = path.basename(file.originalname || 'proof', path.extname(file.originalname || '')).replace(/[^a-zA-Z0-9_-]/g, '')
+    const ext = path.extname(file.originalname || '.png').toLowerCase()
+    cb(null, `${Date.now()}-${safeBase || 'proof'}-${Math.random().toString(16).slice(2)}${ext}`)
   }
 })
 
-const upload = multer({ storage })
+const upload = multer({
+  storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024 // 5MB limit
+  },
+  fileFilter: (_req, file, cb) => {
+    if (ALLOWED_MIME_TYPES.includes(file.mimetype.toLowerCase())) {
+      cb(null, true)
+    } else {
+      cb(new Error('Only JPEG, PNG, WEBP and HEIC image files are accepted as payment proofs.'))
+    }
+  }
+})
 
 // Public ticket actions
 router.get('/availability', getTicketAvailability)

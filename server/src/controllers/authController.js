@@ -4,7 +4,11 @@ import { OAuth2Client } from 'google-auth-library'
 import { env } from '../config/env.js'
 import { User } from '../models/User.js'
 import { Otp } from '../models/Otp.js'
-import { sendOtpEmail, sendPasswordResetEmail } from '../utils/email.js'
+import {
+  sendOtpEmail,
+  sendPasswordResetEmail,
+  sendWelcomeEmail
+} from '../utils/email.js'
 import { signAuthToken } from '../utils/jwt.js'
 
 const googleOAuthClient = new OAuth2Client(env.googleClientId)
@@ -63,6 +67,7 @@ async function upsertUserFromGoogleProfile({ profile }) {
       emailVerified: true,
       role: env.adminEmails.includes(email) ? 'admin' : 'user'
     })
+    sendWelcomeEmail({ to: email, name }).catch(() => {})
   } else {
     let changed = false
     if (!user.googleId && googleId) {
@@ -209,6 +214,8 @@ export async function register(req, res) {
   user.passwordHash = await bcrypt.hash(password, 10)
   user.role = env.adminEmails.includes(normalizedEmail) ? 'admin' : 'user'
   await user.save()
+
+  sendWelcomeEmail({ to: normalizedEmail, name: user.name }).catch(() => {})
 
   const token = signAuthToken(user._id.toString())
   return res.status(201).json({ token, user: user.toJSON() })
