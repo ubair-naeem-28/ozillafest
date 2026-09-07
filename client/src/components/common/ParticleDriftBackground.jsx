@@ -407,13 +407,17 @@ export default function ParticleDriftBackground({
       if (LINKD > 0) {
         const l2 = LINKD * LINKD
         for (let i = 0; i < nCount && lines < MAX_LINES; i++) {
+          const xi = nx[i]
+          const yi = ny[i]
           for (let j = i + 1; j < nCount && lines < MAX_LINES; j++) {
-            const dx = nx[i] - nx[j]
-            const dy = ny[i] - ny[j]
+            const dx = xi - nx[j]
+            if (dx > LINKD || dx < -LINKD) continue
+            const dy = yi - ny[j]
+            if (dy > LINKD || dy < -LINKD) continue
             const dd = dx * dx + dy * dy
             if (dd >= l2) continue
             const a = 0.15 * (1 - Math.sqrt(dd) / LINKD)
-            pushLine(nx[i], ny[i], nx[j], ny[j], a, a, 0, LINKW)
+            pushLine(xi, yi, nx[j], ny[j], a, a, 0, LINKW)
           }
         }
       }

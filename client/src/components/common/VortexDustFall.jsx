@@ -401,6 +401,20 @@ export default function VortexDustFall({
     gl.enable(gl.BLEND)
     gl.blendFunc(gl.ONE, gl.ONE)
 
+    let isVisible = true
+    let io = null
+    if (typeof IntersectionObserver !== 'undefined' && host) {
+      io = new IntersectionObserver(
+        (entries) => {
+          if (entries[0]) {
+            isVisible = entries[0].isIntersecting
+          }
+        },
+        { rootMargin: '120px' }
+      )
+      io.observe(host)
+    }
+
     let dpr = 1
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP)
@@ -427,6 +441,12 @@ export default function VortexDustFall({
 
     const frame = (now) => {
       raf = requestAnimationFrame(frame)
+
+      if (!isVisible || (typeof document !== 'undefined' && document.hidden)) {
+        last = now
+        return
+      }
+
       const dt = Math.min((now - last) / 1000, 0.05)
       last = now
       const L = live.current
@@ -447,21 +467,27 @@ export default function VortexDustFall({
 
       const w = canvas.width
       const h = canvas.height
+      const cssW = canvas.clientWidth || host.clientWidth || 1200
+      const isMobile = cssW < 768
+      const isTablet = cssW >= 768 && cssW < 1024
+
       const focal = h / (2 * Math.tan(((FOV_DEG / 2) * Math.PI) / 180))
 
-      const radius = RADIUS_REF * (L.ring.radius / 100)
+      // Responsive radius & thickness for perfectly proportioned display across all devices
+      const responsiveRadiusFactor = isMobile ? 0.72 : isTablet ? 0.88 : 1.0
+      const radius = RADIUS_REF * (L.ring.radius / 100) * responsiveRadiusFactor
       const fallH = radius * (L.fall.height / 100)
       const rise = fallH * (L.fall.spray / 400)
-      const yPx = h * FRAME_SHIFT
+      const yPx = h * (isMobile ? 0.28 : FRAME_SHIFT)
       const spinTurns = (L.fall.spin / 100) * 1.5
       const scatter = radius * (L.field.scatter / 100) * 0.15
-      const dotWorld = DOT_REF * (L.dotSize / 100)
+      const dotWorld = DOT_REF * (L.dotSize / 100) * (isMobile ? 0.75 : 1.0)
       const blurK = BLUR_REF * (L.field.blur / 100)
 
       const tiltRad =
         (L.tilt * Math.PI) / 180 +
         hoverY * hoverAmount * hoverAmt * ((10 * Math.PI) / 180)
-      const camDist = L.distance - hoverAmt * hoverAmount * 150
+      const camDist = (isMobile ? L.distance * 1.08 : L.distance) - hoverAmt * hoverAmount * 150
 
       const [br, bg, bb, ba] = parseColor(L.baseColor)
       const [ar, ag, ab, aa] = parseColor(L.accentColor)
@@ -518,6 +544,7 @@ export default function VortexDustFall({
     return () => {
       cancelAnimationFrame(raf)
       ro.disconnect()
+      if (io) io.disconnect()
       gl.deleteBuffer(aBuf)
       gl.deleteBuffer(bBuf)
       gl.deleteBuffer(ringBuf)

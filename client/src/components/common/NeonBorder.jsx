@@ -191,6 +191,22 @@ export default function NeonBorder({
   }, [])
 
   useEffect(() => {
+    const el = rootRef.current
+    let isVisible = true
+    let io = null
+
+    if (typeof IntersectionObserver !== 'undefined' && el) {
+      io = new IntersectionObserver(
+        (entries) => {
+          if (entries[0]) {
+            isVisible = entries[0].isIntersecting
+          }
+        },
+        { rootMargin: '100px' }
+      )
+      io.observe(el)
+    }
+
     let raf = 0
     let last = performance.now()
     let lap = 0
@@ -198,6 +214,13 @@ export default function NeonBorder({
     let stepT = 0
 
     const frame = (now) => {
+      raf = requestAnimationFrame(frame)
+
+      if (!isVisible || (typeof document !== 'undefined' && document.hidden)) {
+        last = now
+        return
+      }
+
       const dt = Math.min(0.05, Math.max(0, (now - last) / 1000))
       last = now
       const p = live.current
@@ -232,12 +255,13 @@ export default function NeonBorder({
           b.style.setProperty('--arc', buildArc(lap + 0.5, p.borderSize, w, h, p.color))
         }
       }
-
-      raf = requestAnimationFrame(frame)
     }
     raf = requestAnimationFrame(frame)
 
-    return () => cancelAnimationFrame(raf)
+    return () => {
+      cancelAnimationFrame(raf)
+      if (io) io.disconnect()
+    }
   }, [])
 
   const thick = Math.max(1, Math.min(10, thickness))
