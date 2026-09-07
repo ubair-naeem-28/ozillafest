@@ -48,12 +48,8 @@ const DEFAULT_SINGERS = [
   }
 ]
 
-const MAX_SCALE = 1.38
-const MIN_SCALE = 0.72
-
-function wrap(value, span) {
-  return ((value % span) + span) % span
-}
+const MAX_SCALE = 1.28
+const MIN_SCALE = 0.78
 
 function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value))
@@ -86,16 +82,15 @@ export default function SmoothScrollSlider({
   images,
   slideWidth = 320,
   slideHeight = 440,
-  spacing = 2.5,
+  spacing = 2.4,
   direction = 'right',
   smoothness = 8.5,
   radius = 24,
-  dim = 6,
+  dim = 5,
   background = 'transparent',
   sensitivity = 5,
-  loop = true,
-  autoPlay = true,
-  autoPlaySpeed = 1.2,
+  autoPlay = false,
+  autoPlayInterval = 3500,
   style,
   onItemClick
 }) {
@@ -105,11 +100,13 @@ export default function SmoothScrollSlider({
   const current = useRef(0)
   const [containerWidth, setContainerWidth] = useState(0)
   const [isHovered, setIsHovered] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(0)
 
-  // Use items if passed, else images or default singers
+  // Use rawList: each singer appears exactly ONCE (no repeats)
   const rawList = items && items.length > 0 ? items : (images && images.length > 0 ? images : DEFAULT_SINGERS)
 
-  const source = useMemo(() => {
+  // Slides array has each singer ONLY once
+  const slides = useMemo(() => {
     return rawList.map((item, idx) => ({
       ...item,
       src: imageOf(item),
@@ -124,7 +121,7 @@ export default function SmoothScrollSlider({
   }, [rawList])
 
   // Responsive dimensions
-  const responsiveWidth = containerWidth > 0 && containerWidth < 640 ? Math.min(slideWidth, 240) : containerWidth < 1024 ? Math.min(slideWidth, 280) : slideWidth
+  const responsiveWidth = containerWidth > 0 && containerWidth < 640 ? Math.min(slideWidth, 250) : containerWidth < 1024 ? Math.min(slideWidth, 290) : slideWidth
   const responsiveHeight = containerWidth > 0 && containerWidth < 640 ? Math.round(responsiveWidth * 1.36) : slideHeight
 
   const step = responsiveWidth + clamp(spacing, 0, 10) * 18
@@ -134,30 +131,17 @@ export default function SmoothScrollSlider({
   const dragMultiplier = 0.6 + (clamp(sensitivity, 0, 10) / 10) * 1.6
   const flip = direction === 'left'
 
-  const repeats = useMemo(() => {
-    if (!loop || containerWidth <= 0 || step <= 0 || source.length === 0) return 2
-    return Math.max(2, Math.ceil((containerWidth + step * 3) / (source.length * step)) + 1)
-  }, [loop, containerWidth, step, source.length])
-
-  const slides = useMemo(() => {
-    const out = []
-    for (let r = 0; r < repeats; r += 1) {
-      out.push(...source)
-    }
-    return out
-  }, [source, repeats])
-
   const frame = useRef({
-    count: 0,
-    step: 0,
-    slideWidth: 0,
-    width: 0,
-    ease: 0.075,
+    count: slides.length,
+    step,
+    slideWidth: responsiveWidth,
+    width: containerWidth,
+    ease,
     maxScale: MAX_SCALE,
     minScale: MIN_SCALE,
-    dim: 0,
-    loop: true,
-    flip: false
+    dim: dimAmount,
+    loop: false, // Strictly false: single occurrence per singer
+    flip
   })
 
   frame.current = {
@@ -169,7 +153,7 @@ export default function SmoothScrollSlider({
     maxScale: MAX_SCALE,
     minScale: MIN_SCALE,
     dim: dimAmount,
-    loop,
+    loop: false,
     flip
   }
 
@@ -193,7 +177,21 @@ export default function SmoothScrollSlider({
     nodes.current.length = slides.length
   }, [slides.length])
 
-  // Animation Loop
+  // Optional periodic auto-advance through singers if autoPlay is enabled
+  useEffect(() => {
+    if (!autoPlay || isHovered || slides.length <= 1) return
+    const timer = setInterval(() => {
+      setActiveIndex((prev) => {
+        const next = (prev + 1) % slides.length
+        target.current = next * step
+        return next
+      })
+    }, autoPlayInterval)
+
+    return () => clearInterval(timer)
+  }, [autoPlay, isHovered, slides.length, step, autoPlayInterval])
+
+  // Animation Loop with smooth Lerp physics
   useEffect(() => {
     let raf = 0
     let last = 0
@@ -205,25 +203,18 @@ export default function SmoothScrollSlider({
       last = now
       if (!c.count || c.step <= 0 || c.width <= 0) return
 
-      // Gentle auto drift if not hovered
-      if (autoPlay && !isHovered) {
-        target.current += (c.flip ? -1 : 1) * autoPlaySpeed * (delta * 60)
-      }
-
-      const span = c.count * c.step
-
-      if (c.loop) {
-        if (current.current > span || current.current < -span) {
-          const shift = Math.trunc(current.current / span) * span
-          current.current -= shift
-          target.current -= shift
-        }
-      } else {
-        target.current = clamp(target.current, 0, (c.count - 1) * c.step)
-      }
+      // Non-loop: clamp target strictly within bounds of unique items
+      const maxTarget = (c.count - 1) * c.step
+      target.current = clamp(target.current, 0, maxTarget)
 
       const k = 1 - Math.pow(1 - c.ease, delta * 60)
       current.current += (target.current - current.current) * k
+
+      // Calculate which slide is closest to center
+      const currentIdx = Math.round(current.current / c.step)
+      if (currentIdx >= 0 && currentIdx < c.count) {
+        setActiveIndex(currentIdx)
+      }
 
       const pad = (c.width - c.slideWidth) / 2
       const half = c.width / 2
@@ -233,16 +224,16 @@ export default function SmoothScrollSlider({
         if (!node) continue
 
         const raw = i * c.step - current.current + pad
-        const x = c.loop ? wrap(raw + c.step, span) - c.step : raw
+        const x = raw
 
         const distance = x + c.slideWidth / 2 - half
         let scale
         let push
         if (distance > 0) {
-          scale = Math.min(c.maxScale, 1 + (distance / c.width) * 0.6)
-          push = (scale - 1) * c.slideWidth * 0.45
+          scale = Math.min(c.maxScale, 1 + (distance / c.width) * 0.45)
+          push = (scale - 1) * c.slideWidth * 0.35
         } else {
-          scale = Math.max(c.minScale, 1 + (distance / c.width) * 0.65)
+          scale = Math.max(c.minScale, 1 + (distance / c.width) * 0.5)
           push = 0
         }
 
@@ -251,7 +242,7 @@ export default function SmoothScrollSlider({
 
         if (c.dim > 0 && scale < 1) {
           const t = (1 - scale) / Math.max(0.001, 1 - c.minScale)
-          node.style.filter = `brightness(${Math.max(0.3, 1 - t * c.dim)})`
+          node.style.filter = `brightness(${Math.max(0.35, 1 - t * c.dim)})`
         } else {
           node.style.filter = 'none'
         }
@@ -260,9 +251,9 @@ export default function SmoothScrollSlider({
 
     raf = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(raf)
-  }, [autoPlay, autoPlaySpeed, isHovered])
+  }, [])
 
-  // Wheel listener
+  // Wheel / Trackpad listener
   useEffect(() => {
     const node = containerRef.current
     if (!node) return
@@ -325,9 +316,16 @@ export default function SmoothScrollSlider({
     }
   }, [])
 
+  const goToSlide = useCallback((index) => {
+    const clampedIndex = clamp(index, 0, slides.length - 1)
+    target.current = clampedIndex * step
+    setActiveIndex(clampedIndex)
+  }, [slides.length, step])
+
   const nudge = useCallback((dir) => {
-    target.current += (dir === 'left' ? -1 : 1) * step * 1.2
-  }, [step])
+    const nextIdx = clamp(activeIndex + (dir === 'left' ? -1 : 1), 0, slides.length - 1)
+    goToSlide(nextIdx)
+  }, [activeIndex, goToSlide, slides.length])
 
   return (
     <div
@@ -337,11 +335,55 @@ export default function SmoothScrollSlider({
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        margin: '1.5rem 0',
+        margin: '1.2rem 0',
       }}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {/* Quick Singer Selection Tabs (1 unique tab per singer) */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          flexWrap: 'wrap',
+          gap: '8px',
+          marginBottom: '1rem',
+          zIndex: 10,
+        }}
+      >
+        {slides.map((singer, idx) => {
+          const isActive = idx === activeIndex
+          return (
+            <button
+              key={singer.name}
+              type="button"
+              onClick={() => goToSlide(idx)}
+              style={{
+                padding: '6px 14px',
+                borderRadius: '999px',
+                border: isActive
+                  ? '1px solid #ff8a3d'
+                  : '1px solid rgba(255, 255, 255, 0.12)',
+                background: isActive
+                  ? 'linear-gradient(135deg, rgba(255, 138, 61, 0.32), rgba(255, 90, 31, 0.22))'
+                  : 'rgba(20, 10, 6, 0.55)',
+                color: isActive ? '#ffbd59' : 'rgba(255, 255, 255, 0.65)',
+                fontSize: '0.78rem',
+                fontWeight: isActive ? '850' : '650',
+                letterSpacing: '0.04em',
+                cursor: 'pointer',
+                transition: 'all 200ms ease',
+                backdropFilter: 'blur(8px)',
+                boxShadow: isActive ? '0 0 16px rgba(255, 138, 61, 0.35)' : 'none',
+              }}
+            >
+              {singer.name}
+            </button>
+          )
+        })}
+      </div>
+
       {/* Slider Viewport */}
       <div
         ref={containerRef}
@@ -349,7 +391,7 @@ export default function SmoothScrollSlider({
         style={{
           position: 'relative',
           width: '100%',
-          height: `${responsiveHeight + 60}px`,
+          height: `${responsiveHeight + 50}px`,
           overflow: 'hidden',
           background,
           cursor: 'grab',
@@ -362,13 +404,18 @@ export default function SmoothScrollSlider({
       >
         {slides.map((slide, i) => {
           const isHeadliner = slide.isHeadliner
+          const isCurrentActive = i === activeIndex
+
           return (
             <div
-              key={`${slide.name}-${i}`}
+              key={slide.name}
               ref={(el) => {
                 nodes.current[i] = el
               }}
-              onClick={() => onItemClick && onItemClick(slide, i)}
+              onClick={() => {
+                goToSlide(i)
+                if (onItemClick) onItemClick(slide, i)
+              }}
               style={{
                 position: 'absolute',
                 top: '50%',
@@ -378,15 +425,18 @@ export default function SmoothScrollSlider({
                 borderRadius: `${radius}px`,
                 overflow: 'hidden',
                 background: '#130c0a',
-                border: isHeadliner
-                  ? '1.5px solid rgba(255, 138, 61, 0.75)'
+                border: isCurrentActive
+                  ? '1.5px solid rgba(255, 138, 61, 0.85)'
+                  : isHeadliner
+                  ? '1px solid rgba(255, 138, 61, 0.45)'
                   : '1px solid rgba(255, 255, 255, 0.12)',
-                boxShadow: isHeadliner
-                  ? '0 24px 60px rgba(0,0,0,0.85), 0 0 35px rgba(255, 90, 31, 0.35)'
-                  : '0 20px 50px rgba(0,0,0,0.75)',
+                boxShadow: isCurrentActive
+                  ? '0 26px 65px rgba(0,0,0,0.9), 0 0 35px rgba(255, 90, 31, 0.4)'
+                  : '0 18px 45px rgba(0,0,0,0.75)',
                 willChange: 'transform, filter',
                 transform: 'translate3d(0, -50%, 0)',
                 cursor: 'pointer',
+                transition: 'border-color 250ms ease, box-shadow 250ms ease',
               }}
             >
               {/* Singer Portrait Image */}
@@ -483,7 +533,7 @@ export default function SmoothScrollSlider({
                   position: 'absolute',
                   inset: 0,
                   background:
-                    'linear-gradient(180deg, rgba(0,0,0,0.1) 0%, transparent 40%, rgba(10,5,3,0.72) 65%, rgba(6,3,2,0.96) 100%)',
+                    'linear-gradient(180deg, rgba(0,0,0,0.08) 0%, transparent 40%, rgba(10,5,3,0.72) 65%, rgba(6,3,2,0.96) 100%)',
                   display: 'flex',
                   flexDirection: 'column',
                   justifyContent: 'flex-end',
@@ -561,16 +611,17 @@ export default function SmoothScrollSlider({
         <button
           type="button"
           onClick={() => nudge('left')}
+          disabled={activeIndex === 0}
           aria-label="Previous artist"
           style={{
             width: '40px',
             height: '40px',
             borderRadius: '50%',
-            border: '1px solid rgba(255, 138, 61, 0.35)',
-            background: 'rgba(20, 10, 6, 0.75)',
+            border: activeIndex === 0 ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 138, 61, 0.35)',
+            background: activeIndex === 0 ? 'rgba(10, 5, 3, 0.4)' : 'rgba(20, 10, 6, 0.75)',
             backdropFilter: 'blur(10px)',
-            color: '#ffbd59',
-            cursor: 'pointer',
+            color: activeIndex === 0 ? 'rgba(255, 255, 255, 0.25)' : '#ffbd59',
+            cursor: activeIndex === 0 ? 'default' : 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -579,45 +630,51 @@ export default function SmoothScrollSlider({
             transition: 'all 200ms ease',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'scale(1.1)'
-            e.currentTarget.style.borderColor = '#ff8a3d'
+            if (activeIndex > 0) {
+              e.currentTarget.style.transform = 'scale(1.1)'
+              e.currentTarget.style.borderColor = '#ff8a3d'
+            }
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = 'scale(1)'
-            e.currentTarget.style.borderColor = 'rgba(255, 138, 61, 0.35)'
+            e.currentTarget.style.borderColor = activeIndex === 0 ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 138, 61, 0.35)'
           }}
         >
           ‹
         </button>
 
-        <span
-          style={{
-            fontSize: '0.78rem',
-            fontWeight: '700',
-            color: 'rgba(255, 189, 89, 0.85)',
-            letterSpacing: '0.08em',
-            textTransform: 'uppercase',
-            display: 'flex',
-            alignItems: 'center',
-            gap: '6px',
-          }}
-        >
-          <span>↔</span> Drag, Wheel or Swipe Smooth Rail
-        </span>
+        {/* Progress indicator dots */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+          {slides.map((_, dotIdx) => (
+            <span
+              key={dotIdx}
+              onClick={() => goToSlide(dotIdx)}
+              style={{
+                width: dotIdx === activeIndex ? '20px' : '6px',
+                height: '6px',
+                borderRadius: '999px',
+                backgroundColor: dotIdx === activeIndex ? '#ff8a3d' : 'rgba(255, 255, 255, 0.25)',
+                cursor: 'pointer',
+                transition: 'all 250ms ease',
+              }}
+            />
+          ))}
+        </div>
 
         <button
           type="button"
           onClick={() => nudge('right')}
+          disabled={activeIndex === slides.length - 1}
           aria-label="Next artist"
           style={{
             width: '40px',
             height: '40px',
             borderRadius: '50%',
-            border: '1px solid rgba(255, 138, 61, 0.35)',
-            background: 'rgba(20, 10, 6, 0.75)',
+            border: activeIndex === slides.length - 1 ? '1px solid rgba(255, 255, 255, 0.1)' : '1px solid rgba(255, 138, 61, 0.35)',
+            background: activeIndex === slides.length - 1 ? 'rgba(10, 5, 3, 0.4)' : 'rgba(20, 10, 6, 0.75)',
             backdropFilter: 'blur(10px)',
-            color: '#ffbd59',
-            cursor: 'pointer',
+            color: activeIndex === slides.length - 1 ? 'rgba(255, 255, 255, 0.25)' : '#ffbd59',
+            cursor: activeIndex === slides.length - 1 ? 'default' : 'pointer',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'center',
@@ -626,12 +683,14 @@ export default function SmoothScrollSlider({
             transition: 'all 200ms ease',
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'scale(1.1)'
-            e.currentTarget.style.borderColor = '#ff8a3d'
+            if (activeIndex < slides.length - 1) {
+              e.currentTarget.style.transform = 'scale(1.1)'
+              e.currentTarget.style.borderColor = '#ff8a3d'
+            }
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = 'scale(1)'
-            e.currentTarget.style.borderColor = 'rgba(255, 138, 61, 0.35)'
+            e.currentTarget.style.borderColor = activeIndex === slides.length - 1 ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 138, 61, 0.35)'
           }}
         >
           ›
