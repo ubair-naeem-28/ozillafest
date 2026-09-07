@@ -6,6 +6,7 @@ import { ozillaProfessionalContent } from '../../data/ozillaProfessionalContent'
 import RoundCarousel from '../../components/common/RoundCarousel'
 import SmoothScrollSlider from '../../components/common/SmoothScrollSlider'
 import NeonBorder from '../../components/common/NeonBorder'
+import VortexDustFall from '../../components/common/VortexDustFall'
 
 // ── Performer Data with Stage & BPM ────────────────────────────────────
 const performers = [
@@ -327,6 +328,13 @@ function DashboardPage() {
     <main className="sp-main">
       {/* ══ HERO SECTION ══ */}
       <section id="home" className="sp-hero" aria-label="Ozilla Fest">
+        <VortexDustFall
+          baseColor="#ff8a3d"
+          accentColor="#ffbd59"
+          density={125}
+          speed={46}
+          tilt={7}
+        />
         <div className="sp-hero-ambient-glow" />
 
         <div className="sp-hero-content">
