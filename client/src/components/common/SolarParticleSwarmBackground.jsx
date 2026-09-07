@@ -38,21 +38,21 @@ function SolarParticleSwarmBackground() {
     renderer.setClearColor(0x000000, 0)
     container.appendChild(renderer.domElement)
 
-    // Particle Configuration
+    // Particle Configuration (Low density, airy & elegant)
     const isMobile = width < 768
-    const count = isMobile ? 8000 : 18000
-    const speedMult = 1.0
+    const count = isMobile ? 1800 : 3800
+    const speedMult = 0.85
 
     const dummy = new THREE.Object3D()
     const target = new THREE.Vector3()
     const pColor = new THREE.Color()
 
-    // Geometry & Material (Increased size for vivid crisp glow)
-    const geometry = new THREE.TetrahedronGeometry(isMobile ? 0.58 : 0.48)
+    // Geometry & Material (Light, refined cosmic embers)
+    const geometry = new THREE.TetrahedronGeometry(isMobile ? 0.35 : 0.28)
     const material = new THREE.MeshBasicMaterial({
       color: 0xffffff,
       transparent: true,
-      opacity: 0.96
+      opacity: 0.75
     })
 
     const mesh = new THREE.InstancedMesh(geometry, material, count)

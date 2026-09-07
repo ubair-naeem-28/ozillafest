@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { assetUrl } from '../../utils/assetUrl.util'
-import RoundCarousel from '../../components/common/RoundCarousel'
+import SmoothScrollSlider from '../../components/common/SmoothScrollSlider'
 
 const performers = [
   {
@@ -145,16 +145,17 @@ function CelebritySingersPage() {
           </p>
         </div>
 
-        <div className="celebrity-carousel-container" style={{ margin: '1.5rem 0 3.5rem 0' }}>
-          <RoundCarousel
+        <div className="celebrity-slider-container" style={{ margin: '1.5rem 0 3.5rem 0' }}>
+          <SmoothScrollSlider
             items={performers}
-            imageWidth={295}
-            imageHeight={410}
-            spacing={2.9}
-            speed={5}
-            tilt={-6}
-            perspective={2600}
-            cornerRadius={24}
+            slideWidth={330}
+            slideHeight={450}
+            spacing={2.6}
+            smoothness={8.5}
+            dim={6}
+            sensitivity={5}
+            autoPlay={true}
+            autoPlaySpeed={1.2}
           />
         </div>
       </section>

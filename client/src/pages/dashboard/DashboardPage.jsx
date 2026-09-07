@@ -4,6 +4,7 @@ import { motion } from 'framer-motion'
 import { assetUrl } from '../../utils/assetUrl.util'
 import { ozillaProfessionalContent } from '../../data/ozillaProfessionalContent'
 import RoundCarousel from '../../components/common/RoundCarousel'
+import SmoothScrollSlider from '../../components/common/SmoothScrollSlider'
 
 // ── Performer Data with Stage & BPM ────────────────────────────────────
 const performers = [
@@ -432,22 +433,23 @@ function DashboardPage() {
           </motion.div>
 
           <motion.div
-            className="sp-celebrity-carousel-wrap"
-            initial={{ opacity: 0, scale: 0.95 }}
-            whileInView={{ opacity: 1, scale: 1 }}
+            className="sp-celebrity-slider-wrap"
+            initial={{ opacity: 0, y: 25 }}
+            whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-40px' }}
             transition={{ duration: 0.6 }}
             style={{ margin: '1rem 0 3.5rem 0' }}
           >
-            <RoundCarousel
+            <SmoothScrollSlider
               items={performers}
-              imageWidth={290}
-              imageHeight={400}
-              spacing={2.9}
-              speed={5}
-              tilt={-6}
-              perspective={2600}
-              cornerRadius={24}
+              slideWidth={320}
+              slideHeight={440}
+              spacing={2.6}
+              smoothness={8.5}
+              dim={6}
+              sensitivity={5}
+              autoPlay={true}
+              autoPlaySpeed={1.2}
             />
           </motion.div>
 
