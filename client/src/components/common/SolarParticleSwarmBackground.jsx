@@ -21,13 +21,12 @@ function SolarParticleSwarmBackground() {
 
     // Scene Setup
     const scene = new THREE.Scene()
-    scene.fog = new THREE.FogExp2(0x0b0705, 0.0035)
 
     const width = window.innerWidth
     const height = window.innerHeight
 
     const camera = new THREE.PerspectiveCamera(60, width / height, 0.1, 1000)
-    camera.position.set(0, 0, 100)
+    camera.position.set(0, 0, 90)
 
     const renderer = new THREE.WebGLRenderer({
       alpha: true,
@@ -41,19 +40,19 @@ function SolarParticleSwarmBackground() {
 
     // Particle Configuration
     const isMobile = width < 768
-    const count = isMobile ? 6500 : 15000
+    const count = isMobile ? 8000 : 18000
     const speedMult = 1.0
 
     const dummy = new THREE.Object3D()
     const target = new THREE.Vector3()
     const pColor = new THREE.Color()
 
-    // Geometry & Material
-    const geometry = new THREE.TetrahedronGeometry(isMobile ? 0.35 : 0.28)
+    // Geometry & Material (Increased size for vivid crisp glow)
+    const geometry = new THREE.TetrahedronGeometry(isMobile ? 0.58 : 0.48)
     const material = new THREE.MeshBasicMaterial({
       color: 0xffffff,
       transparent: true,
-      opacity: 0.92
+      opacity: 0.96
     })
 
     const mesh = new THREE.InstancedMesh(geometry, material, count)
@@ -65,15 +64,15 @@ function SolarParticleSwarmBackground() {
     for (let i = 0; i < count; i++) {
       positions.push(
         new THREE.Vector3(
-          (Math.random() - 0.5) * 120,
-          (Math.random() - 0.5) * 120,
-          (Math.random() - 0.5) * 120
+          (Math.random() - 0.5) * 140,
+          (Math.random() - 0.5) * 140,
+          (Math.random() - 0.5) * 140
         )
       )
     }
 
     // Solar Parameters
-    const scaleR = isMobile ? 85 : 120
+    const scaleR = isMobile ? 70 : 95
     const fusionRate = 2.5
     const convection = 1.2
     const magnetic = 1.4
@@ -242,7 +241,7 @@ function SolarParticleSwarmBackground() {
             const archHeight = scaleR * (0.1 + lh3 * 0.15) * Math.max(0.1, magnetic) * flarePulse
             const radius = scaleR * 0.8 + archHeight * bulge
             px = dirx * radius; py = diry * radius; pz = dirz * radius
-            pColor.setHSL(0.55, 0.3, 0.45 + bulge * 0.3)
+            pColor.setHSL(0.52, 0.95, 0.65 + bulge * 0.25)
           } else {
             const theta = h1 * 6.2831853
             const cphi = h2 * 2 - 1
@@ -253,7 +252,7 @@ function SolarParticleSwarmBackground() {
             py = rad * sphi * Math.sin(theta)
             pz = rad * cphi
             const fade = Math.max(0, 1 - travel / 18)
-            pColor.setHSL(0.58, 0.4, 0.15 + fade * 0.5)
+            pColor.setHSL(0.56, 0.85, 0.45 + fade * 0.45)
           }
         } else if (t < t6) {
           // 7. Prominences & Solar Flares
@@ -286,7 +285,7 @@ function SolarParticleSwarmBackground() {
           const archHeight = scaleR * (0.2 + lh3 * 0.3) * Math.max(0.1, magnetic) * flarePulse
           const radius = scaleR * 0.79 + archHeight * bulge
           px = dirx * radius; py = diry * radius; pz = dirz * radius
-          pColor.setHSL(Math.max(0, 0.05 - flarePulse * 0.02), 0.95, 0.4 + flarePulse * 0.3 + bulge * 0.1)
+          pColor.setHSL(Math.max(0, 0.05 - flarePulse * 0.02), 1.0, 0.55 + flarePulse * 0.35 + bulge * 0.1)
         } else {
           // Outflowing Solar Wind
           const theta = h1 * 6.2831853
@@ -298,7 +297,7 @@ function SolarParticleSwarmBackground() {
           py = rad * sphi * Math.sin(theta)
           pz = rad * cphi
           const fade = Math.max(0, 1 - travel / 70)
-          pColor.setHSL(0.6, 0.35, 0.1 + fade * 0.4)
+          pColor.setHSL(0.58, 0.85, 0.4 + fade * 0.45)
         }
 
         // Slow celestial rotation around Y axis

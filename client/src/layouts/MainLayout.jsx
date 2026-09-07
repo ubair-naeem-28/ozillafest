@@ -5,9 +5,9 @@ import Footer from '../components/common/Footer'
 
 function MainLayout({ children }) {
   return (
-    <div className="min-h-screen flex flex-col bg-[#550e0e] text-white overflow-x-hidden w-full">
+    <div className="min-h-screen flex flex-col bg-transparent text-white overflow-x-hidden w-full relative z-[1]">
       <DockNavbar />
-      <div className="flex-1 w-full overflow-x-hidden">
+      <div className="flex-1 w-full overflow-x-hidden bg-transparent">
         {children || <Outlet />}
       </div>
       <Footer />

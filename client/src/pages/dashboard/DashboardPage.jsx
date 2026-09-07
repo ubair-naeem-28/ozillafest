@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { assetUrl } from '../../utils/assetUrl.util'
 import { ozillaProfessionalContent } from '../../data/ozillaProfessionalContent'
+import RoundCarousel from '../../components/common/RoundCarousel'
 
 // ── Performer Data with Stage & BPM ────────────────────────────────────
 const performers = [
@@ -430,50 +431,25 @@ function DashboardPage() {
             </p>
           </motion.div>
 
-          <div className="sp-celebrity-grid">
-            {performers.map((p, i) => (
-              <motion.article
-                key={p.name}
-                className={`sp-celeb-card ${p.isHeadliner ? 'sp-celeb-headliner' : ''}`}
-                initial={{ opacity: 0, y: 35 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: '-50px' }}
-                transition={{ duration: 0.5, delay: i * 0.1 }}
-                whileHover={{ y: -8, scale: 1.02 }}
-              >
-                <div className="sp-celeb-frame">
-                  <img
-                    src={p.image}
-                    alt={p.name}
-                    loading="lazy"
-                    decoding="async"
-                    onError={e => { e.currentTarget.src = assetUrl('/assets/prism-auth-visual.jpg') }}
-                  />
-                  <div className="celeb-holo-sheen" />
-                  <div className="celeb-top-badges">
-                    {p.isHeadliner ? (
-                      <span className="sp-headliner-badge">★ MAIN HEADLINER</span>
-                    ) : (
-                      <span className="celeb-stage-tag">{p.stage}</span>
-                    )}
-                    <div className="celeb-mini-eq">
-                      <span />
-                      <span />
-                      <span />
-                    </div>
-                  </div>
-                  <div className="sp-celeb-overlay">
-                    <div className="celeb-genre-pill">{p.genre}</div>
-                    <h3>{p.name}</h3>
-                    <div className="celeb-meta-row">
-                      <span>⚡ {p.bpm}</span>
-                      <span>♫ {p.vibe}</span>
-                    </div>
-                  </div>
-                </div>
-              </motion.article>
-            ))}
-          </div>
+          <motion.div
+            className="sp-celebrity-carousel-wrap"
+            initial={{ opacity: 0, scale: 0.95 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true, margin: '-40px' }}
+            transition={{ duration: 0.6 }}
+            style={{ margin: '1rem 0 3.5rem 0' }}
+          >
+            <RoundCarousel
+              items={performers}
+              imageWidth={290}
+              imageHeight={400}
+              spacing={2.9}
+              speed={5}
+              tilt={-6}
+              perspective={2600}
+              cornerRadius={24}
+            />
+          </motion.div>
 
           {/* Countdown to Festival */}
           <motion.div
@@ -1077,7 +1053,7 @@ function DashboardPage() {
           --text-muted:    rgba(255, 255, 255, 0.78);
           font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
           color: #ffffff !important;
-          background: #0B0705 !important;
+          background: transparent !important;
           min-height: 100vh;
           overflow-x: hidden;
           position: relative;
@@ -1095,6 +1071,7 @@ function DashboardPage() {
           position: relative;
           padding: clamp(5.5rem, 8.5vw, 8.5rem) 0;
           border: none !important;
+          background: transparent !important;
         }
 
         /* ── HERO SECTION ── */
@@ -1107,7 +1084,7 @@ function DashboardPage() {
           justify-content: center;
           overflow: hidden;
           background:
-            radial-gradient(ellipse at 50% 15%, rgba(255, 90, 31, 0.28) 0%, rgba(85, 14, 14, 0.45) 45%, #0B0705 85%) !important;
+            radial-gradient(ellipse at 50% 25%, rgba(255, 90, 31, 0.18) 0%, rgba(85, 14, 14, 0.15) 50%, transparent 85%) !important;
           padding: clamp(7rem, 12vw, 10rem) 1.5rem clamp(5rem, 8vw, 7rem);
         }
 

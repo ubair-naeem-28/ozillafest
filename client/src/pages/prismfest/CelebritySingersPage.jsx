@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { assetUrl } from '../../utils/assetUrl.util'
+import RoundCarousel from '../../components/common/RoundCarousel'
 
 const performers = [
   {
@@ -144,47 +145,17 @@ function CelebritySingersPage() {
           </p>
         </div>
 
-        <div className="celebrity-grid">
-          {performers.map((performer, index) => (
-            <article
-              key={performer.name}
-              className={`celebrity-card ${performer.isHeadliner ? 'celebrity-card-headliner' : ''}`}
-              tabIndex={0}
-              style={{ '--artist-delay': `${index * 90}ms` }}
-              onMouseMove={handleCardPointerMove}
-              onMouseLeave={resetCardPointer}
-              onBlur={resetCardPointer}
-            >
-              <div className="celebrity-card-frame">
-                <img
-                  src={performer.image}
-                  alt={performer.name}
-                  className="celebrity-card-image"
-                  loading="lazy"
-                  onError={(event) => {
-                    event.currentTarget.onerror = null
-                    event.currentTarget.src = assetUrl('/assets/prism-auth-visual.jpg')
-                  }}
-                />
-                <div className="celebrity-card-overlay">
-                  {performer.isHeadliner && (
-                    <span className="celebrity-badge">MAIN ARTIST</span>
-                  )}
-                  <div className="celebrity-live-icon" aria-hidden="true">
-                    <span />
-                    <span />
-                    <span />
-                  </div>
-                  <p className="celebrity-card-name">{performer.name}</p>
-                  <p className="celebrity-card-genre">{performer.genre}</p>
-                </div>
-              </div>
-              <div className="celebrity-card-caption">
-                <p className="celebrity-card-name">{performer.name}</p>
-                <p className="celebrity-card-genre">{performer.genre}</p>
-              </div>
-            </article>
-          ))}
+        <div className="celebrity-carousel-container" style={{ margin: '1.5rem 0 3.5rem 0' }}>
+          <RoundCarousel
+            items={performers}
+            imageWidth={295}
+            imageHeight={410}
+            spacing={2.9}
+            speed={5}
+            tilt={-6}
+            perspective={2600}
+            cornerRadius={24}
+          />
         </div>
       </section>
 
