@@ -360,10 +360,11 @@ export default function VortexDustFall({
     let count = 0
 
     const buildDust = (d) => {
-      // Scale density nicely on mobile (<768px)
-      const isMobile = (canvas.clientWidth || window.innerWidth) < 768
-      const effectiveD = isMobile ? Math.min(d * 0.45, 55) : d
-      count = Math.max(800, Math.round(effectiveD * PTS_PER_DENSITY))
+      const cssW = canvas.clientWidth || host.clientWidth || (typeof window !== 'undefined' ? window.innerWidth : 1200)
+      const isMobile = cssW < 768
+      const isTablet = cssW >= 768 && cssW < 1024
+      const targetCount = isMobile ? 1800 : isTablet ? 8500 : Math.round(d * PTS_PER_DENSITY)
+      count = Math.max(1000, targetCount)
       const arrA = new Float32Array(count * 4)
       const arrB = new Float32Array(count * 2)
       const rnd = mulberry32(0x51dd0c7)
@@ -416,6 +417,7 @@ export default function VortexDustFall({
     }
 
     let dpr = 1
+    let lastKnownW = 0
     const resize = () => {
       dpr = Math.min(window.devicePixelRatio || 1, DPR_CAP)
       const cssW = canvas.clientWidth || host.clientWidth || 1
@@ -427,6 +429,10 @@ export default function VortexDustFall({
         canvas.height = h
       }
       gl.viewport(0, 0, w, h)
+      if (Math.abs(lastKnownW - cssW) > 50) {
+        lastKnownW = cssW
+        buildDust(live.current.density)
+      }
     }
     resize()
     const ro = new ResizeObserver(resize)
@@ -473,21 +479,23 @@ export default function VortexDustFall({
 
       const focal = h / (2 * Math.tan(((FOV_DEG / 2) * Math.PI) / 180))
 
-      // Responsive radius & thickness for perfectly proportioned display across all devices
-      const responsiveRadiusFactor = isMobile ? 0.72 : isTablet ? 0.88 : 1.0
-      const radius = RADIUS_REF * (L.ring.radius / 100) * responsiveRadiusFactor
-      const fallH = radius * (L.fall.height / 100)
+      // Responsive aspect-ratio scaling to guarantee the ring stays perfectly framed on mobile screens
+      const aspect = w / Math.max(h, 1)
+      const aspectFactor = aspect < 1.0 ? Math.max(0.32, aspect / 1.4) : (isTablet ? 0.85 : 1.0)
+      const radius = RADIUS_REF * (L.ring.radius / 100) * aspectFactor
+      const fallH = radius * (isMobile ? 1.1 : L.fall.height / 100)
       const rise = fallH * (L.fall.spray / 400)
-      const yPx = h * (isMobile ? 0.28 : FRAME_SHIFT)
+      const yPx = h * (isMobile ? 0.22 : FRAME_SHIFT)
       const spinTurns = (L.fall.spin / 100) * 1.5
-      const scatter = radius * (L.field.scatter / 100) * 0.15
-      const dotWorld = DOT_REF * (L.dotSize / 100) * (isMobile ? 0.75 : 1.0)
+      const scatter = radius * (L.field.scatter / 100) * (isMobile ? 0.08 : 0.15)
+      const dotWorld = DOT_REF * (L.dotSize / 100) * (isMobile ? 0.65 : 1.0)
       const blurK = BLUR_REF * (L.field.blur / 100)
+      const ringThick = isMobile ? Math.min(L.ring.thickness * dpr, 9 * dpr) : (L.ring.thickness * dpr)
 
       const tiltRad =
         (L.tilt * Math.PI) / 180 +
         hoverY * hoverAmount * hoverAmt * ((10 * Math.PI) / 180)
-      const camDist = (isMobile ? L.distance * 1.08 : L.distance) - hoverAmt * hoverAmount * 150
+      const camDist = (isMobile ? L.distance * 1.05 : L.distance) - hoverAmt * hoverAmount * 150
 
       const [br, bg, bb, ba] = parseColor(L.baseColor)
       const [ar, ag, ab, aa] = parseColor(L.accentColor)
@@ -529,7 +537,7 @@ export default function VortexDustFall({
       gl.uniform1f(rU.camDist, camDist)
       gl.uniform1f(rU.tilt, tiltRad)
       gl.uniform1f(rU.yPx, yPx)
-      gl.uniform1f(rU.thick, L.ring.thickness * dpr)
+      gl.uniform1f(rU.thick, ringThick)
       gl.uniform1f(rU.seg, RING_SEG)
       gl.uniform3f(rU.color, ar, ag, ab)
       gl.uniform1f(rU.alpha, aa)
