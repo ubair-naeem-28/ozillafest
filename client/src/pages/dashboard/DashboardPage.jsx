@@ -1138,7 +1138,7 @@ function DashboardPage() {
           line-height: 1.02;
           color: #ffffff;
           margin-bottom: 1.5rem;
-          text-shadow: 0 14px 45px rgba(0, 0, 0, 0.85);
+          filter: drop-shadow(0 6px 35px rgba(0, 0, 0, 1));
           background: linear-gradient(180deg, #ffffff 45%, #ffd36a 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
@@ -1147,10 +1147,12 @@ function DashboardPage() {
         .sp-hero-subtitle {
           max-width: 740px;
           font-size: clamp(1.08rem, 2vw, 1.3rem);
-          color: rgba(255, 255, 255, 0.88);
+          color: #ffffff !important;
           line-height: 1.75;
           margin-bottom: 2.2rem;
           word-spacing: 0.03em;
+          font-weight: 500;
+          text-shadow: 0 3px 20px rgba(0, 0, 0, 1), 0 1px 6px rgba(0, 0, 0, 0.95);
         }
 
         .sp-hero-meta-strip {
@@ -1314,16 +1316,29 @@ function DashboardPage() {
         /* ── SECTION HEADERS & TYPOGRAPHY ── */
         .sp-section-header {
           margin-bottom: 3.5rem;
+          background: radial-gradient(ellipse at 50% 50%, rgba(14, 8, 5, 0.88) 0%, rgba(14, 8, 5, 0.5) 70%, transparent 100%);
+          padding: 1.8rem 1.6rem;
+          border-radius: 28px;
+          backdrop-filter: blur(10px);
+          -webkit-backdrop-filter: blur(10px);
         }
 
         .sp-eyebrow {
-          display: block;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          padding: 0.4rem 1.2rem;
+          border-radius: 999px;
+          background: rgba(14, 8, 5, 0.9) !important;
+          border: 1px solid rgba(255, 189, 89, 0.45) !important;
           color: #ffbd59 !important;
           font-size: 0.82rem;
           font-weight: 800;
-          letter-spacing: 0.18em;
+          letter-spacing: 0.16em;
           text-transform: uppercase;
-          margin-bottom: 0.75rem;
+          margin-bottom: 0.85rem;
+          box-shadow: 0 4px 18px rgba(0, 0, 0, 0.65);
+          text-shadow: 0 2px 10px rgba(0, 0, 0, 0.95);
         }
 
         .sp-section-title {
@@ -1334,14 +1349,17 @@ function DashboardPage() {
           letter-spacing: -0.01em;
           color: #ffffff !important;
           margin-bottom: 1rem;
+          text-shadow: 0 4px 30px rgba(0, 0, 0, 1), 0 2px 12px rgba(0, 0, 0, 0.95);
         }
 
         .sp-section-subtitle {
           max-width: 720px;
           font-size: 1.1rem;
-          color: var(--text-muted) !important;
+          color: rgba(255, 255, 255, 0.92) !important;
           line-height: 1.75;
           word-spacing: 0.02em;
+          font-weight: 500;
+          text-shadow: 0 2px 16px rgba(0, 0, 0, 1), 0 1px 6px rgba(0, 0, 0, 0.95);
         }
 
         /* ── OBSIDIAN GLASS CARD ── */
