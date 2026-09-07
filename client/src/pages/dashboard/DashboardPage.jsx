@@ -324,7 +324,7 @@ function DashboardPage() {
   return (
     <main className="sp-main">
       {/* ══ HERO SECTION ══ */}
-      <section id="home" className="sp-hero" aria-label="Ozilla Festival">
+      <section id="home" className="sp-hero" aria-label="Ozilla Fest">
         <PlexusNetBackground
           nodeColor="#EC4899"
           lineColor="236, 72, 153"
@@ -342,7 +342,7 @@ function DashboardPage() {
             transition={{ duration: 0.6 }}
           >
             <span>✨</span>
-            <strong>OZILLA FESTIVAL 2026 · LAHORE</strong>
+            <strong>OZILLA FEST 2026 · LAHORE</strong>
           </motion.div>
 
           <motion.h1
@@ -351,7 +351,7 @@ function DashboardPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.12 }}
           >
-            OZILLA FESTIVAL
+            OZILLA FEST
           </motion.h1>
 
           <motion.p
@@ -585,7 +585,7 @@ function DashboardPage() {
             transition={{ duration: 0.5 }}
           >
             <span className="sp-eyebrow">⚡ THE ULTIMATE LIVE EXPERIENCE</span>
-            <h2 className="sp-section-title">The Ozilla Festival Atmosphere</h2>
+            <h2 className="sp-section-title">The Ozilla Fest Atmosphere</h2>
             <p className="sp-section-subtitle">
               Pakistan's flagship open-air music & cultural festival. 4 electrified stages, 100kW concert sound, headline celebrity acts, gourmet food street, and unmatched crowd energy under the Lahore night sky.
             </p>
