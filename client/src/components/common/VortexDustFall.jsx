@@ -91,7 +91,7 @@ void main() {
     float fadeIn  = smoothstep(0.0, 0.02, tau);
     float fadeOut = pow(1.0 - tau, 0.7);
     vAlpha = uAlpha * live * fadeIn * fadeOut
-           * (0.35 + 0.65 * aB.y) * pow(ratio, -1.2);
+           * (0.55 + 0.65 * aB.y) * pow(ratio, -1.0);
 }
 `
 
@@ -103,7 +103,7 @@ void main() {
     vec2 d = gl_PointCoord - 0.5;
     float r2 = dot(d, d) * 4.0;
     if (r2 > 1.0) discard;
-    float a = vAlpha * exp(-r2 * 3.0);
+    float a = vAlpha * exp(-r2 * 2.5);
     gl_FragColor = vec4(uColor * a, a);
 }
 `
@@ -165,9 +165,9 @@ varying float vSide;
 varying float vNear;
 void main() {
     float s    = abs(vSide);
-    float core = exp(-pow(s * ${RIBBON.toFixed(1)}, 2.0) * 4.0);
-    float halo = exp(-s * s * 2.2) * 0.20;
-    float a    = (core + halo) * uAlpha * clamp(vNear, 0.7, 1.4);
+    float core = exp(-pow(s * ${RIBBON.toFixed(1)}, 2.0) * 3.2);
+    float halo = exp(-s * s * 1.6) * 0.45;
+    float a    = (core + halo) * uAlpha * clamp(vNear, 0.7, 1.5) * 1.35;
     gl_FragColor = vec4(uColor * a, a);
 }
 `
@@ -239,9 +239,9 @@ function linkProg(gl, vs, fs) {
   return prog
 }
 
-const DEFAULT_RING = { radius: 142, thickness: 11 }
-const DEFAULT_FALL = { height: 140, spin: 36, spray: 0 }
-const DEFAULT_FIELD = { scatter: 300, blur: 0 }
+const DEFAULT_RING = { radius: 195, thickness: 16 }
+const DEFAULT_FALL = { height: 165, spin: 38, spray: 0 }
+const DEFAULT_FIELD = { scatter: 280, blur: 0 }
 const DEFAULT_HOVER = {
   amount: 103,
   transition: { type: 'tween', duration: 0.6, ease: 'easeOut' }
@@ -249,12 +249,12 @@ const DEFAULT_HOVER = {
 
 export default function VortexDustFall({
   background = 'transparent',
-  baseColor = '#ff8a3d', // warm festival orange/amber dust
-  accentColor = '#ffbd59', // luminous golden ring
-  density = 120,
-  dotSize = 107,
-  speed = 46,
-  distance = 1495,
+  baseColor = '#FFA733', // luminous radiant amber/gold dust
+  accentColor = '#FFE082', // intense glowing golden wire ring
+  density = 145,
+  dotSize = 130,
+  speed = 48,
+  distance = 1450,
   tilt = 7,
   ring = {},
   fall = {},
