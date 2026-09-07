@@ -312,19 +312,19 @@ export default function ParticleDriftBackground({
       const isMobile = cw < 768
       const isTablet = cw >= 768 && cw < 1024
 
-      // Adaptive density & sizing: Mobile is kept airy and subtle (35-45 particles)
+      // Adaptive density & sizing: Mobile is kept at a balanced aesthetic level
       let targetDensity = v.density
       let targetLinkD = v.linkDistance
       let targetDotSize = v.dotSize
 
       if (isMobile) {
-        targetDensity = Math.max(20, Math.min(Math.round(v.density * 0.18), 42))
-        targetLinkD = Math.min(v.linkDistance, 95)
-        targetDotSize = Math.min(v.dotSize, 6.5)
+        targetDensity = Math.max(60, Math.min(Math.round(v.density * 0.38), 90))
+        targetLinkD = Math.min(v.linkDistance, 135)
+        targetDotSize = Math.min(v.dotSize, 8.5)
       } else if (isTablet) {
-        targetDensity = Math.max(45, Math.min(Math.round(v.density * 0.45), 100))
-        targetLinkD = Math.min(v.linkDistance, 140)
-        targetDotSize = Math.min(v.dotSize, 9.5)
+        targetDensity = Math.max(90, Math.min(Math.round(v.density * 0.6), 145))
+        targetLinkD = Math.min(v.linkDistance, 165)
+        targetDotSize = Math.min(v.dotSize, 11)
       }
 
       if (targetDensity !== builtN) {
