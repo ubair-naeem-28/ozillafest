@@ -309,9 +309,27 @@ export default function ParticleDriftBackground({
       }
       gl.viewport(0, 0, bw, bh)
 
-      if (v.density !== builtN) {
-        buildNodes(v.density, cw, ch)
-        builtN = v.density
+      const isMobile = cw < 768
+      const isTablet = cw >= 768 && cw < 1024
+
+      // Adaptive density & sizing: Mobile is kept airy and subtle (35-45 particles)
+      let targetDensity = v.density
+      let targetLinkD = v.linkDistance
+      let targetDotSize = v.dotSize
+
+      if (isMobile) {
+        targetDensity = Math.max(20, Math.min(Math.round(v.density * 0.18), 42))
+        targetLinkD = Math.min(v.linkDistance, 95)
+        targetDotSize = Math.min(v.dotSize, 6.5)
+      } else if (isTablet) {
+        targetDensity = Math.max(45, Math.min(Math.round(v.density * 0.45), 100))
+        targetLinkD = Math.min(v.linkDistance, 140)
+        targetDotSize = Math.min(v.dotSize, 9.5)
+      }
+
+      if (targetDensity !== builtN) {
+        buildNodes(targetDensity, cw, ch)
+        builtN = targetDensity
       }
       if (cw !== builtW || ch !== builtH) {
         const sx = cw / Math.max(builtW || cw, 1)
@@ -326,9 +344,9 @@ export default function ParticleDriftBackground({
 
       const ptr = ptrRef.current
       const hv = v.hover
-      const reach = 180 * (hv > 0 ? 1 : 0)
-      const LINKD = v.linkDistance
-      const LINKW = v.linkThickness
+      const reach = (isMobile ? 100 : 180) * (hv > 0 ? 1 : 0)
+      const LINKD = targetLinkD
+      const LINKW = isMobile ? Math.min(v.linkThickness, 1.6) : v.linkThickness
 
       const th = ((v.direction) * Math.PI) / 180
       const dirX = Math.sin(th)
@@ -457,7 +475,7 @@ export default function ParticleDriftBackground({
 
         gl.uniform2f(u(dotProg, 'uSize'), cw, ch)
         gl.uniform1f(u(dotProg, 'uDpr'), dpr)
-        gl.uniform1f(u(dotProg, 'uDot'), v.dotSize)
+        gl.uniform1f(u(dotProg, 'uDot'), targetDotSize)
         gl.uniform1f(u(dotProg, 'uRestAlpha'), 0.4)
         gl.uniform3f(u(dotProg, 'uBase'), cb[0], cb[1], cb[2])
         gl.uniform3f(u(dotProg, 'uAccent'), ca[0], ca[1], ca[2])

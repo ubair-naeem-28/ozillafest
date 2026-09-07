@@ -5,6 +5,7 @@ import { assetUrl } from '../../utils/assetUrl.util'
 import { ozillaProfessionalContent } from '../../data/ozillaProfessionalContent'
 import RoundCarousel from '../../components/common/RoundCarousel'
 import SmoothScrollSlider from '../../components/common/SmoothScrollSlider'
+import NeonBorder from '../../components/common/NeonBorder'
 
 // ── Performer Data with Stage & BPM ────────────────────────────────────
 const performers = [
@@ -586,12 +587,14 @@ function DashboardPage() {
           {/* Festival Vibe & Highlights Showcase */}
           <motion.div
             className="sp-festival-vibe-banner"
+            style={{ position: 'relative', overflow: 'hidden' }}
             initial={{ opacity: 0, y: 35 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <div className="sp-vibe-left">
+            <NeonBorder color="#ff7a29" rounded={24} thickness={2.8} borderSize={45} glow={85} />
+            <div className="sp-vibe-left" style={{ position: 'relative', zIndex: 2 }}>
               <span className="sp-vibe-eyebrow">FESTIVAL HIGHLIGHTS</span>
               <h3>What Makes Ozilla Legendary</h3>
               <p>Non-stop beats from golden hour to midnight, surrounded by festival activations and pure music culture.</p>
@@ -612,7 +615,7 @@ function DashboardPage() {
               </div>
             </div>
 
-            <div className="sp-vibe-tags-grid">
+            <div className="sp-vibe-tags-grid" style={{ position: 'relative', zIndex: 2 }}>
               {[
                 { text: '4 Mega Music Stages', isMain: true },
                 { text: '100kW Laser & Sound', isMain: true },
@@ -663,23 +666,27 @@ function DashboardPage() {
               <motion.div
                 key={event.name}
                 className="sp-glass-card sp-past-event-card"
+                style={{ position: 'relative', overflow: 'hidden' }}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.12 }}
                 whileHover={{ y: -6 }}
               >
-                <div className="sp-card-header">
-                  <h3>{event.name}</h3>
-                  <span className="sp-pill-badge">{event.status}</span>
-                </div>
-                <p className="sp-card-desc">{event.detail}</p>
-                <div className="sp-card-footer-eq">
-                  <span>LIVE ARCHIVE</span>
-                  <div className="celeb-mini-eq">
-                    <span />
-                    <span />
-                    <span />
+                <NeonBorder color="#ff8a3d" rounded={22} thickness={2.5} borderSize={40} glow={80} />
+                <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', height: '100%' }}>
+                  <div className="sp-card-header">
+                    <h3>{event.name}</h3>
+                    <span className="sp-pill-badge">{event.status}</span>
+                  </div>
+                  <p className="sp-card-desc">{event.detail}</p>
+                  <div className="sp-card-footer-eq">
+                    <span>LIVE ARCHIVE</span>
+                    <div className="celeb-mini-eq">
+                      <span />
+                      <span />
+                      <span />
+                    </div>
                   </div>
                 </div>
               </motion.div>
@@ -710,17 +717,21 @@ function DashboardPage() {
               <motion.div
                 key={ev.name}
                 className="sp-glass-card sp-future-card"
+                style={{ position: 'relative', overflow: 'hidden' }}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.12 }}
                 whileHover={{ y: -6 }}
               >
-                <span className="sp-pill-badge">{ev.status}</span>
-                <h3 style={{ marginTop: '0.8rem' }}>{ev.name}</h3>
-                <p className="sp-meta-text">📍 {ev.date} · {ev.location}</p>
-                <p className="sp-card-desc" style={{ flex: 1 }}>{ev.description}</p>
-                <Link to="/tickets" className="sp-accent-link">Get Tickets →</Link>
+                <NeonBorder color="#ff9e42" rounded={22} thickness={2.5} borderSize={40} glow={80} />
+                <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', height: '100%' }}>
+                  <span className="sp-pill-badge">{ev.status}</span>
+                  <h3 style={{ marginTop: '0.8rem' }}>{ev.name}</h3>
+                  <p className="sp-meta-text">📍 {ev.date} · {ev.location}</p>
+                  <p className="sp-card-desc" style={{ flex: 1 }}>{ev.description}</p>
+                  <Link to="/tickets" className="sp-accent-link">Get Tickets →</Link>
+                </div>
               </motion.div>
             ))}
           </div>
@@ -730,12 +741,15 @@ function DashboardPage() {
       {/* ══ SECTION 06: HISTORY & EDITIONS TIMELINE ══ */}
       <section id="history" className="sp-section sp-section-history" aria-label="Festival History">
         <div className="sp-container">
-          <div className="sp-section-header">
-            <span className="sp-eyebrow">Festival Legacy</span>
-            <h2 className="sp-section-title">Our Editions & Timeline</h2>
-            <p className="sp-section-subtitle">
-              From our underground debut to Pakistan's biggest stadium concert experience.
-            </p>
+          <div className="sp-section-header sp-timeline-banner-header" style={{ position: 'relative', overflow: 'hidden' }}>
+            <NeonBorder color="#ff8a3d" rounded={24} thickness={2.8} borderSize={45} glow={85} />
+            <div style={{ position: 'relative', zIndex: 2 }}>
+              <span className="sp-eyebrow">Festival Legacy</span>
+              <h2 className="sp-section-title">Our Editions & Timeline</h2>
+              <p className="sp-section-subtitle">
+                From our underground debut to Pakistan's biggest stadium concert experience.
+              </p>
+            </div>
           </div>
 
           <div className="sp-timeline">
@@ -859,22 +873,26 @@ function DashboardPage() {
             {ozillaProfessionalContent.restaurants.map((r, idx) => (
               <motion.div
                 key={r.name}
-                className="sp-glass-card"
+                className="sp-glass-card sp-restaurant-card"
+                style={{ position: 'relative', overflow: 'hidden' }}
                 initial={{ opacity: 0, y: 25 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: idx * 0.1 }}
                 whileHover={{ y: -5, scale: 1.01 }}
               >
-                <div className="sp-card-header">
-                  <h3>{r.name}</h3>
-                  <span className="sp-discount-pill">{r.discount}</span>
-                </div>
-                <p className="sp-meta-text">{r.cuisine} · {r.location}</p>
-                <p className="sp-card-desc">{r.offer}</p>
-                <div className="sp-code-box">
-                  <span>Promo Code:</span>
-                  <code>{r.code}</code>
+                <NeonBorder color="#ff8a3d" rounded={22} thickness={2.5} borderSize={40} glow={80} />
+                <div style={{ position: 'relative', zIndex: 2 }}>
+                  <div className="sp-card-header">
+                    <h3>{r.name}</h3>
+                    <span className="sp-discount-pill">{r.discount}</span>
+                  </div>
+                  <p className="sp-meta-text">{r.cuisine} · {r.location}</p>
+                  <p className="sp-card-desc">{r.offer}</p>
+                  <div className="sp-code-box">
+                    <span>Promo Code:</span>
+                    <code>{r.code}</code>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -886,14 +904,18 @@ function DashboardPage() {
       <section id="discounts" className="sp-section sp-section-deals" aria-label="Promo Vouchers">
         <div className="sp-container">
           <motion.div
-            className="sp-section-header"
+            className="sp-section-header sp-voucher-header-banner"
+            style={{ position: 'relative', overflow: 'hidden' }}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <span className="sp-eyebrow">Exclusive Member Deals</span>
-            <h2 className="sp-section-title">Festival Promo Vouchers</h2>
+            <NeonBorder color="#ff8a3d" rounded={24} thickness={2.8} borderSize={45} glow={85} />
+            <div style={{ position: 'relative', zIndex: 2 }}>
+              <span className="sp-eyebrow">Exclusive Member Deals</span>
+              <h2 className="sp-section-title">Festival Promo Vouchers</h2>
+            </div>
           </motion.div>
 
           <div className="sp-discounts-grid">
@@ -901,18 +923,22 @@ function DashboardPage() {
               <motion.div
                 key={d.brand}
                 className="sp-glass-card sp-voucher-card"
+                style={{ position: 'relative', overflow: 'hidden' }}
                 initial={{ opacity: 0, scale: 0.92, y: 20 }}
                 whileInView={{ opacity: 1, scale: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: idx * 0.08 }}
                 whileHover={{ y: -6, scale: 1.02 }}
               >
-                <span className="sp-eyebrow" style={{ fontSize: '0.75rem', marginBottom: '0.3rem' }}>{d.category}</span>
-                <h3 style={{ marginTop: '0.2rem', fontSize: '1.3rem' }}>{d.brand}</h3>
-                <p className="sp-card-desc" style={{ margin: '0.6rem 0 1.2rem' }}>{d.desc}</p>
-                <div className="sp-discount-footer">
-                  <span className="sp-big-discount">{d.discount}</span>
-                  <code className="sp-code-pill">{d.code}</code>
+                <NeonBorder color="#ff9e42" rounded={22} thickness={2.2} borderSize={40} glow={80} />
+                <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', height: '100%' }}>
+                  <span className="sp-eyebrow" style={{ fontSize: '0.75rem', marginBottom: '0.3rem' }}>{d.category}</span>
+                  <h3 style={{ marginTop: '0.2rem', fontSize: '1.3rem' }}>{d.brand}</h3>
+                  <p className="sp-card-desc" style={{ margin: '0.6rem 0 1.2rem' }}>{d.desc}</p>
+                  <div className="sp-discount-footer">
+                    <span className="sp-big-discount">{d.discount}</span>
+                    <code className="sp-code-pill">{d.code}</code>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -924,17 +950,21 @@ function DashboardPage() {
       <section id="facilities" className="sp-section sp-section-facilities" aria-label="Facilities">
         <div className="sp-container">
           <motion.div
-            className="sp-section-header"
+            className="sp-section-header sp-facilities-header-banner"
+            style={{ position: 'relative', overflow: 'hidden' }}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <span className="sp-eyebrow">⚡ FESTIVAL VENUE & PRODUCTION</span>
-            <h2 className="sp-section-title">World-Class Festival Facilities</h2>
-            <p className="sp-section-subtitle">
-              Built for a seamless 10,000+ attendee experience with concert-grade sound, medical support, VIP hospitality, and creator amenities.
-            </p>
+            <NeonBorder color="#ff8a3d" rounded={24} thickness={2.8} borderSize={45} glow={85} />
+            <div style={{ position: 'relative', zIndex: 2 }}>
+              <span className="sp-eyebrow">⚡ FESTIVAL VENUE & PRODUCTION</span>
+              <h2 className="sp-section-title">World-Class Festival Facilities</h2>
+              <p className="sp-section-subtitle">
+                Built for a seamless 10,000+ attendee experience with concert-grade sound, medical support, VIP hospitality, and creator amenities.
+              </p>
+            </div>
           </motion.div>
 
           <div className="sp-facilities-grid">
@@ -942,20 +972,24 @@ function DashboardPage() {
               <motion.div
                 key={f.title}
                 className="sp-glass-card sp-facility-card"
+                style={{ position: 'relative', overflow: 'hidden' }}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.45, delay: idx * 0.07 }}
                 whileHover={{ y: -8, scale: 1.02 }}
               >
-                <div className="sp-facility-top">
-                  <span className="sp-facility-badge" style={{ color: f.accent, borderColor: `${f.accent}44`, background: `${f.accent}14` }}>
-                    {f.badge}
-                  </span>
-                </div>
+                <NeonBorder color={f.accent || '#ff8a3d'} rounded={20} thickness={2.2} borderSize={40} glow={80} />
+                <div style={{ position: 'relative', zIndex: 2, width: '100%' }}>
+                  <div className="sp-facility-top">
+                    <span className="sp-facility-badge" style={{ color: f.accent, borderColor: `${f.accent}44`, background: `${f.accent}14` }}>
+                      {f.badge}
+                    </span>
+                  </div>
 
-                <h3 className="sp-facility-title">{f.title}</h3>
-                <p className="sp-card-desc">{f.desc}</p>
+                  <h3 className="sp-facility-title">{f.title}</h3>
+                  <p className="sp-card-desc">{f.desc}</p>
+                </div>
                 <div className="sp-facility-glow-bar" style={{ background: `linear-gradient(90deg, ${f.accent}, transparent)` }} />
               </motion.div>
             ))}
@@ -967,18 +1001,21 @@ function DashboardPage() {
       <section id="sponsorship" className="sp-section sp-section-sponsorship" aria-label="Sponsorships">
         <div className="sp-container">
           <motion.div
-            className="sp-section-header"
-            style={{ textAlign: 'center' }}
+            className="sp-section-header sp-sponsorship-header-banner"
+            style={{ position: 'relative', overflow: 'hidden', textAlign: 'center' }}
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.5 }}
           >
-            <span className="sp-eyebrow">BRAND COLLABORATIONS</span>
-            <h2 className="sp-section-title">Sponsorship & Brand Packages</h2>
-            <p className="sp-section-subtitle" style={{ margin: '0 auto' }}>
-              Partner with Pakistan's biggest live music festival. Gain unparalleled on-ground brand presence, digital engagement, and VIP hospitality.
-            </p>
+            <NeonBorder color="#ff8a3d" rounded={24} thickness={2.8} borderSize={45} glow={85} />
+            <div style={{ position: 'relative', zIndex: 2 }}>
+              <span className="sp-eyebrow">BRAND COLLABORATIONS</span>
+              <h2 className="sp-section-title">Sponsorship & Brand Packages</h2>
+              <p className="sp-section-subtitle" style={{ margin: '0 auto' }}>
+                Partner with Pakistan's biggest live music festival. Gain unparalleled on-ground brand presence, digital engagement, and VIP hospitality.
+              </p>
+            </div>
           </motion.div>
 
           <div className="sp-sponsorship-grid">
@@ -1134,16 +1171,20 @@ function DashboardPage() {
 
         .sp-hero-title {
           font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif);
-          font-size: clamp(3.2rem, 8vw, 6rem);
+          font-size: clamp(3.6rem, 9.5vw, 6.8rem);
           font-weight: 900;
-          letter-spacing: 0.01em;
-          line-height: 1.02;
-          color: #ffffff;
-          margin-bottom: 1.5rem;
-          filter: drop-shadow(0 6px 35px rgba(0, 0, 0, 1));
-          background: linear-gradient(180deg, #ffffff 45%, #ffd36a 100%);
-          -webkit-background-clip: text;
-          -webkit-text-fill-color: transparent;
+          letter-spacing: 0.05em;
+          line-height: 1.0;
+          color: #FFFFFF !important;
+          -webkit-text-fill-color: #FFFFFF !important;
+          background: none !important;
+          margin-bottom: 1.6rem;
+          text-transform: uppercase;
+          text-shadow:
+            0 0 35px rgba(255, 189, 89, 0.8),
+            0 0 70px rgba(255, 90, 31, 0.55),
+            0 4px 20px rgba(0, 0, 0, 1),
+            0 8px 45px rgba(0, 0, 0, 0.95);
         }
 
         .sp-hero-subtitle {
@@ -1350,8 +1391,9 @@ function DashboardPage() {
           line-height: 1.08;
           letter-spacing: -0.01em;
           color: #ffffff !important;
+          -webkit-text-fill-color: #ffffff !important;
           margin-bottom: 1rem;
-          text-shadow: 0 4px 30px rgba(0, 0, 0, 1), 0 2px 12px rgba(0, 0, 0, 0.95);
+          text-shadow: 0 0 25px rgba(255, 189, 89, 0.4), 0 4px 30px rgba(0, 0, 0, 1), 0 2px 12px rgba(0, 0, 0, 0.95);
         }
 
         .sp-section-subtitle {
