@@ -3,7 +3,6 @@ import { Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { assetUrl } from '../../utils/assetUrl.util'
 import { ozillaProfessionalContent } from '../../data/ozillaProfessionalContent'
-import PlexusNetBackground from '../../components/common/PlexusNetBackground'
 
 // ── Performer Data with Stage & BPM ────────────────────────────────────
 const performers = [
@@ -325,13 +324,6 @@ function DashboardPage() {
     <main className="sp-main">
       {/* ══ HERO SECTION ══ */}
       <section id="home" className="sp-hero" aria-label="Ozilla Fest">
-        <PlexusNetBackground
-          nodeColor="#EC4899"
-          lineColor="236, 72, 153"
-          secondaryColor="255, 90, 31"
-          maxDistance={145}
-          speed={0.6}
-        />
         <div className="sp-hero-ambient-glow" />
 
         <div className="sp-hero-content">
