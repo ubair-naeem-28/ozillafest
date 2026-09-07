@@ -1125,14 +1125,14 @@ function DashboardPage() {
         .sp-hero {
           position: relative;
           width: 100%;
-          min-height: 90vh;
+          min-height: 95vh;
           display: flex;
           align-items: center;
           justify-content: center;
           overflow: hidden;
-          background:
-            radial-gradient(ellipse at 50% 25%, rgba(255, 90, 31, 0.18) 0%, rgba(85, 14, 14, 0.15) 50%, transparent 85%) !important;
+          background: #0B0705 !important;
           padding: clamp(7rem, 12vw, 10rem) 1.5rem clamp(5rem, 8vw, 7rem);
+          z-index: 2;
         }
 
         .sp-hero-ambient-glow {
@@ -1142,10 +1142,10 @@ function DashboardPage() {
           transform: translate(-50%, -50%);
           width: 700px;
           height: 700px;
-          background: radial-gradient(circle, rgba(255, 138, 61, 0.28) 0%, rgba(236, 72, 153, 0.16) 50%, transparent 70%);
+          background: radial-gradient(circle, rgba(255, 138, 61, 0.22) 0%, rgba(236, 72, 153, 0.12) 50%, transparent 70%);
           filter: blur(110px);
           pointer-events: none;
-          z-index: 0;
+          z-index: 1;
         }
 
         .sp-hero-content {
