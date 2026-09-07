@@ -1162,10 +1162,10 @@ function DashboardPage() {
         }
 
         .sp-hero-title {
-          font-family: 'Outfit', sans-serif;
+          font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif);
           font-size: clamp(3.2rem, 8vw, 6rem);
           font-weight: 900;
-          letter-spacing: -0.04em;
+          letter-spacing: 0.01em;
           line-height: 1.02;
           color: #ffffff;
           margin-bottom: 1.5rem;
@@ -1317,13 +1317,13 @@ function DashboardPage() {
 
         .stat-val {
           display: block;
-          font-family: 'Outfit', sans-serif;
+          font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif);
           font-size: clamp(2.2rem, 3.5vw, 2.7rem);
           font-weight: 900;
           color: #ffffff !important;
           line-height: 1.05;
           margin-bottom: 0.4rem;
-          letter-spacing: -0.03em;
+          letter-spacing: -0.01em;
         }
 
         .stat-label {
@@ -1358,11 +1358,11 @@ function DashboardPage() {
         }
 
         .sp-section-title {
-          font-family: 'Outfit', sans-serif;
+          font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif);
           font-size: clamp(2.3rem, 4.8vw, 3.6rem);
           font-weight: 900;
           line-height: 1.08;
-          letter-spacing: -0.035em;
+          letter-spacing: -0.01em;
           color: #ffffff !important;
           margin-bottom: 1rem;
         }
@@ -1403,11 +1403,11 @@ function DashboardPage() {
         }
 
         .sp-card-header h3 {
-          font-family: 'Outfit', sans-serif;
+          font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif);
           font-size: 1.35rem;
           font-weight: 800;
           color: #ffffff !important;
-          letter-spacing: -0.02em;
+          letter-spacing: -0.01em;
         }
 
         .sp-card-desc {
@@ -1581,12 +1581,12 @@ function DashboardPage() {
         }
 
         .sp-celeb-overlay h3 {
-          font-family: 'Outfit', sans-serif;
+          font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif);
           color: #fff !important;
           font-size: 1.5rem;
           font-weight: 900;
           text-transform: uppercase;
-          letter-spacing: -0.01em;
+          letter-spacing: 0.02em;
           line-height: 1.1;
         }
 
@@ -1624,12 +1624,13 @@ function DashboardPage() {
 
         .sp-countdown-card strong {
           display: block;
-          font-family: 'Outfit', sans-serif;
+          font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif);
           font-size: clamp(2rem, 3.8vw, 2.8rem);
           font-weight: 900;
           color: #ffffff !important;
           line-height: 1;
           margin-bottom: 0.4rem;
+          letter-spacing: -0.01em;
         }
 
         .sp-countdown-card span {
@@ -1711,20 +1712,20 @@ function DashboardPage() {
         }
 
         .sp-pricing-header h3 {
-          font-family: 'Outfit', sans-serif;
+          font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif);
           font-size: 1.6rem;
           font-weight: 900;
           color: #ffffff;
           margin-bottom: 0.9rem;
-          letter-spacing: -0.02em;
+          letter-spacing: -0.01em;
         }
 
         .sp-pricing-cost strong {
-          font-family: 'Outfit', sans-serif;
+          font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif);
           font-size: 2.3rem;
           font-weight: 900;
           color: #ffffff;
-          letter-spacing: -0.03em;
+          letter-spacing: -0.02em;
         }
 
         .sp-pricing-sub {
@@ -1812,12 +1813,12 @@ function DashboardPage() {
         }
 
         .sp-pillar-title {
-          font-family: 'Outfit', sans-serif;
+          font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif);
           font-size: 1.5rem;
           font-weight: 800;
           color: #ffffff !important;
           margin-bottom: 0.75rem;
-          letter-spacing: -0.02em;
+          letter-spacing: -0.01em;
         }
 
         .sp-pillar-desc {
@@ -1869,12 +1870,12 @@ function DashboardPage() {
         }
 
         .sp-vibe-left h3 {
-          font-family: 'Outfit', sans-serif;
+          font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif);
           font-size: clamp(1.6rem, 2.5vw, 2.2rem);
           font-weight: 900;
           color: #ffffff;
           line-height: 1.15;
-          letter-spacing: -0.03em;
+          letter-spacing: -0.01em;
         }
 
         .sp-vibe-left p {
@@ -2051,11 +2052,11 @@ function DashboardPage() {
         }
 
         .sp-timeline-heading {
-          font-family: 'Outfit', sans-serif;
+          font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif);
           font-size: 1.45rem;
           font-weight: 800;
           color: #ffffff !important;
-          letter-spacing: -0.02em;
+          letter-spacing: -0.01em;
         }
 
         .sp-timeline-tag {
@@ -2108,7 +2109,7 @@ function DashboardPage() {
 
         .sp-discounts-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.5rem; }
         .sp-discount-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 0.8rem; }
-        .sp-big-discount { font-family: 'Outfit', sans-serif; font-size: 1.45rem; font-weight: 900; color: #ffbd59 !important; }
+        .sp-big-discount { font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif); font-size: 1.45rem; font-weight: 900; color: #ffbd59 !important; letter-spacing: -0.01em; }
         .sp-code-pill { font-family: monospace; background: rgba(255, 255, 255, 0.1) !important; border: 1px solid rgba(255, 255, 255, 0.18) !important; padding: 0.35rem 0.8rem; border-radius: 8px; color: #ffffff !important; font-weight: 800; font-size: 0.85rem; }
 
         /* ── WORLD-CLASS FESTIVAL FACILITIES ── */
@@ -2176,7 +2177,7 @@ function DashboardPage() {
         }
 
         .sp-facility-title {
-          font-family: 'Outfit', sans-serif;
+          font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif);
           font-size: 1.25rem;
           font-weight: 800;
           color: #ffffff !important;
@@ -2237,7 +2238,7 @@ function DashboardPage() {
           transform: translateX(-50%);
           background: linear-gradient(90deg, #ff5a1f, #ffbd59);
           color: #0B0705;
-          font-family: 'Outfit', sans-serif;
+          font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif);
           font-size: 0.65rem;
           font-weight: 900;
           letter-spacing: 0.12em;
@@ -2286,18 +2287,19 @@ function DashboardPage() {
         }
 
         .sp-sponsor-header h3 {
-          font-family: 'Outfit', sans-serif;
+          font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif);
           font-size: 1.45rem;
           font-weight: 800;
           color: #ffffff !important;
           margin-bottom: 0.25rem;
+          letter-spacing: -0.01em;
         }
 
         .sp-sponsor-price-tag {
-          font-family: 'Outfit', sans-serif;
+          font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif);
           font-size: 1.15rem;
           font-weight: 900;
-          letter-spacing: 0.04em;
+          letter-spacing: 0.02em;
         }
 
         .sp-sponsor-tagline {
