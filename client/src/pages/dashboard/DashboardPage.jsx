@@ -137,7 +137,7 @@ const festivalPillars = [
 ]
 
 const futureEvents = [
-  { name: 'Ozilla Festival 2026: The Flagship', date: 'November 1, 2026', location: 'Lahore, Pakistan', status: 'FEATURED FESTIVAL', description: 'Flagship festival with 4 mega stages, 20+ star artists, and 10,000+ live crowd.' },
+  { name: 'OZILLA FEST 2026: The Flagship', date: 'November 1, 2026', location: 'Lahore, Pakistan', status: 'FEATURED FESTIVAL', description: 'Flagship festival with 4 mega stages, 20+ star artists, and 10,000+ live crowd.' },
   { name: 'Celebrity Night Live Concert',        date: 'February 2027',    location: 'Lahore, Pakistan', status: 'UPCOMING CONCERT',  description: 'High-octane stadium night with headline Punjabi artists and 360° laser shows.' },
   { name: 'Ozilla Basant Beats Season 2',        date: 'March 2027',       location: 'Lahore, Pakistan', status: 'SEASONAL FESTIVAL', description: 'Cultural music fusion festival with live pop sets, color activations, and street eats.' }
 ]
@@ -176,7 +176,7 @@ const historyEvents = [
     date: 'March 15, 2025'
   },
   {
-    name: 'Ozilla Festival 2026 (The Grand Edition)',
+    name: 'OZILLA FEST 2026 (The Grand Edition)',
     year: '2026',
     badge: 'FLAGSHIP 10,000+ EDITION',
     description: 'Monumental flagship edition with 4 stages, 20+ star artists, and 100kW laser sound arrays.',
@@ -185,7 +185,7 @@ const historyEvents = [
     date: 'November 1, 2026'
   },
   {
-    name: 'Ozilla Festival 2027: Arena Tour',
+    name: 'OZILLA FEST 2027: Arena Tour',
     year: '2027',
     badge: 'NATIONWIDE TOUR',
     description: 'Nationwide arena tour expansion bringing the signature Ozilla concert experience across Pakistan.',

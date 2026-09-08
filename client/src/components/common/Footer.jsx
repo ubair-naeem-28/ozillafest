@@ -103,7 +103,7 @@ export default function Footer() {
               <Link to="/verification/OZ-2026-PREVIEW">QR Verification</Link>
             </div>
             <p className="kex-bottom-copy">
-              © 2026 Ozilla Festival & Prism Entertainment. All rights reserved.
+              © 2026 OZILLA FEST & Prism Entertainment. All rights reserved.
             </p>
           </div>
         </div>

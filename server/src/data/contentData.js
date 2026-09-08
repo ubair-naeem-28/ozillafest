@@ -1,7 +1,7 @@
 export const contentData = {
   organization: {
-    name: 'Ozilla Festival',
-    event: 'Ozilla Festival 2026',
+    name: 'OZILLA FEST',
+    event: 'OZILLA FEST 2026',
     date: '2026',
     venue: 'Karachi, Pakistan'
   },
@@ -24,7 +24,7 @@ export const contentData = {
     },
     {
       id: 'oz2026',
-      name: 'Ozilla Festival 2026',
+      name: 'OZILLA FEST 2026',
       date: '2026-11-01',
       time: '08:00 PM',
       location: 'Karachi, Pakistan',

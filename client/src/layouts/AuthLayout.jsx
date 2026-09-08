@@ -80,11 +80,11 @@ function AuthLayout({ children }) {
 
               {/* Card Header & Brand */}
               <header className="kx-header">
-                <Link to="/" className="kx-logo-link" aria-label="Ozilla Festival Home">
+                <Link to="/" className="kx-logo-link" aria-label="OZILLA FEST Home">
                   <div className="kx-logo">
                     <img
                       src={assetUrl('/assets/ozilla/logo.png')}
-                      alt="Ozilla Festival Logo"
+                      alt="OZILLA FEST Logo"
                       onError={(e) => { e.currentTarget.src = assetUrl('/assets/logo.jpeg') }}
                     />
                     <i aria-hidden="true" />
@@ -93,7 +93,7 @@ function AuthLayout({ children }) {
 
                 <span className="kx-tag">PAKISTAN'S PREMIER MUSIC FESTIVAL</span>
                 <h1 className="kx-title">
-                  {isLogin ? 'Welcome Back' : 'Join Ozilla Festival'}
+                  {isLogin ? 'Welcome Back' : 'Join OZILLA FEST'}
                 </h1>
                 <p className="kx-subtitle">
                   {isLogin

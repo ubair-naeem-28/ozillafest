@@ -120,7 +120,7 @@ function Navbar() {
   return (
     <nav className={`site-nav booking-nav navbar-fixed ${scrolled ? 'scrolled' : ''} ${hidden ? 'nav-hidden' : ''}`} aria-label="Main navigation">
       <div className="site-nav-main-shell navbar-repair-shell">
-        <Link to="/" className="site-brand-cluster navbar-repair-brand" aria-label="Ozilla Festival home">
+        <Link to="/" className="site-brand-cluster navbar-repair-brand" aria-label="OZILLA FEST home">
           <span className="site-brand-logo-shell">
             <img src={assetUrl('/assets/ozilla/logo.png')} alt="" className="site-brand-logo-img" />
           </span>

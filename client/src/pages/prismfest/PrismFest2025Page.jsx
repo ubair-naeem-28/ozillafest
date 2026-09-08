@@ -11,12 +11,12 @@ function PrismFest2025Page() {
 
   return (
     <div>
-      <PageHeader title="Ozilla Festival 2026" subtitle="Upcoming Headline Edition" />
+      <PageHeader title="OZILLA FEST 2026" subtitle="Upcoming Headline Edition" />
 
       <div className="bg-white rounded-lg shadow-md p-8 mb-6">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">Edition Summary</h2>
         <p className="text-gray-600 mb-6">
-          Ozilla Festival 2026 is structured as the flagship sponsorship and entertainment edition,
+          OZILLA FEST 2026 is structured as the flagship sponsorship and entertainment edition,
           combining immersive brand activations with large-scale digital and on-ground audience impact.
         </p>
 

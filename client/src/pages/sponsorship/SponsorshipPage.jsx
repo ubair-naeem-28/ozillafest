@@ -51,7 +51,7 @@ const packages = [
 ]
 
 const sponsorBenefits = [
-  ['Brand Visibility', 'Premium on-ground and digital visibility throughout Ozilla Festival.'],
+  ['Brand Visibility', 'Premium on-ground and digital visibility throughout OZILLA FEST.'],
   ['Social Media Exposure', 'Audience-first promotion across festival content and partner campaigns.'],
   ['VIP Networking', 'Access to guests, creators, businesses, and premium festival audiences.'],
   ['Media Coverage', 'High-value content moments designed for campaign amplification.'],
@@ -85,7 +85,7 @@ const sponsorProcess = [
 const testimonials = [
   [
     'Partnership Impact',
-    'Ozilla Festival gives brands a strong experiential platform where visibility turns into audience memory.'
+    'OZILLA FEST gives brands a strong experiential platform where visibility turns into audience memory.'
   ],
   [
     'Marketing Value',
@@ -94,7 +94,7 @@ const testimonials = [
 ]
 
 const proposalDeckSlides = [
-  ['Proposal Cover', 'Main Ozilla Festival partnership proposal identity.', '/assets/new-proposal/proposal-cover.jpg'],
+  ['Proposal Cover', 'Main OZILLA FEST partnership proposal identity.', '/assets/new-proposal/proposal-cover.jpg'],
   ['About Ozilla', 'Festival background, vision, and corporate positioning.', '/assets/new-proposal/about-us.jpg'],
   ['Festival 2026', 'Flagship Lahore festival story and premium audience promise.', '/assets/new-proposal/festival-2026.jpg'],
   ['Partnership Value', 'Why sponsorship matters for relevant audience access.', '/assets/new-proposal/partnership-matters.jpg'],
@@ -129,7 +129,7 @@ const proposalDeckSlides = [
 function SponsorshipPage() {
   return (
     <main className="sponsor-premium">
-      <section className="sponsor-hero" aria-label="Become an Ozilla Festival partner">
+      <section className="sponsor-hero" aria-label="Become an OZILLA FEST partner">
         <div className="sponsor-hero-bg" />
         <div className="sponsor-orb sponsor-orb-one" />
         <div className="sponsor-orb sponsor-orb-two" />
@@ -142,7 +142,7 @@ function SponsorshipPage() {
         </div>
         <div className="sponsor-hero-content">
           <p className="sponsor-eyebrow">Corporate Partnership Portal</p>
-          <h1>Grow Your Brand With Ozilla Festival</h1>
+          <h1>Grow Your Brand With OZILLA FEST</h1>
           <p>
             Partner with one of Pakistan's most exciting festivals and showcase your
             brand to thousands of visitors.
@@ -150,7 +150,7 @@ function SponsorshipPage() {
         </div>
       </section>
 
-      <section className="sponsor-stats" aria-label="Why sponsor Ozilla Festival">
+      <section className="sponsor-stats" aria-label="Why sponsor OZILLA FEST">
         {stats.map(([value, label], index) => (
           <article key={label} style={{ '--delay': `${index * 80}ms` }}>
             <strong>{value}</strong>
@@ -159,7 +159,7 @@ function SponsorshipPage() {
         ))}
       </section>
 
-      <section className="sponsor-proposal-gallery" aria-label="Official Ozilla Festival sponsorship proposal visuals">
+      <section className="sponsor-proposal-gallery" aria-label="Official OZILLA FEST sponsorship proposal visuals">
         <div className="sponsor-section-heading">
           <p className="sponsor-eyebrow">Official Proposal Deck</p>
           <h2>Every sponsorship asset organized into a premium visual partnership story.</h2>
@@ -317,10 +317,10 @@ function SponsorshipPage() {
       </section>
 
       <section className="sponsor-cta">
-        <p className="sponsor-eyebrow">Ozilla Festival Partnerships</p>
+        <p className="sponsor-eyebrow">OZILLA FEST Partnerships</p>
         <h2>Let's build something extraordinary together.</h2>
         <p>
-          Become an official Ozilla Festival partner and grow your brand with one of
+          Become an official OZILLA FEST partner and grow your brand with one of
           Pakistan's biggest festivals.
         </p>
         <Link to="/contact" className="sponsor-action-button">

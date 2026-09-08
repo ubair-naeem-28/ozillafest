@@ -11,12 +11,12 @@ function BrandCollaborationPage() {
 
   return (
     <div>
-      <PageHeader title="Brand Collaboration" subtitle="Partnership Opportunities for Ozilla Festival 2026" />
+      <PageHeader title="Brand Collaboration" subtitle="Partnership Opportunities for OZILLA FEST 2026" />
 
       <div className="bg-white rounded-lg shadow-md p-8 mb-6">
         <h2 className="text-3xl font-bold text-gray-800 mb-4">Why Collaborate</h2>
         <p className="text-gray-600 mb-6">
-          Ozilla Festival provides end-to-end brand integration across venue touchpoints, audience
+          OZILLA FEST provides end-to-end brand integration across venue touchpoints, audience
           journey, digital campaigns, and creator-led amplification.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">

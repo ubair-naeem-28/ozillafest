@@ -7,7 +7,7 @@ const privacySections = [
     number: '01',
     icon: 'PV',
     title: 'Introduction',
-    text: 'This Privacy Policy explains how Ozilla Festival handles visitor, account, ticket, and support information with transparency and care.'
+    text: 'This Privacy Policy explains how OZILLA FEST handles visitor, account, ticket, and support information with transparency and care.'
   },
   {
     id: 'information-collection',
@@ -49,7 +49,7 @@ const privacySections = [
     number: '07',
     icon: 'RT',
     title: 'User Rights',
-    text: 'Visitors can contact Ozilla Festival to request support, corrections, clarification, or help with account and privacy-related questions.'
+    text: 'Visitors can contact OZILLA FEST to request support, corrections, clarification, or help with account and privacy-related questions.'
   },
   {
     id: 'children-privacy',
@@ -70,7 +70,7 @@ const privacySections = [
     number: '10',
     icon: 'CT',
     title: 'Contact Information',
-    text: 'For privacy questions, account support, or clarification, visitors can contact the Ozilla Festival support team through the Contact page.'
+    text: 'For privacy questions, account support, or clarification, visitors can contact the OZILLA FEST support team through the Contact page.'
   }
 ]
 
@@ -80,14 +80,14 @@ const termsSections = [
     number: '01',
     icon: 'TR',
     title: 'Introduction',
-    text: 'These Terms & Conditions explain the policies that help Ozilla Festival maintain a safe, organized, and enjoyable festival experience for every visitor.'
+    text: 'These Terms & Conditions explain the policies that help OZILLA FEST maintain a safe, organized, and enjoyable festival experience for every visitor.'
   },
   {
     id: 'ticket-policy',
     number: '02',
     icon: 'TK',
     title: 'Ticket Policy',
-    text: 'Tickets are issued for the selected Ozilla Festival access and must be presented at the event entrance. Visitors are responsible for keeping ticket information secure.'
+    text: 'Tickets are issued for the selected OZILLA FEST access and must be presented at the event entrance. Visitors are responsible for keeping ticket information secure.'
   },
   {
     id: 'payments',
@@ -115,14 +115,14 @@ const termsSections = [
     number: '06',
     icon: 'PR',
     title: 'Privacy',
-    text: 'Personal information is used for event operations, communication, ticketing, and support. Ozilla Festival does not sell visitor information.'
+    text: 'Personal information is used for event operations, communication, ticketing, and support. OZILLA FEST does not sell visitor information.'
   },
   {
     id: 'liability',
     number: '07',
     icon: 'LB',
     title: 'Liability',
-    text: 'Ozilla Festival may update event timing, venue details, entry requirements, or operational policies when necessary for safety, logistics, or compliance.'
+    text: 'OZILLA FEST may update event timing, venue details, entry requirements, or operational policies when necessary for safety, logistics, or compliance.'
   },
   {
     id: 'user-responsibilities',
@@ -136,7 +136,7 @@ const termsSections = [
     number: '09',
     icon: 'CT',
     title: 'Contact Information',
-    text: 'For clarification about these Terms & Conditions, contact the Ozilla Festival support team through the official contact page.'
+    text: 'For clarification about these Terms & Conditions, contact the OZILLA FEST support team through the official contact page.'
   }
 ]
 
@@ -147,13 +147,13 @@ const termsBanners = [
 
 const privacyBanners = [
   ['Privacy First', 'Your account, ticket, and support information is handled with transparency and careful access control.'],
-  ['Security Guaranteed', 'Ozilla Festival uses secure workflows to protect authentication, ticket requests, and payment-related support.']
+  ['Security Guaranteed', 'OZILLA FEST uses secure workflows to protect authentication, ticket requests, and payment-related support.']
 ]
 
 const termsHighlights = [
   ['Notice', 'Important Notice', 'Under 16 attendees are allowed with their family according to the current event notice.'],
   ['Entry', 'Restricted Items', 'Venue safety checks may apply. Visitors must follow all staff and security instructions at entry points.'],
-  ['Update', 'Policy Updates', 'Operational updates may be shared before or during the festival through official Ozilla Festival channels.']
+  ['Update', 'Policy Updates', 'Operational updates may be shared before or during the festival through official OZILLA FEST channels.']
 ]
 
 const privacyHighlights = [
@@ -168,7 +168,7 @@ const legalHighlights = [
   ['Privacy Commitment', 'Visitor information is used only for festival operations, ticketing, communication, and support.'],
   ['Safe Payments', 'Payment details are reviewed through trusted workflows for booking confirmation and assistance.'],
   ['Festival Rules', 'Clear rules help protect guests, families, artists, partners, and the event experience.'],
-  ['Professional Support', 'The Ozilla Festival team is available for policy questions and event guidance.']
+  ['Professional Support', 'The OZILLA FEST team is available for policy questions and event guidance.']
 ]
 
 const privacySecurity = [
@@ -303,7 +303,7 @@ function LegalPage({ type }) {
 
   const title = isTerms ? 'Terms & Conditions' : 'Privacy Policy'
   const subtitle = isTerms
-    ? 'Please review our policies carefully to ensure a safe and enjoyable Ozilla Festival experience.'
+    ? 'Please review our policies carefully to ensure a safe and enjoyable OZILLA FEST experience.'
     : 'Your privacy matters. We are committed to protecting your personal information and providing complete transparency.'
 
   return (
@@ -323,7 +323,7 @@ function LegalPage({ type }) {
           <span />
         </div>
         <div className="legal-hero-content legal-reveal">
-          <p className="legal-kicker">Ozilla Festival 2026</p>
+          <p className="legal-kicker">OZILLA FEST 2026</p>
           <h1>{title}</h1>
           <p>{subtitle}</p>
           {!isTerms && (
@@ -419,7 +419,7 @@ function LegalPage({ type }) {
             <article className="legal-acceptance-card legal-reveal">
               <span aria-hidden="true">OK</span>
               <div>
-                <h3>By continuing to use Ozilla Festival, you acknowledge and agree to these Terms & Conditions.</h3>
+                <h3>By continuing to use OZILLA FEST, you acknowledge and agree to these Terms & Conditions.</h3>
                 <p>Please read each section carefully before purchasing tickets, creating an account, or attending the event.</p>
               </div>
             </article>

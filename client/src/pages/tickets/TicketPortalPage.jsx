@@ -218,7 +218,7 @@ function TicketPortalPage() {
         <div className="hero-glow-blob" />
 
         <div className="ticket-clean-hero-content">
-          <span className="hero-eyebrow">OZILLA FESTIVAL 2026</span>
+          <span className="hero-eyebrow">OZILLA FEST 2026</span>
           <h1 className="hero-title">Book Your Festival Passes</h1>
           <p className="hero-subtitle">
             Instant digital QR pass with access to 4 live stages, headline artists, and VIP amenities in Lahore.
@@ -270,7 +270,7 @@ function TicketPortalPage() {
               Tickets Are Officially Sold Out!
             </h2>
             <p style={{ color: '#d1d5db', maxWidth: '600px', margin: '0 auto 24px', fontSize: '16px', lineHeight: '1.6' }}>
-              All General, VIP, and Premium passes for <strong>Ozilla Festival 2026</strong> have been fully booked. The ticket booking system is locked to prevent overbooking.
+              All General, VIP, and Premium passes for <strong>OZILLA FEST 2026</strong> have been fully booked. The ticket booking system is locked to prevent overbooking.
             </p>
             <div style={{ display: 'flex', justifyContent: 'center', gap: '14px', flexWrap: 'wrap' }}>
               <button

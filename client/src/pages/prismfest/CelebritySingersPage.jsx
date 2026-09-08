@@ -115,10 +115,10 @@ function CelebritySingersPage() {
         </div>
 
         <div className="celebrity-hero-content">
-          <p className="celebrity-eyebrow">Ozilla Festival 2026</p>
+          <p className="celebrity-eyebrow">OZILLA FEST 2026</p>
           <h1>CELEBRITY SINGERS</h1>
           <p className="celebrity-hero-copy">
-            Experience the Biggest Music Icons Live at Ozilla Festival 2026
+            Experience the Biggest Music Icons Live at OZILLA FEST 2026
           </p>
         </div>
 
@@ -170,7 +170,7 @@ function CelebritySingersPage() {
             Concert lights, pulsing sound, premium crowd energy, and a two-day lineup built for Lahore.
           </p>
         </div>
-        <div className="celebrity-countdown" aria-label="Countdown to Ozilla Festival 2026">
+        <div className="celebrity-countdown" aria-label="Countdown to OZILLA FEST 2026">
           {[
             ['Days', countdown.days],
             ['Hours', countdown.hours],
@@ -199,7 +199,7 @@ function CelebritySingersPage() {
 
       <section className="celebrity-cta-section">
         <div className="celebrity-cta-orbit" aria-hidden="true" />
-        <p className="celebrity-eyebrow">Ozilla Festival 2026</p>
+        <p className="celebrity-eyebrow">OZILLA FEST 2026</p>
         <h2>DON'T MISS THE BIGGEST MUSIC FESTIVAL OF 2026</h2>
         <div className="celebrity-cta-actions">
           <Link className="celebrity-btn celebrity-btn-primary" to="/tickets">

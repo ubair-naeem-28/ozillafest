@@ -1,10 +1,10 @@
-# Ozilla Festival 2026 — Software Requirements Specification (SRS) & System Architecture Document
+# OZILLA FEST 2026 — Software Requirements Specification (SRS) & System Architecture Document
 
 ---
 
 ## 1. Executive Summary & Product Scope
 
-**Ozilla Festival 2026** is Pakistan's premier luxury music, cultural, and sponsorship festival platform. The platform serves thousands of attendees, VIP guests, brand sponsors, and event administrators. 
+**OZILLA FEST 2026** is Pakistan's premier luxury music, cultural, and sponsorship festival platform. The platform serves thousands of attendees, VIP guests, brand sponsors, and event administrators. 
 
 ### Core Product Goals
 1. **Public Discovery & Brand Experience**: High-performance showcase for festival lineup, schedule, sponsor tiers, and luxury partner hotels with zero-auth public access.

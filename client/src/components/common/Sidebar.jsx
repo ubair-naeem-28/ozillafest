@@ -11,10 +11,10 @@ function Sidebar() {
     { path: '/tickets', label: 'Ticket Portal', icon: 'T' },
     { path: '/about', label: 'About Us', icon: 'A' },
     { path: '/collaboration', label: 'Brand Collaboration', icon: 'B' },
-    { path: '/prismfest', label: 'Ozilla Festival', icon: 'O' },
+    { path: '/prismfest', label: 'OZILLA FEST', icon: 'O' },
     { path: '/prismfest/2023', label: 'Pre-Campaign Module', icon: '23' },
     { path: '/prismfest/2024', label: 'Scale Module', icon: '24' },
-    { path: '/prismfest/2025', label: 'Ozilla Festival 2026', icon: '26' },
+    { path: '/prismfest/2025', label: 'OZILLA FEST 2026', icon: '26' },
     { path: '/prismfest/celebrities', label: 'Celebrity Singers', icon: 'C' },
     { path: '/prismfest/events', label: 'Past Events', icon: 'PE' },
     { path: '/prismfest/future', label: 'Future Events', icon: 'F' },
@@ -57,7 +57,7 @@ function Sidebar() {
             <span className="w-5 h-0.5 bg-gray-700 block"></span>
             <span className="w-5 h-0.5 bg-gray-700 block"></span>
           </span>
-          {!collapsed && <span className="text-xl font-bold text-gray-800 whitespace-nowrap">Ozilla Festival</span>}
+          {!collapsed && <span className="text-xl font-bold text-gray-800 whitespace-nowrap">OZILLA FEST</span>}
         </button>
 
         <nav className={`mt-5 ${collapsed ? 'space-y-2' : 'space-y-1'}`}>

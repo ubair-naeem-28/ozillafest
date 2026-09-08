@@ -55,7 +55,7 @@ export async function seedDatabase() {
         tier: s.tier,
         amount: s.amount,
         companyName: `${s.tier} Partner`,
-        description: `Official ${s.tier} partner of Ozilla Festival 2026`,
+        description: `Official ${s.tier} partner of OZILLA FEST 2026`,
         benefits: ['VIP Stage Access', 'Brand Activation Booth', 'Main SMD Logo Placement', 'Digital PR Amplification'],
         displayOrder: index + 1,
         isActive: true

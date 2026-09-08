@@ -33,7 +33,7 @@ export default function PayFastGatewayModal({ isOpen, onClose, ticket, amount, o
     await new Promise((r) => setTimeout(r, 700))
     setPhase(`Deducting PKR ${Number(amount || 0).toLocaleString()} and settling to Organizer Bank Account...`)
     await new Promise((r) => setTimeout(r, 800))
-    setPhase('Payment Successful! Sending IPN webhook to Ozilla Festival...')
+    setPhase('Payment Successful! Sending IPN webhook to OZILLA FEST...')
     await new Promise((r) => setTimeout(r, 600))
 
     try {
@@ -63,7 +63,7 @@ export default function PayFastGatewayModal({ isOpen, onClose, ticket, amount, o
         <div className="pf-merchant-banner">
           <div>
             <small>Merchant</small>
-            <strong>Prism Events & Tours (Ozilla Festival 2026)</strong>
+            <strong>Prism Events & Tours (OZILLA FEST 2026)</strong>
           </div>
           <div className="pf-amount-pill">
             <small>Total Due</small>

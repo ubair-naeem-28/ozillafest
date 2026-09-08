@@ -19,7 +19,7 @@ export const stripeService = {
       const paymentIntent = await stripe.paymentIntents.create({
         amount: amountInPaisa,
         currency: 'pkr',
-        description: `Ozilla Festival 2026 - ${ticket.ticketType || 'General'} Pass (${ticket.ticketId || ticket.id})`,
+        description: `OZILLA FEST 2026 - ${ticket.ticketType || 'General'} Pass (${ticket.ticketId || ticket.id})`,
         receipt_email: ticket.email || undefined,
         metadata: {
           ticketId: String(ticket.id || ticket._id),
@@ -43,7 +43,7 @@ export const stripeService = {
       const fallbackIntent = await stripe.paymentIntents.create({
         amount: 50, // $0.50 USD minimum
         currency: 'usd',
-        description: `Ozilla Festival 2026 - ${ticket.ticketType || 'General'} Pass`,
+        description: `OZILLA FEST 2026 - ${ticket.ticketType || 'General'} Pass`,
         receipt_email: ticket.email || undefined,
         metadata: {
           ticketId: String(ticket.id || ticket._id),
@@ -77,7 +77,7 @@ export const stripeService = {
             price_data: {
               currency: 'pkr',
               product_data: {
-                name: `Ozilla Festival 2026 - ${ticket.ticketType?.toUpperCase() || 'GENERAL'} PASS`,
+                name: `OZILLA FEST 2026 - ${ticket.ticketType?.toUpperCase() || 'GENERAL'} PASS`,
                 description: `Official Digital Pass with Verified Dynamic QR Code (Qty: ${ticket.quantity || 1})`
               },
               unit_amount: Math.round(unitPrice * 100) // in paisas
@@ -111,7 +111,7 @@ export const stripeService = {
             price_data: {
               currency: 'usd',
               product_data: {
-                name: `Ozilla Festival 2026 - ${ticket.ticketType?.toUpperCase() || 'GENERAL'} PASS`,
+                name: `OZILLA FEST 2026 - ${ticket.ticketType?.toUpperCase() || 'GENERAL'} PASS`,
                 description: `Official Digital Pass with Verified Dynamic QR Code`
               },
               unit_amount: 100 // $1.00 USD

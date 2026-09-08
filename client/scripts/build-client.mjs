@@ -44,7 +44,7 @@ const spa404Html = `<!DOCTYPE html>
 <html>
   <head>
     <meta charset="utf-8">
-    <title>Ozilla Festival</title>
+    <title>OZILLA FEST</title>
     <script type="text/javascript">
       // Single Page Apps for GitHub Pages
       // MIT License - https://github.com/rafgraph/spa-github-pages

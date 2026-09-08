@@ -49,7 +49,7 @@ app.get('/', (_req, res) => {
       <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <title>Ozilla Festival API</title>
+        <title>OZILLA FEST API</title>
         <style>
           body { font-family: Arial, sans-serif; margin: 40px; line-height: 1.5; }
           code { background: #f4f4f5; padding: 2px 6px; border-radius: 4px; }
@@ -57,7 +57,7 @@ app.get('/', (_req, res) => {
         </style>
       </head>
       <body>
-        <h1>Ozilla Festival API is running</h1>
+        <h1>OZILLA FEST API is running</h1>
         <p>This port is for backend APIs.</p>
         <p>Open frontend at <a href="http://localhost:8080">http://localhost:8080</a>.</p>
         <p>Health check: <a href="/api/health">/api/health</a></p>

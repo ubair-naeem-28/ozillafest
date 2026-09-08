@@ -20,7 +20,7 @@ const contactCards = [
     icon: 'PH',
     label: 'Phone',
     value: '+92 322 6622221',
-    detail: 'Speak with the Ozilla Festival coordination team.'
+    detail: 'Speak with the OZILLA FEST coordination team.'
   },
   {
     icon: 'LC',
@@ -43,20 +43,20 @@ const contactCards = [
   {
     icon: 'WB',
     label: 'Website',
-    value: 'Ozilla Festival Official',
+    value: 'OZILLA FEST Official',
     detail: 'Explore events, hotels, tickets, restaurants, and partner offers.'
   },
   {
     icon: 'EV',
     label: 'Event',
-    value: 'OZILLA FESTIVAL 2026',
+    value: 'OZILLA FEST 2026',
     detail: 'Music, entertainment, food, brands, and family experiences.'
   }
 ]
 
 const supportCards = [
   ['Ticket Support', 'Questions about ticket requests, QR codes, payments, and entry support.'],
-  ['Sponsorship Inquiry', 'For brands interested in premium Ozilla Festival partnership packages.'],
+  ['Sponsorship Inquiry', 'For brands interested in premium OZILLA FEST partnership packages.'],
   ['Media Inquiry', 'Press, creator coverage, announcements, and festival communication requests.'],
   ['Business Partnership', 'Hotels, restaurants, media teams, creators, and experience partners.'],
   ['General Support', 'Event timings, location guidance, facilities, and guest information.']
@@ -66,7 +66,7 @@ const trustFeatures = [
   ['Fast Response', 'Clear support channels for visitors, partners, and guests.'],
   ['Professional Team', 'A polished team built around trust, hospitality, and clear communication.'],
   ['Festival Experts', 'A team that understands event operations and visitor needs.'],
-  ['Secure Communication', 'Your inquiry is handled through official Ozilla Festival channels.'],
+  ['Secure Communication', 'Your inquiry is handled through official OZILLA FEST channels.'],
   ['Trusted Organization', 'A premium festival experience managed with care and consistency.'],
   ['Friendly Team', 'Helpful support designed around a premium guest experience.']
 ]
@@ -118,7 +118,7 @@ function ContactUsPage() {
 
   return (
     <main className="contact-premium">
-      <section className="contact-hero" aria-label="Contact Ozilla Festival">
+      <section className="contact-hero" aria-label="Contact OZILLA FEST">
         <div className="contact-hero-bg" />
         <div className="contact-orb contact-orb-one" />
         <div className="contact-orb contact-orb-two" />
@@ -132,7 +132,7 @@ function ContactUsPage() {
         <div className="contact-hero-content">
           <p className="contact-eyebrow">Official Customer Experience Center</p>
           <h1>Let's Connect And Create Something Extraordinary</h1>
-          <p>We're here to help you create an unforgettable Ozilla Festival experience.</p>
+          <p>We're here to help you create an unforgettable OZILLA FEST experience.</p>
           <div className="contact-response-badge" aria-label="Average response time">
             <span>Average Response Time</span>
             <strong>Less Than 24 Hours</strong>
@@ -143,7 +143,7 @@ function ContactUsPage() {
       <section className="contact-experience" aria-label="Contact experience">
         <div className="contact-section-heading">
           <p className="contact-eyebrow">Premium Support</p>
-          <h2>Reach the right Ozilla Festival team with confidence.</h2>
+          <h2>Reach the right OZILLA FEST team with confidence.</h2>
           <p>
             Whether you need ticket support, partnership guidance, sponsorship information,
             or visitor assistance, our official support channels are ready to help.
@@ -239,15 +239,15 @@ function ContactUsPage() {
         </div>
       </section>
 
-      <section className="contact-location" aria-label="Ozilla Festival location">
+      <section className="contact-location" aria-label="OZILLA FEST location">
         <div className="contact-section-heading">
           <p className="contact-eyebrow">Festival Location</p>
           <h2>Lahore, Punjab, Pakistan</h2>
-          <p>Official Ozilla Festival visitor support and event coordination location.</p>
+          <p>Official OZILLA FEST visitor support and event coordination location.</p>
         </div>
         <div className="contact-map-frame">
           <iframe
-            title="Ozilla Festival Lahore Map"
+            title="OZILLA FEST Lahore Map"
             src="https://www.google.com/maps?q=Lahore%2C%20Punjab%2C%20Pakistan&output=embed"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
@@ -271,7 +271,7 @@ function ContactUsPage() {
         </div>
       </section>
 
-      <section className="contact-trust" aria-label="Why contact Ozilla Festival">
+      <section className="contact-trust" aria-label="Why contact OZILLA FEST">
         <div className="contact-section-heading">
           <p className="contact-eyebrow">Why Contact Us</p>
           <h2>Professional support for a premium festival experience.</h2>
@@ -303,7 +303,7 @@ function ContactUsPage() {
       </section>
 
       <section className="contact-cta">
-        <p className="contact-eyebrow">Ozilla Festival Support</p>
+        <p className="contact-eyebrow">OZILLA FEST Support</p>
         <h2>We'd love to hear from you.</h2>
         <p>
           Whether you have a question, partnership inquiry, sponsorship proposal,

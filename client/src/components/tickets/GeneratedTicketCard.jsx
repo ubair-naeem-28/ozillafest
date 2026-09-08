@@ -116,7 +116,7 @@ function GeneratedTicketCard({ ticket, actionTo, actionLabel = 'View Ticket' }) 
 
     ctx.fillStyle = '#ff9f1c'
     ctx.font = '800 13px "Segoe UI", Arial, sans-serif'
-    ctx.fillText('OZILLA FESTIVAL 2026', 54, 94)
+    ctx.fillText('OZILLA FEST 2026', 54, 94)
 
     // Middle-Left: Attendee Name
     const fullName = ticket.fullName || ticket.name || 'Festival Guest'
@@ -224,8 +224,8 @@ function GeneratedTicketCard({ ticket, actionTo, actionLabel = 'View Ticket' }) 
     if (!navigator.share) return
     try {
       await navigator.share({
-        title: ticket.eventName || 'Ozilla Festival Ticket Pass',
-        text: `Ozilla Festival Ticket: ${ticketNumber} (${passTypeLabel})`
+        title: ticket.eventName || 'OZILLA FEST Ticket Pass',
+        text: `OZILLA FEST Ticket: ${ticketNumber} (${passTypeLabel})`
       })
     } catch {
       // Sharing was cancelled or unavailable.
@@ -242,7 +242,7 @@ function GeneratedTicketCard({ ticket, actionTo, actionLabel = 'View Ticket' }) 
         <div className="ticket-pass-left">
           <div className="ticket-pass-top-row">
             <div className="ticket-pass-type-badge">{passTypeLabel}</div>
-            <div className="ticket-pass-festival-tag">OZILLA FESTIVAL 2026</div>
+            <div className="ticket-pass-festival-tag">OZILLA FEST 2026</div>
           </div>
 
           <div className="ticket-pass-identity">

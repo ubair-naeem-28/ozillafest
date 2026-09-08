@@ -4,7 +4,7 @@ import { assetUrl } from '../../utils/assetUrl.util'
 
 const futureEvents = [
   {
-    name: 'Ozilla Festival 2026',
+    name: 'OZILLA FEST 2026',
     date: 'November 1, 2026',
     location: 'Lahore, Pakistan',
     status: 'FEATURED EVENT',
@@ -27,7 +27,7 @@ const futureEvents = [
 ]
 
 const roadmap = [
-  'Ozilla Festival 2026 execution and sponsor delivery',
+  'OZILLA FEST 2026 execution and sponsor delivery',
   'Audience journey execution from discovery to post-event recall',
   'Expanded creator content and multi-platform amplification'
 ]
@@ -72,10 +72,10 @@ function FutureEventsPage() {
           <span />
         </div>
         <div className="future-hero-content">
-          <p className="future-eyebrow">Ozilla Festival 2026</p>
+          <p className="future-eyebrow">OZILLA FEST 2026</p>
           <h1>UPCOMING EVENTS</h1>
           <p>
-            Discover the unforgettable experiences waiting for you at Ozilla Festival 2026.
+            Discover the unforgettable experiences waiting for you at OZILLA FEST 2026.
           </p>
         </div>
         <div className="future-scroll-cue" aria-hidden="true">
@@ -137,7 +137,7 @@ function FutureEventsPage() {
       <section className="future-cta-section future-reveal">
         <div className="future-cta-glow" aria-hidden="true" />
         <p className="future-eyebrow">Join the experience</p>
-        <h2>READY TO EXPERIENCE OZILLA FESTIVAL 2026?</h2>
+        <h2>READY TO EXPERIENCE OZILLA FEST 2026?</h2>
         <p>
           Secure your place for the upcoming celebration of music, entertainment, creators, food, and premium festival culture.
         </p>

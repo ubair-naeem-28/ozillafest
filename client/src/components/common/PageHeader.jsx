@@ -7,7 +7,7 @@ function PageHeader({ title, subtitle }) {
       <div className="relative z-10">
         <p className="text-xs font-extrabold uppercase tracking-widest text-[#ffbd59] mb-2 flex items-center gap-2">
           <span className="inline-block w-2 h-2 rounded-full bg-[#ffbd59] animate-ping" />
-          Ozilla Festival 2026
+          OZILLA FEST 2026
         </p>
         <h1 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-2">
           {title}

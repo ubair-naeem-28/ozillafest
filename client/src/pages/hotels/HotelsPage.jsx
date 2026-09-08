@@ -70,9 +70,9 @@ function HotelsPage() {
         <div className="hotel-hero-glow hotel-hero-glow-b" />
         <div className="hotel-hero-sweep" />
         <div className="hotel-hero-content">
-          <p className="hotel-eyebrow">OZILLA FESTIVAL 2026</p>
+          <p className="hotel-eyebrow">OZILLA FEST 2026</p>
           <h1>LUXURY HOTELS</h1>
-          <p>Stay in the finest hotels and experience premium hospitality during Ozilla Festival 2026.</p>
+          <p>Stay in the finest hotels and experience premium hospitality during OZILLA FEST 2026.</p>
           <div className="hotel-search-bar" aria-label="Hotel page highlights">
             <span>Lahore, Pakistan</span>
             <span>Festival Partner Hotels</span>
@@ -84,7 +84,7 @@ function HotelsPage() {
       <section className="hotel-booking-intro hotel-reveal">
         <div>
           <p className="hotel-eyebrow">Premium Stay Collection</p>
-          <h2>Browse Ozilla Festival Partner Hotels</h2>
+          <h2>Browse OZILLA FEST Partner Hotels</h2>
         </div>
         <p>
           A curated hotel listing experience for guests who want comfort, convenient access, trusted booking links, and premium Lahore hospitality.
@@ -194,7 +194,7 @@ function HotelsPage() {
       <section className="hotel-booking-cta hotel-reveal">
         <p className="hotel-eyebrow">Premium Hospitality</p>
         <h2>Your Perfect Stay Awaits</h2>
-        <p>Stay in the finest hotels during Ozilla Festival 2026.</p>
+        <p>Stay in the finest hotels during OZILLA FEST 2026.</p>
         <a
           href="#top"
           onClick={(event) => {

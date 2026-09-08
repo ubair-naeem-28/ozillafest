@@ -12,7 +12,7 @@ const offerCategories = [
 ]
 
 const partnerBenefits = [
-  ['Verified Festival Partners', 'Every offer is connected to the Ozilla Festival partner experience.'],
+  ['Verified Festival Partners', 'Every offer is connected to the OZILLA FEST partner experience.'],
   ['Exclusive Discounts', 'Promo codes and limited-time benefits built for attendees.'],
   ['Premium Experience', 'Hotels, dining, and lifestyle offers designed around comfort and value.'],
   ['Trusted Brands', 'Partner profiles are presented with clear offer details and claim flow.']
@@ -60,11 +60,11 @@ function DiscountsPage() {
           <span>2026</span>
         </div>
         <div className="discounts-hero-content">
-          <p className="discounts-eyebrow">Ozilla Festival Rewards</p>
+          <p className="discounts-eyebrow">OZILLA FEST Rewards</p>
           <h1>Exclusive Member Benefits</h1>
           <p>
             Unlock premium deals, exclusive partner offers, and unforgettable savings
-            during Ozilla Festival 2026.
+            during OZILLA FEST 2026.
           </p>
         </div>
       </section>
@@ -75,7 +75,7 @@ function DiscountsPage() {
           <h2>VIP festival savings made for premium guests.</h2>
           <p>
             Get priority access to the best partner benefits, curated dining offers,
-            and luxury stay deals during Ozilla Festival 2026.
+            and luxury stay deals during OZILLA FEST 2026.
           </p>
         </div>
         <div className="discount-featured-voucher">
@@ -198,7 +198,7 @@ function DiscountsPage() {
         <p className="discounts-eyebrow">Ozilla VIP Offers</p>
         <h2>Don't miss these exclusive offers.</h2>
         <p>
-          Take advantage of premium discounts available only during Ozilla Festival 2026.
+          Take advantage of premium discounts available only during OZILLA FEST 2026.
         </p>
         <a href="#top" className="discount-action-button">
           Explore All Offers

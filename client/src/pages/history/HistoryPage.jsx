@@ -22,7 +22,7 @@ const historyEvents = [
     date: 'November 9, 2024'
   },
   {
-    name: 'Ozilla Festival Website Brief 2026 (Pre-Campaign)',
+    name: 'OZILLA FEST Website Brief 2026 (Pre-Campaign)',
     year: '2025',
     icon: 'A',
     description: 'Pre-launch phase covering website content, ticketing workflow, and full experience readiness for the main festival.',
@@ -40,7 +40,7 @@ const historyEvents = [
     date: 'March 07, 2026'
   },
   {
-    name: 'Ozilla Festival 2027 Season 2',
+    name: 'OZILLA FEST 2027 Season 2',
     year: '2027',
     icon: 'C',
     description: 'Second season expansion with larger audience engagement, celebrity performances, and upgraded event production.',
@@ -129,7 +129,7 @@ function HistoryPage() {
         <span />
       </div>
 
-      <section className="history-hero history-reveal" aria-label="Ozilla Festival history">
+      <section className="history-hero history-reveal" aria-label="OZILLA FEST history">
         <img className="history-hero-logo" src={assetUrl('/assets/ozilla/logo.png')} alt="" loading="eager" />
         <div className="history-hero-rays" aria-hidden="true">
           <span />
@@ -137,9 +137,9 @@ function HistoryPage() {
           <span />
         </div>
         <div className="history-hero-content">
-          <p className="history-eyebrow">Ozilla Festival Legacy</p>
+          <p className="history-eyebrow">OZILLA FEST Legacy</p>
           <h1>OUR JOURNEY</h1>
-          <p>Relive the unforgettable moments that shaped the Ozilla Festival.</p>
+          <p>Relive the unforgettable moments that shaped the OZILLA FEST.</p>
         </div>
       </section>
 
@@ -154,7 +154,7 @@ function HistoryPage() {
         </div>
       </section>
 
-      <section className="history-legacy history-reveal" aria-label="Ozilla Festival achievements">
+      <section className="history-legacy history-reveal" aria-label="OZILLA FEST achievements">
         <div className="history-section-heading">
           <p className="history-eyebrow">Our Legacy</p>
           <h2>Built on energy, people, and unforgettable nights.</h2>
@@ -170,7 +170,7 @@ function HistoryPage() {
         </div>
       </section>
 
-      <section className="history-timeline" aria-label="Ozilla Festival timeline">
+      <section className="history-timeline" aria-label="OZILLA FEST timeline">
         <div className="history-timeline-line" aria-hidden="true" />
         {historyEvents.map((event, index) => (
           <article
@@ -225,11 +225,11 @@ function HistoryPage() {
         </div>
       </section>
 
-      <section className="history-quote history-reveal" aria-label="Ozilla Festival quote">
+      <section className="history-quote history-reveal" aria-label="OZILLA FEST quote">
         <div className="history-quote-card">
           <span>OZILLA</span>
           <blockquote>
-            “Every festival creates memories, but Ozilla Festival creates unforgettable stories.”
+            “Every festival creates memories, but OZILLA FEST creates unforgettable stories.”
           </blockquote>
         </div>
       </section>
@@ -239,7 +239,7 @@ function HistoryPage() {
         <p className="history-eyebrow">Next chapter: {latestYear}</p>
         <h2>THE NEXT CHAPTER BEGINS WITH YOU</h2>
         <p>Join us in creating the next unforgettable memories.</p>
-        <Link className="history-cta-button" to="/tickets">Join Ozilla Festival</Link>
+        <Link className="history-cta-button" to="/tickets">Join OZILLA FEST</Link>
       </section>
 
       <style>{`

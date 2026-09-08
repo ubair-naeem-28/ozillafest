@@ -15,7 +15,7 @@ export const EVENT_DETAILS = {
   },
   PRISMFEST_2025: {
     id: 'oz2026',
-    name: 'Ozilla Festival 2026',
+    name: 'OZILLA FEST 2026',
     date: '2026',
     location: 'Karachi, Pakistan',
     description: 'Flagship sponsorship and entertainment edition.'

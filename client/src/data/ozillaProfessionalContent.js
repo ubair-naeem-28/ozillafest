@@ -2,9 +2,9 @@ import { assetUrl } from '../utils/assetUrl.util'
 
 export const ozillaProfessionalContent = {
   objective:
-    'To build a premium experience platform where users can explore OZilla Festival, discover partner restaurants and hotels, claim discounts, and connect with event experiences.',
+    'To build a premium experience platform where users can explore OZILLA FEST, discover partner restaurants and hotels, claim discounts, and connect with event experiences.',
   about:
-    'OZilla Festival is a youth-focused entertainment experience combining music, food, culture, creators, brands and communities into one powerful lifestyle platform.',
+    'OZILLA FEST is a youth-focused entertainment experience combining music, food, culture, creators, brands and communities into one powerful lifestyle platform.',
   festivalExperience: [
     'Live Concerts',
     'DJ Nights',

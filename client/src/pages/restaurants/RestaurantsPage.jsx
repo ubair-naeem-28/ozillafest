@@ -57,11 +57,11 @@ function RestaurantsPage() {
           <span />
         </div>
         <div className="restaurants-hero-content">
-          <p className="restaurants-eyebrow">Ozilla Festival 2026</p>
+          <p className="restaurants-eyebrow">OZILLA FEST 2026</p>
           <h1>Discover the Finest Dining Experience</h1>
           <p>
             Discover the finest restaurants and unforgettable culinary experiences during
-            Ozilla Festival 2026.
+            OZILLA FEST 2026.
           </p>
         </div>
       </section>
@@ -169,7 +169,7 @@ function RestaurantsPage() {
       <section className="restaurants-cta">
         <p className="restaurants-eyebrow">Ozilla Dining</p>
         <h2>Your perfect dining experience awaits.</h2>
-        <p>Discover Lahore's finest restaurants during Ozilla Festival 2026.</p>
+        <p>Discover Lahore's finest restaurants during OZILLA FEST 2026.</p>
         <Link to="/discounts" className="restaurants-hero-button">
           Explore Restaurants
         </Link>

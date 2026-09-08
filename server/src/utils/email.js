@@ -13,7 +13,7 @@ function getMailFrom() {
     return configuredFrom
   }
 
-  return env.smtpUser ? `Ozilla Festival <${env.smtpUser}>` : 'Ozilla Festival <info@ozillafestival.com>'
+  return env.smtpUser ? `OZILLA FEST <${env.smtpUser}>` : 'OZILLA FEST <info@ozillafestival.com>'
 }
 
 function getTransporter() {
@@ -57,7 +57,7 @@ function buildEmailWrapper(title, contentHtml) {
               <!-- Header Banner -->
               <tr>
                 <td style="background: linear-gradient(135deg, #3d0c1e 0%, #170712 100%); padding: 30px 24px; text-align: center; border-bottom: 2px solid #d4af37;">
-                  <h1 style="margin: 0; font-size: 26px; font-weight: 800; letter-spacing: 2px; color: #f9df88; text-transform: uppercase;">OZILLA FESTIVAL 2026</h1>
+                  <h1 style="margin: 0; font-size: 26px; font-weight: 800; letter-spacing: 2px; color: #f9df88; text-transform: uppercase;">OZILLA FEST 2026</h1>
                   <p style="margin: 6px 0 0; font-size: 13px; color: rgba(255, 255, 255, 0.7); letter-spacing: 1px;">THE PREMIER LUXURY CULTURAL & MUSIC EXPERIENCE</p>
                 </td>
               </tr>
@@ -70,7 +70,7 @@ function buildEmailWrapper(title, contentHtml) {
               <!-- Footer -->
               <tr>
                 <td style="background-color: #0a0b0e; padding: 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.06); font-size: 12px; color: #71717a;">
-                  <p style="margin: 0 0 6px;">© 2026 Ozilla Festival. All rights reserved.</p>
+                  <p style="margin: 0 0 6px;">© 2026 OZILLA FEST. All rights reserved.</p>
                   <p style="margin: 0;">Karachi, Pakistan | Official Ticketing & Concierge</p>
                 </td>
               </tr>
@@ -87,7 +87,7 @@ export async function sendOtpEmail({ to, otpCode }) {
   try {
     const client = getTransporter()
     const html = buildEmailWrapper(
-      'Your Ozilla Festival Verification Code',
+      'Your OZILLA FEST Verification Code',
       `
         <h2 style="color: #ffffff; margin-top: 0; font-size: 20px;">Email Verification</h2>
         <p>Use the following 6-digit one-time code to complete your security verification:</p>
@@ -104,7 +104,7 @@ export async function sendOtpEmail({ to, otpCode }) {
       from: getMailFrom(),
       to,
       subject: `[Ozilla 2026] Verification Code: ${otpCode}`,
-      text: `Your Ozilla Festival OTP code is: ${otpCode}. It expires in 10 minutes.`,
+      text: `Your OZILLA FEST OTP code is: ${otpCode}. It expires in 10 minutes.`,
       html
     })
   } catch (error) {
@@ -116,10 +116,10 @@ export async function sendPasswordResetEmail({ to, resetUrl }) {
   try {
     const client = getTransporter()
     const html = buildEmailWrapper(
-      'Reset Your Ozilla Festival Password',
+      'Reset Your OZILLA FEST Password',
       `
         <h2 style="color: #ffffff; margin-top: 0; font-size: 20px;">Password Reset Request</h2>
-        <p>We received a request to reset your password for your Ozilla Festival account.</p>
+        <p>We received a request to reset your password for your OZILLA FEST account.</p>
         <div style="margin: 28px 0; text-align: center;">
           <a href="${resetUrl}" style="background: linear-gradient(135deg, #d4af37 0%, #aa8420 100%); color: #111827; text-decoration: none; padding: 14px 32px; border-radius: 10px; font-weight: 700; font-size: 15px; display: inline-block; box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);">
             Reset My Password
@@ -145,10 +145,10 @@ export async function sendWelcomeEmail({ to, name }) {
   try {
     const client = getTransporter()
     const html = buildEmailWrapper(
-      'Welcome to Ozilla Festival 2026',
+      'Welcome to OZILLA FEST 2026',
       `
         <h2 style="color: #ffffff; margin-top: 0; font-size: 22px;">Welcome to the Experience, ${name || 'Festival Guest'}! 🌟</h2>
-        <p>Your Ozilla Festival account is now active and ready. You have complete access to the VIP lounges, stage lineups, luxury hotel concierges, and our streamlined Ticket Portal.</p>
+        <p>Your OZILLA FEST account is now active and ready. You have complete access to the VIP lounges, stage lineups, luxury hotel concierges, and our streamlined Ticket Portal.</p>
         
         <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; padding: 18px; margin: 20px 0;">
           <h3 style="color: #f9df88; margin: 0 0 8px; font-size: 16px;">Festival Highlights:</h3>
@@ -170,8 +170,8 @@ export async function sendWelcomeEmail({ to, name }) {
     await client.sendMail({
       from: getMailFrom(),
       to,
-      subject: '🌟 Welcome to Ozilla Festival 2026',
-      text: `Welcome to Ozilla Festival 2026, ${name || 'Guest'}! Log in to view your tickets at: ${env.frontendUrl}/tickets`,
+      subject: '🌟 Welcome to OZILLA FEST 2026',
+      text: `Welcome to OZILLA FEST 2026, ${name || 'Guest'}! Log in to view your tickets at: ${env.frontendUrl}/tickets`,
       html
     })
   } catch (error) {
@@ -183,11 +183,11 @@ export async function sendPaymentReceivedEmail({ to, name, ticketId, tierName, a
   try {
     const client = getTransporter()
     const html = buildEmailWrapper(
-      'Payment Received - Ozilla Festival 2026',
+      'Payment Received - OZILLA FEST 2026',
       `
         <h2 style="color: #ffffff; margin-top: 0; font-size: 20px;">Payment Confirmation Received 🎟️</h2>
         <p>Hello ${name || 'Guest'},</p>
-        <p>We have successfully registered your payment for <strong>Ozilla Festival 2026</strong>.</p>
+        <p>We have successfully registered your payment for <strong>OZILLA FEST 2026</strong>.</p>
         
         <table border="0" cellpadding="8" cellspacing="0" width="100%" style="margin: 20px 0; background: rgba(255,255,255,0.03); border: 1px solid rgba(212,175,55,0.2); border-radius: 12px; font-size: 14px;">
           <tr>
@@ -233,7 +233,7 @@ export async function sendTicketApprovedEmail({ to, name, ticketId, tierName, ve
     const client = getTransporter()
     const verifyLink = verificationUrl || `${env.frontendUrl}/verification/${ticketId}`
     const html = buildEmailWrapper(
-      'Your Ticket is Ready - Ozilla Festival 2026',
+      'Your Ticket is Ready - OZILLA FEST 2026',
       `
         <div style="text-align: center; margin-bottom: 20px;">
           <span style="background: #064e3b; color: #34d399; font-weight: 700; font-size: 12px; padding: 6px 14px; border-radius: 9999px; text-transform: uppercase; letter-spacing: 1px;">
@@ -241,7 +241,7 @@ export async function sendTicketApprovedEmail({ to, name, ticketId, tierName, ve
           </span>
         </div>
         <h2 style="color: #ffffff; margin-top: 0; font-size: 22px; text-align: center;">Your Official Festival Pass is Ready!</h2>
-        <p>Dear ${name || 'Guest'}, your pass for <strong>${eventName || 'Ozilla Festival 2026'}</strong> has been generated and confirmed.</p>
+        <p>Dear ${name || 'Guest'}, your pass for <strong>${eventName || 'OZILLA FEST 2026'}</strong> has been generated and confirmed.</p>
 
         <div style="background: #1c1d29; border: 1px solid #d4af37; border-radius: 16px; padding: 20px; margin: 24px 0; text-align: center;">
           <p style="color: #9ca3af; margin: 0 0 6px; font-size: 13px;">OFFICIAL TICKET IDENTIFIER</p>
@@ -266,7 +266,7 @@ export async function sendTicketApprovedEmail({ to, name, ticketId, tierName, ve
     await client.sendMail({
       from: getMailFrom(),
       to,
-      subject: `🎉 [Confirmed] Your Ozilla Festival 2026 Pass (${ticketId})`,
+      subject: `🎉 [Confirmed] Your OZILLA FEST 2026 Pass (${ticketId})`,
       text: `Your ticket ${ticketId} is ready! View your QR pass here: ${verifyLink}`,
       html
     })
@@ -279,7 +279,7 @@ export async function sendTicketRejectedEmail({ to, name, ticketId, reason }) {
   try {
     const client = getTransporter()
     const html = buildEmailWrapper(
-      'Ticket Status Update - Ozilla Festival 2026',
+      'Ticket Status Update - OZILLA FEST 2026',
       `
         <h2 style="color: #ef4444; margin-top: 0; font-size: 20px;">Verification Update for Ticket #${ticketId}</h2>
         <p>Dear ${name || 'Guest'},</p>
@@ -303,7 +303,7 @@ export async function sendTicketRejectedEmail({ to, name, ticketId, reason }) {
     await client.sendMail({
       from: getMailFrom(),
       to,
-      subject: `[Action Required] Ozilla Festival Ticket #${ticketId} Payment Status`,
+      subject: `[Action Required] OZILLA FEST Ticket #${ticketId} Payment Status`,
       text: `Your payment for ticket ${ticketId} could not be verified. Reason: ${reason || 'Invalid payment receipt'}. Please log in at ${env.frontendUrl}/tickets to update.`,
       html
     })

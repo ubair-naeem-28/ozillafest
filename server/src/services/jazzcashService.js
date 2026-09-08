@@ -47,7 +47,7 @@ export const jazzcashService = {
       pp_TxnCurrency: 'PKR',
       pp_TxnDateTime: this.formatDateTime(now),
       pp_BillReference: `BILL-${ticket.ticketId || ticket.id}`,
-      pp_Description: `Ozilla Festival Pass Booking (${ticket.ticketType || 'General'})`,
+      pp_Description: `OZILLA FEST Pass Booking (${ticket.ticketType || 'General'})`,
       pp_TxnExpiryDateTime: this.formatDateTime(expiry),
       pp_ReturnURL: callbackUrl,
       pp_MobileNumber: ticket.phone || ticket.senderPhone || '',

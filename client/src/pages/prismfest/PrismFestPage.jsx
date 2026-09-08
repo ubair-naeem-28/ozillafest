@@ -5,7 +5,7 @@ import PageHeader from '../../components/common/PageHeader'
 function PrismFestPage() {
   return (
     <div>
-      <PageHeader title="Ozilla Festival" subtitle="Campaign Modules and Performance Highlights" />
+      <PageHeader title="OZILLA FEST" subtitle="Campaign Modules and Performance Highlights" />
 
       <div className="bg-white rounded-lg shadow-md p-8 mb-6">
         <h2 className="text-3xl font-bold text-gray-800 mb-4">Festival Modules</h2>
@@ -19,7 +19,7 @@ function PrismFestPage() {
             <p className="text-gray-600">25+ events delivered and large influencer/campus ecosystem growth.</p>
           </Link>
           <Link to="/prismfest/2025" className="bg-green-50 rounded-lg p-6">
-            <h3 className="text-2xl font-bold text-gray-800 mb-2">Ozilla Festival 2026</h3>
+            <h3 className="text-2xl font-bold text-gray-800 mb-2">OZILLA FEST 2026</h3>
             <p className="text-gray-600">Flagship edition with 40,000+ attendance target and multi-channel sponsor visibility.</p>
           </Link>
         </div>

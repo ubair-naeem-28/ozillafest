@@ -1,9 +1,9 @@
 export const websiteContent = {
   about: {
-    title: 'About Ozilla Festival',
+    title: 'About OZILLA FEST',
     description: 'A sponsorship-led entertainment platform built for measurable brand impact.',
     story:
-      'Ozilla Festival is designed to connect brands with youth audiences through live experiences, content moments, and on-ground activations.',
+      'OZILLA FEST is designed to connect brands with youth audiences through live experiences, content moments, and on-ground activations.',
     mission:
       'Deliver high-visibility festival partnerships that combine audience engagement, digital scale, and campaign outcomes.',
     values: [
@@ -13,7 +13,7 @@ export const websiteContent = {
     ]
   },
   prismfest: {
-    title: 'Ozilla Festival',
+    title: 'OZILLA FEST',
     subtitle: 'Sponsorship Campaign Modules',
     description:
       'A structured festival campaign built around sponsor objectives, activation design, and multi-platform audience reach.',
@@ -39,7 +39,7 @@ export const websiteContent = {
       },
       {
         id: 'oz2026',
-        name: 'Ozilla Festival 2026',
+        name: 'OZILLA FEST 2026',
         date: '2026',
         location: 'Karachi, Pakistan',
         status: 'upcoming'

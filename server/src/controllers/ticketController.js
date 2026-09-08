@@ -31,7 +31,7 @@ function notifyTicketApproval(ticket) {
     name: ticket.fullName,
     ticketId: ticket.ticketId || ticket._id,
     tierName: ticket.ticketType,
-    eventName: ticket.eventName || 'Ozilla Festival 2026',
+    eventName: ticket.eventName || 'OZILLA FEST 2026',
     eventDate: ticket.eventDate || 'November 1-2, 2026',
     quantity: ticket.quantity || 1,
     verificationUrl: `${env.frontendUrl}/verification/${ticket.ticketId || ticket._id}`
@@ -51,7 +51,7 @@ function resolveEvent(eventId) {
 
   return {
     id: 'oz2026',
-    eventName: 'Ozilla Festival 2026',
+    eventName: 'OZILLA FEST 2026',
     eventDate: '2026-11-01',
     eventTime: '08:00 PM',
     location: 'Lahore'

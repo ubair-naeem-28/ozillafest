@@ -91,7 +91,7 @@ function createTicket(req) {
     phone: String(req.body?.phone || '+923000000000').trim(),
     idCardNumber: String(req.body?.idCardNumber || '').trim(),
     festivalDay: req.body?.festivalDay === 'day2' ? 'day2' : 'day1',
-    eventName: 'Ozilla Festival 2026',
+    eventName: 'OZILLA FEST 2026',
     eventDate: '2026-11-01',
     eventTime: '08:00 PM',
     location: 'Lahore, Pakistan',

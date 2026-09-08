@@ -99,9 +99,9 @@ function FacilitiesPage() {
           <span />
         </div>
         <div className="facilities-hero-content">
-          <p className="facilities-eyebrow">Ozilla Festival 2026</p>
+          <p className="facilities-eyebrow">OZILLA FEST 2026</p>
           <h1>Everything You Need For An Unforgettable Festival Experience</h1>
-          <p>Premium comfort, safety, hospitality, and world-class visitor services at Ozilla Festival 2026.</p>
+          <p>Premium comfort, safety, hospitality, and world-class visitor services at OZILLA FEST 2026.</p>
         </div>
       </section>
 
@@ -286,7 +286,7 @@ function FacilitiesPage() {
         <p className="facilities-eyebrow">Ozilla Experience</p>
         <h2>Ready to experience world-class facilities?</h2>
         <p>
-          Discover every premium service designed to make your Ozilla Festival experience unforgettable.
+          Discover every premium service designed to make your OZILLA FEST experience unforgettable.
         </p>
         <Link to="/events/future" className="facility-action-button">
           Explore Festival

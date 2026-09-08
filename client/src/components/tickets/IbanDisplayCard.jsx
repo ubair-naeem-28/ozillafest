@@ -4,7 +4,7 @@ function IbanDisplayCard() {
   const [copied, setCopied] = useState('')
   const bankDetails = {
     bankName: 'HBL',
-    accountTitle: 'Ozilla Festival',
+    accountTitle: 'OZILLA FEST',
     accountNumber: '1234-5678-9012-3456',
     iban: 'PK36HABB0000123456789012345',
     branchCode: '1234'

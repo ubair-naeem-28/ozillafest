@@ -44,8 +44,8 @@ export const payfastService = {
       success_url: returnUrl || `${baseUrl}/tickets/view/${ticket.id}?payment=success`,
       cancel_url: cancelUrl || `${baseUrl}/tickets?payment=cancelled`,
       ipn_url: `${process.env.BACKEND_URL || 'http://localhost:5000'}/api/tickets/payfast-ipn`,
-      item_name: `Ozilla Festival 2026 - ${ticket.ticketType || 'Regular'} Pass (Qty: ${ticket.quantity || 1})`,
-      item_description: `Official Ticket Pass for ${ticket.eventName || 'Ozilla Festival 2026'}`
+      item_name: `OZILLA FEST 2026 - ${ticket.ticketType || 'Regular'} Pass (Qty: ${ticket.quantity || 1})`,
+      item_description: `Official Ticket Pass for ${ticket.eventName || 'OZILLA FEST 2026'}`
     }
 
     const signature = this.generateSignature(payload)

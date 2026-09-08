@@ -1,4 +1,4 @@
-# Ozilla Festival 2026 — Deployment & Testing Guide
+# OZILLA FEST 2026 — Deployment & Testing Guide
 
 ---
 

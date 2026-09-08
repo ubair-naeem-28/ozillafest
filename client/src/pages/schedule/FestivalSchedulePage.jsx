@@ -142,7 +142,7 @@ function FestivalSchedulePage() {
           Day 1 & Day 2 Full Lineup Schedule
         </h1>
         <p style={{ maxWidth: '680px', margin: '0 auto 24px', color: '#d1d5db', fontSize: '16px', lineHeight: '1.6' }}>
-          Discover the complete minute-by-minute itinerary, stage assignments, headliner performance slots, and grand finale fireworks for Ozilla Festival 2026.
+          Discover the complete minute-by-minute itinerary, stage assignments, headliner performance slots, and grand finale fireworks for OZILLA FEST 2026.
         </p>
 
         {/* ── DAY SWITCHER TABS ── */}

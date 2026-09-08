@@ -146,7 +146,7 @@ function createLocalTicket(ticketData = {}) {
     `${ticketData?.firstName || ''} ${ticketData?.lastName || ''}`
   ).trim() || 'Demo User'
 
-  const selectedEvent = { id: 'oz2026', name: 'Ozilla Festival 2026', date: '2026-11-01', time: '08:00 PM', location: 'Lahore' }
+  const selectedEvent = { id: 'oz2026', name: 'OZILLA FEST 2026', date: '2026-11-01', time: '08:00 PM', location: 'Lahore' }
   const now = new Date().toISOString()
   const identity = getCurrentIdentity()
   const resolvedEmail = String(ticketData?.email || identity?.email || 'local@ozillafestival.com').toLowerCase().trim()

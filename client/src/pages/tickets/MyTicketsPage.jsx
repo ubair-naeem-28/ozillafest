@@ -65,7 +65,7 @@ function MyTicketsPage() {
           <p className="my-tickets-eyebrow">DIGITAL FESTIVAL WALLET</p>
           <h1 className="my-tickets-title">Your Festival Passes</h1>
           <span className="my-tickets-subtitle">
-            Access your verified QR tickets, download pass images, and track your VIP festival benefits for Ozilla Festival 2026.
+            Access your verified QR tickets, download pass images, and track your VIP festival benefits for OZILLA FEST 2026.
           </span>
         </div>
       </section>
@@ -117,7 +117,7 @@ function MyTicketsPage() {
           <div className="ticket-wallet-empty">
             <div className="ticket-empty-mark">🎟️</div>
             <h2>No Tickets Booked Yet</h2>
-            <p>Reserve your Ozilla Festival pass and unlock your personal digital ticket wallet with dynamic QR entry.</p>
+            <p>Reserve your OZILLA FEST pass and unlock your personal digital ticket wallet with dynamic QR entry.</p>
             <Link to="/tickets" className="ticket-empty-btn">Purchase Ticket →</Link>
           </div>
         ) : (

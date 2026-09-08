@@ -221,12 +221,20 @@ export const authService = {
       const response = await apiClient.post(API_ENDPOINTS.AUTH.SEND_OTP, { email: normalized })
       return response.data
     } catch (error) {
+      if (error?.response?.status === 404) {
+        try {
+          const fallbackRes = await apiClient.post(API_ENDPOINTS.AUTH.RESEND_OTP, { email: normalized })
+          return fallbackRes.data
+        } catch (fallbackErr) {
+          if (fallbackErr?.response?.data?.message) throw fallbackErr
+        }
+      }
       if (error?.response?.data?.message) {
         throw error
       }
       if (isBackendUnreachable(error)) {
-        const netErr = new Error('Cannot connect to backend server at http://localhost:5000. Please ensure the backend server is running.')
-        netErr.response = { status: 503, data: { message: 'Cannot connect to backend server at http://localhost:5000. Please ensure the backend server is running.' } }
+        const netErr = new Error('Cannot connect to backend server. Please ensure the backend server is running and reachable.')
+        netErr.response = { status: 503, data: { message: 'Cannot connect to backend server. Please ensure the backend server is running and reachable.' } }
         throw netErr
       }
       throw error

@@ -42,7 +42,7 @@ class ErrorBoundary extends Component {
       return (
         <main style={{ padding: '32px', fontFamily: 'Arial, sans-serif', maxWidth: '600px', margin: '40px auto', textAlign: 'center' }}>
           <h1 style={{ color: '#7c2d12', marginBottom: '12px' }}>
-            {isChunkError ? 'New Update Available' : 'Ozilla Festival could not render'}
+            {isChunkError ? 'New Update Available' : 'OZILLA FEST could not render'}
           </h1>
           <p style={{ color: '#444', marginBottom: '16px' }}>
             {isChunkError
