@@ -481,23 +481,29 @@ function DashboardPage() {
 
           {/* Countdown to Festival */}
           <motion.div
-            className="sp-countdown"
+            className="sp-countdown-banner"
             initial={{ opacity: 0, y: 25 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.55 }}
           >
-            <p className="sp-eyebrow" style={{ marginBottom: '1.4rem' }}>Countdown to the First Beat Drop</p>
+            <div className="sp-countdown-header">
+              <span className="sp-countdown-eyebrow">
+                <span className="sp-countdown-pulse" />
+                COUNTDOWN TO THE FIRST BEAT DROP
+              </span>
+            </div>
             <div className="sp-countdown-grid">
               {[['Days', countdown.days], ['Hours', countdown.hours], ['Minutes', countdown.minutes], ['Seconds', countdown.seconds]].map(([label, val]) => (
                 <motion.div
                   key={label}
                   className="sp-countdown-card"
-                  whileHover={{ scale: 1.06, y: -3 }}
+                  whileHover={{ scale: 1.05, y: -4 }}
                   transition={{ type: 'spring', stiffness: 350 }}
                 >
                   <strong>{String(val).padStart(2, '0')}</strong>
                   <span>{label}</span>
+                  <div className="sp-countdown-glow-line" />
                 </motion.div>
               ))}
             </div>
@@ -1669,47 +1675,122 @@ function DashboardPage() {
           margin-top: 0.5rem;
         }
 
-        /* ── COUNTDOWN ── */
-        .sp-countdown {
+        /* ── COUNTDOWN BANNER ── */
+        .sp-countdown-banner {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
           text-align: center;
-          padding: 2.5rem 0 0;
+          margin: 3.5rem auto 0;
+          max-width: 860px;
+          width: 100%;
+          padding: 2.4rem clamp(1.5rem, 4vw, 3rem);
+          background: rgba(18, 10, 6, 0.72);
+          border: 1px solid rgba(255, 189, 89, 0.25);
+          border-radius: 28px;
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          box-shadow:
+            0 16px 45px rgba(0, 0, 0, 0.6),
+            inset 0 1px 0 rgba(255, 255, 255, 0.12),
+            0 0 30px rgba(255, 90, 31, 0.12);
+        }
+
+        .sp-countdown-header {
+          margin-bottom: 1.8rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        .sp-countdown-eyebrow {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.65rem;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-size: 0.82rem;
+          font-weight: 800;
+          letter-spacing: 0.16em;
+          color: #ffbd59;
+          text-transform: uppercase;
+          background: rgba(0, 0, 0, 0.55);
+          border: 1px solid rgba(255, 189, 89, 0.35);
+          padding: 0.5rem 1.35rem;
+          border-radius: 999px;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+        }
+
+        .sp-countdown-pulse {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #ff5a1f;
+          box-shadow: 0 0 10px #ff5a1f, 0 0 4px #ffbd59;
         }
 
         .sp-countdown-grid {
-          display: inline-grid;
+          display: grid;
           grid-template-columns: repeat(4, 1fr);
-          gap: 1.4rem;
-          max-width: 640px;
+          gap: clamp(0.9rem, 2vw, 1.6rem);
           width: 100%;
+          max-width: 720px;
         }
 
         .sp-countdown-card {
-          background: rgba(27, 17, 11, 0.78) !important;
-          border: 1px solid rgba(255, 255, 255, 0.08) !important;
+          position: relative;
+          overflow: hidden;
+          background: linear-gradient(135deg, rgba(35, 20, 14, 0.85) 0%, rgba(20, 11, 7, 0.92) 100%) !important;
+          border: 1px solid rgba(255, 189, 89, 0.22) !important;
           border-radius: 20px;
-          padding: 1.4rem 1.5rem;
-          text-align: center;
-          backdrop-filter: blur(16px);
-          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05), 0 10px 30px rgba(0, 0, 0, 0.45);
+          padding: 1.6rem 1rem 1.4rem;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          backdrop-filter: blur(14px);
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.1),
+            0 10px 25px rgba(0, 0, 0, 0.5);
+          transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+        }
+
+        .sp-countdown-card:hover {
+          border-color: rgba(255, 189, 89, 0.6) !important;
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.2),
+            0 14px 35px rgba(255, 90, 31, 0.35);
         }
 
         .sp-countdown-card strong {
           display: block;
           font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif);
-          font-size: clamp(2rem, 3.8vw, 2.8rem);
+          font-size: clamp(2.2rem, 4vw, 3.2rem);
           font-weight: 900;
           color: #ffffff !important;
           line-height: 1;
-          margin-bottom: 0.4rem;
-          letter-spacing: -0.01em;
+          margin-bottom: 0.5rem;
+          letter-spacing: -0.02em;
+          text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 189, 89, 0.3);
         }
 
         .sp-countdown-card span {
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: 0.76rem;
           font-weight: 800;
           color: #ffbd59 !important;
           text-transform: uppercase;
-          letter-spacing: 0.14em;
+          letter-spacing: 0.16em;
+        }
+
+        .sp-countdown-glow-line {
+          position: absolute;
+          bottom: 0;
+          left: 15%;
+          right: 15%;
+          height: 2px;
+          background: linear-gradient(90deg, transparent, #ffbd59, transparent);
+          opacity: 0.7;
         }
 
         /* ── PRICING / TICKET TIERS GRID (CreatorOS Style) ── */
@@ -2436,7 +2517,6 @@ function DashboardPage() {
         }
 
         @media (max-width: 640px) {
-          #hotels.sp-section-hotels { display: none !important; }
           .sp-section { padding: 4.5rem 0; }
           .sp-container { width: min(100%, calc(100% - 1.5rem)); }
           .stats-inner-grid { grid-template-columns: repeat(2, 1fr); gap: 0.85rem; }
