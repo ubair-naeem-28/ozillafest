@@ -363,7 +363,8 @@ function DashboardPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.25 }}
           >
-            Pakistan's Premier Music, Cultural & Entertainment Festival Live in Lahore. Experience 4 Mega Stages, Headline Artists, Gourmet Dining & Unmatched Sound.
+            <strong className="sp-hero-sub-highlight">Pakistan's Flagship Music & Cultural Phenomenon.</strong>
+            <span className="sp-hero-sub-detail">4 Electrified Mega Stages · Headline Celebrities · High-Octane Sound Under the Lahore Night Sky.</span>
           </motion.p>
 
           <motion.div
@@ -372,10 +373,26 @@ function DashboardPage() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.6, delay: 0.4 }}
           >
-            <span>📅 November 1, 2026</span>
-            <span>📍 Lahore, Pakistan</span>
-            <span>⚡ 4 Mega Stages</span>
-            <span>🎟️ Official QR Passes</span>
+            <div className="sp-hero-meta-pill">
+              <span className="sp-meta-dot" />
+              <span className="sp-meta-label">DATE</span>
+              <strong>NOV 01, 2026</strong>
+            </div>
+            <div className="sp-hero-meta-pill">
+              <span className="sp-meta-dot" />
+              <span className="sp-meta-label">CITY</span>
+              <strong>LAHORE, PK</strong>
+            </div>
+            <div className="sp-hero-meta-pill">
+              <span className="sp-meta-dot" />
+              <span className="sp-meta-label">PRODUCTION</span>
+              <strong>4 MEGA STAGES</strong>
+            </div>
+            <div className="sp-hero-meta-pill sp-meta-featured">
+              <span className="sp-meta-dot sp-dot-gold" />
+              <span className="sp-meta-label">PASSES</span>
+              <strong>INSTANT QR PASS</strong>
+            </div>
           </motion.div>
 
           <motion.div
@@ -1145,57 +1162,123 @@ function DashboardPage() {
         }
 
         .sp-hero-subtitle {
-          max-width: 740px;
-          font-size: clamp(1.08rem, 2vw, 1.3rem);
-          color: #ffffff !important;
-          line-height: 1.75;
+          max-width: 820px;
+          font-size: clamp(1.06rem, 1.85vw, 1.28rem);
+          color: rgba(255, 255, 255, 0.92) !important;
+          line-height: 1.68;
           margin-bottom: 2.2rem;
-          word-spacing: 0.03em;
-          font-weight: 500;
+          font-weight: 400;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 0.4rem;
           text-shadow: 0 3px 20px rgba(0, 0, 0, 1), 0 1px 6px rgba(0, 0, 0, 0.95);
+        }
+
+        .sp-hero-sub-highlight {
+          font-size: clamp(1.15rem, 2.1vw, 1.45rem);
+          font-weight: 800;
+          letter-spacing: -0.01em;
+          background: linear-gradient(120deg, #ffffff 0%, #ffd36a 60%, #ff8a3d 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        .sp-hero-sub-detail {
+          font-size: clamp(0.92rem, 1.5vw, 1.06rem);
+          color: rgba(255, 255, 255, 0.85);
+          font-weight: 500;
+          max-width: 720px;
         }
 
         .sp-hero-meta-strip {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 0.75rem;
+          gap: 0.9rem;
           flex-wrap: wrap;
           margin: 0 auto 2.8rem;
-          max-width: 720px;
+          max-width: 880px;
         }
 
-        .sp-hero-meta-strip span {
+        .sp-hero-meta-pill {
           display: inline-flex;
           align-items: center;
-          justify-content: center;
-          gap: 0.45rem;
-          padding: 0.45rem 1.15rem;
+          gap: 0.65rem;
+          padding: 0.55rem 1.3rem;
           border-radius: 999px;
-          background: rgba(0, 0, 0, 0.65);
-          border: 1px solid rgba(255, 255, 255, 0.14);
+          background: rgba(18, 10, 6, 0.75) !important;
+          border: 1px solid rgba(255, 189, 89, 0.3) !important;
+          backdrop-filter: blur(18px);
+          -webkit-backdrop-filter: blur(18px);
+          box-shadow:
+            0 8px 30px rgba(0, 0, 0, 0.6),
+            inset 0 1px 0 rgba(255, 255, 255, 0.15);
+          transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+        }
+
+        .sp-hero-meta-pill:hover {
+          transform: translateY(-2px);
+          border-color: rgba(255, 189, 89, 0.65) !important;
+          box-shadow: 0 12px 35px rgba(255, 90, 31, 0.35);
+        }
+
+        .sp-meta-dot {
+          width: 7px;
+          height: 7px;
+          border-radius: 50%;
+          background: #ff5a1f;
+          box-shadow: 0 0 10px #ff5a1f, 0 0 4px #ffbd59;
+        }
+
+        .sp-dot-gold {
+          background: #ffbd59;
+          box-shadow: 0 0 10px #ffbd59;
+        }
+
+        .sp-meta-label {
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-size: 0.68rem;
+          font-weight: 800;
+          letter-spacing: 0.14em;
+          color: rgba(255, 189, 89, 0.9);
+          text-transform: uppercase;
+        }
+
+        .sp-hero-meta-pill strong {
+          font-size: 0.88rem;
+          font-weight: 800;
+          letter-spacing: 0.04em;
           color: #ffffff;
-          font-size: 0.85rem;
-          font-weight: 700;
-          letter-spacing: 0.01em;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+          font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        .sp-meta-featured {
+          border-color: rgba(255, 189, 89, 0.55) !important;
+          background: rgba(35, 18, 10, 0.82) !important;
+          box-shadow: 0 8px 30px rgba(255, 90, 31, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
         }
 
         @media (max-width: 640px) {
           .sp-hero-meta-strip {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
-            gap: 0.55rem;
+            gap: 0.65rem;
             width: 100%;
-            max-width: 360px;
-            margin: 0 auto 2.2rem;
+            max-width: 380px;
+            margin: 0 auto 2.4rem;
           }
-          .sp-hero-meta-strip span {
-            font-size: 0.76rem;
-            padding: 0.45rem 0.4rem;
-            width: 100%;
-            text-align: center;
+          .sp-hero-meta-pill {
+            padding: 0.5rem 0.65rem;
+            justify-content: center;
+            gap: 0.45rem;
+          }
+          .sp-hero-meta-pill strong {
+            font-size: 0.78rem;
             white-space: nowrap;
+          }
+          .sp-meta-label {
+            font-size: 0.62rem;
           }
         }
 
