@@ -11,22 +11,45 @@ import TicketLayout from '../layouts/TicketLayout'
 // Loading & Fallback
 import LoadingSpinner from '../components/common/LoadingSpinner'
 
+function lazyWithRetry(componentImport) {
+  return lazy(async () => {
+    try {
+      return await componentImport()
+    } catch (error) {
+      const isChunkError =
+        /Failed to fetch dynamically imported module/i.test(error?.message) ||
+        /Loading chunk/i.test(error?.message) ||
+        /Failed to load module script/i.test(error?.message)
+
+      if (isChunkError) {
+        const lastReload = Number(sessionStorage.getItem('chunk_reload_ts') || 0)
+        if (Date.now() - lastReload > 10000) {
+          sessionStorage.setItem('chunk_reload_ts', String(Date.now()))
+          window.location.reload()
+          return new Promise(() => {}) // keep suspended while page reloads
+        }
+      }
+      throw error
+    }
+  })
+}
+
 // Lazy-loaded Pages (Code Splitting for instant first load & low memory footprint)
-const LoginPage = lazy(() => import('../pages/auth/LoginPage'))
-const RegisterPage = lazy(() => import('../pages/auth/RegisterPage'))
-const GoogleAuthCallbackPage = lazy(() => import('../pages/auth/GoogleAuthCallbackPage'))
-const DashboardPage = lazy(() => import('../pages/dashboard/DashboardPage'))
-const UserDashboardPage = lazy(() => import('../pages/account/UserDashboardPage'))
-const TicketPortalPage = lazy(() => import('../pages/tickets/TicketPortalPage'))
-const MyTicketsPage = lazy(() => import('../pages/tickets/MyTicketsPage'))
-const TicketViewPage = lazy(() => import('../pages/tickets/TicketViewPage'))
-const TicketVerificationPage = lazy(() => import('../pages/verification/TicketVerificationPage'))
-const AdminDashboardPage = lazy(() => import('../pages/admin/AdminDashboardPage'))
-const AdminTicketReviewPage = lazy(() => import('../pages/admin/AdminTicketReviewPage'))
-const HotelsPage = lazy(() => import('../pages/hotels/HotelsPage'))
-const FestivalSchedulePage = lazy(() => import('../pages/schedule/FestivalSchedulePage'))
-const LegalPage = lazy(() => import('../pages/legal/LegalPage'))
-const NotFound = lazy(() => import('../components/common/NotFound'))
+const LoginPage = lazyWithRetry(() => import('../pages/auth/LoginPage'))
+const RegisterPage = lazyWithRetry(() => import('../pages/auth/RegisterPage'))
+const GoogleAuthCallbackPage = lazyWithRetry(() => import('../pages/auth/GoogleAuthCallbackPage'))
+const DashboardPage = lazyWithRetry(() => import('../pages/dashboard/DashboardPage'))
+const UserDashboardPage = lazyWithRetry(() => import('../pages/account/UserDashboardPage'))
+const TicketPortalPage = lazyWithRetry(() => import('../pages/tickets/TicketPortalPage'))
+const MyTicketsPage = lazyWithRetry(() => import('../pages/tickets/MyTicketsPage'))
+const TicketViewPage = lazyWithRetry(() => import('../pages/tickets/TicketViewPage'))
+const TicketVerificationPage = lazyWithRetry(() => import('../pages/verification/TicketVerificationPage'))
+const AdminDashboardPage = lazyWithRetry(() => import('../pages/admin/AdminDashboardPage'))
+const AdminTicketReviewPage = lazyWithRetry(() => import('../pages/admin/AdminTicketReviewPage'))
+const HotelsPage = lazyWithRetry(() => import('../pages/hotels/HotelsPage'))
+const FestivalSchedulePage = lazyWithRetry(() => import('../pages/schedule/FestivalSchedulePage'))
+const LegalPage = lazyWithRetry(() => import('../pages/legal/LegalPage'))
+const NotFound = lazyWithRetry(() => import('../components/common/NotFound'))
 
 function AppRouter() {
   return (
