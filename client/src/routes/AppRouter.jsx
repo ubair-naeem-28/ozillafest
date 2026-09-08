@@ -35,10 +35,11 @@ function lazyWithRetry(componentImport) {
 }
 
 // Lazy-loaded Pages (Code Splitting for instant first load & low memory footprint)
-const LoginPage = lazyWithRetry(() => import('../pages/auth/LoginPage'))
-const RegisterPage = lazyWithRetry(() => import('../pages/auth/RegisterPage'))
-const GoogleAuthCallbackPage = lazyWithRetry(() => import('../pages/auth/GoogleAuthCallbackPage'))
-const DashboardPage = lazyWithRetry(() => import('../pages/dashboard/DashboardPage'))
+// Direct imports for instant auth and core routing (never fails on stale cache)
+import LoginPage from '../pages/auth/LoginPage'
+import RegisterPage from '../pages/auth/RegisterPage'
+import GoogleAuthCallbackPage from '../pages/auth/GoogleAuthCallbackPage'
+import DashboardPage from '../pages/dashboard/DashboardPage'
 const UserDashboardPage = lazyWithRetry(() => import('../pages/account/UserDashboardPage'))
 const TicketPortalPage = lazyWithRetry(() => import('../pages/tickets/TicketPortalPage'))
 const MyTicketsPage = lazyWithRetry(() => import('../pages/tickets/MyTicketsPage'))
