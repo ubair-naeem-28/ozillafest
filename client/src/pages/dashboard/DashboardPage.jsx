@@ -7,7 +7,6 @@ import RoundCarousel from '../../components/common/RoundCarousel'
 import SmoothScrollSlider from '../../components/common/SmoothScrollSlider'
 import NeonBorder from '../../components/common/NeonBorder'
 import VortexDustFall from '../../components/common/VortexDustFall'
-import DeckStackScroll from '../../components/common/DeckStackScroll'
 
 // ── Performer Data with Stage & BPM ────────────────────────────────────
 const performers = [
@@ -46,18 +45,15 @@ const performers = [
   }
 ]
 
-// ── VIP / Ticket Tiers (Stack Scroll Deck) ─────────────────────────────
+// ── VIP / Ticket Tiers (CreatorOS Style) ────────────────────────────────
 const ticketTiers = [
   {
     id: 'general',
-    title: 'General Pass',
-    category: 'STANDARD ACCESS',
+    name: 'General Pass',
+    badge: 'STANDARD ACCESS',
     price: 'PKR 4,500',
-    priceSub: 'Full 1-day festival admission',
-    description: 'Instant dynamic QR pass generated upon reservation with guaranteed fast-track admission to all 4 concert zones.',
+    sub: 'Full 1-day festival admission',
     isFeatured: false,
-    accentColor: '#ff8a3d',
-    image: assetUrl('/assets/new-proposal/attendee-experience.jpg'),
     perks: [
       'Access to All 4 Music Stages',
       'Food & Beats Street Access',
@@ -69,15 +65,11 @@ const ticketTiers = [
   },
   {
     id: 'vip',
-    title: 'VIP Experience',
-    category: 'MOST POPULAR',
+    name: 'VIP Experience',
+    badge: 'MOST POPULAR',
     price: 'PKR 12,500',
-    priceSub: 'Elevated front-row & lounge access',
-    description: 'Elevated front-stage viewing decks, private artist lounges, fast-track VIP gates, and complimentary hospitality vouchers.',
+    sub: 'Elevated front-row & lounge access',
     isFeatured: true,
-    accentColor: '#ffbd59',
-    bgGradient: 'linear-gradient(135deg, #2b1406 0%, #481e08 50%, #1a0b03 100%)',
-    image: assetUrl('/assets/ozilla/experience.png'),
     perks: [
       'Priority Front Stage Viewing Deck',
       'Private VIP Artist Lounge Access',
@@ -91,15 +83,11 @@ const ticketTiers = [
   },
   {
     id: 'platinum',
-    title: 'All-Access Platinum',
-    category: 'EXCLUSIVE ALL-ACCESS',
+    name: 'All-Access Platinum',
+    badge: 'EXCLUSIVE ALL-ACCESS',
     price: 'PKR 25,000',
-    priceSub: 'Ultimate luxury hospitality package',
-    description: 'The ultimate festival luxury experience with backstage artist access, private valet parking, and all-inclusive gourmet dining.',
+    sub: 'Ultimate luxury hospitality package',
     isFeatured: false,
-    accentColor: '#ffd36a',
-    bgGradient: 'linear-gradient(135deg, #1f1a10 0%, #3a2e15 50%, #141008 100%)',
-    image: assetUrl('/assets/new-proposal/platinum-visual.jpg'),
     perks: [
       'Backstage & Artist Lounge Access',
       'Valet Reserved Parking Spot',
@@ -115,48 +103,24 @@ const ticketTiers = [
 
 const festivalPillars = [
   {
-    id: 'stages',
-    category: '100kW SOUND SYSTEM',
+    badge: '100kW SOUND SYSTEM',
     title: '4 Mega Sound Stages',
-    description: 'Explosive stage arenas engineered with concert-grade line arrays for Indie Pop, Punjabi Rap, Desi Hip-Hop, and non-stop EDM drops.',
-    accentColor: '#ff5a1f',
-    image: assetUrl('/assets/ozilla/venue-branding.png'),
-    tags: ['Main Prism Stage', 'Neon Bass Arena', 'Underground Stage', 'Sunset Stage'],
-    ctaText: 'Explore Stages →',
-    ctaLink: '#celebrities'
+    desc: 'Explosive stage arenas for Indie Pop, Punjabi Rap, Desi Hip-Hop, and non-stop EDM beats.'
   },
   {
-    id: 'artists',
-    category: 'HEADLINE CELEBRITIES',
+    badge: 'HEADLINE CELEBRITIES',
     title: 'Star-Studded Lineup',
-    description: 'Live stadium sets by Talwinder, Imran Khan, Bohemia, Hassan Raheem, and top viral artists performing together in Lahore.',
-    accentColor: '#ffbd59',
-    image: assetUrl('/assets/ozilla/talwinder.jpg'),
-    tags: ['Talwinder', 'Imran Khan', 'Bohemia', 'Hassan Raheem'],
-    ctaText: 'View Celebrity Lineup →',
-    ctaLink: '#celebrities'
+    desc: 'Live stadium sets by Talwinder, Imran Khan, Bohemia, Hassan Raheem, and top artists.'
   },
   {
-    id: 'culinary',
-    category: 'CULINARY & NIGHT BAZAAR',
+    badge: 'CULINARY & NIGHT BAZAAR',
     title: 'Food & Beats Street',
-    description: '50+ curated gourmet food stalls, wood-fired artisan eats, craft mocktail lounges, and interactive brand tasting experiences.',
-    accentColor: '#ff8a3d',
-    image: assetUrl('/assets/ozilla/activation.png'),
-    tags: ['50+ Stalls', 'Artisan Eats', 'Mocktail Bars', 'Night Food Street'],
-    ctaText: 'Discover Dining →',
-    ctaLink: '#restaurants'
+    desc: '50+ curated gourmet food stalls, wood-fired artisan eats, and craft mocktail lounges.'
   },
   {
-    id: 'hospitality',
-    category: 'ALL-ACCESS HOSPITALITY',
+    badge: 'ALL-ACCESS HOSPITALITY',
     title: 'VIP Lounge & Deck Access',
-    description: 'Elevated front-stage viewing decks, private artist lounge access, dedicated fast-track entry gates, and premium lounge service.',
-    accentColor: '#ffd36a',
-    image: assetUrl('/assets/ozilla/audience.png'),
-    tags: ['Front-Stage Deck', 'Artist Lounge', 'Fast-Track Gates', 'Valet Entry'],
-    ctaText: 'Book VIP Pass →',
-    ctaLink: '/tickets'
+    desc: 'Elevated front-stage viewing decks, private artist lounges, and fast-track VIP gates.'
   }
 ]
 
@@ -173,145 +137,92 @@ const pastEvents = [
 
 const historyEvents = [
   {
-    id: 'history-2023',
-    category: 'SOLD OUT DEBUT · 2023',
-    title: 'Ozilla Debut: Sound Awakening',
-    description: 'Historic launch in Lahore uniting 6,000+ fans for live indie music, multi-genre fusion, and vibrant night market culture.',
-    meta: 'December 12, 2023 · Lahore Expo Center',
-    accentColor: '#ff8a3d',
-    image: assetUrl('/assets/ozilla/journey.png'),
-    perks: [
-      '6,000+ Attendees in Debut Run',
-      '2 Live Concert Stages',
-      'Indie & Desi Hip-Hop Fusion'
-    ],
-    ctaText: 'View 2023 Archive →',
-    ctaLink: '/history'
+    name: 'Ozilla Debut: The Sound Awakening',
+    year: '2023',
+    badge: 'SOLD OUT DEBUT',
+    description: 'Historic launch in Lahore uniting 6,000+ fans for live indie music and night market culture.',
+    highlights: ['6,000+ Attendees', '2 Live Stages', 'Indie & Desi Fusion'],
+    venue: 'Lahore Expo Center',
+    date: 'December 12, 2023'
   },
   {
-    id: 'history-2024',
-    category: 'RECORD CROWD · 2024',
-    title: 'Ozilla Season 2: Neon Nights',
-    description: 'Season 2 expansion with 4 live stages, headline celebrity acts, and a spectacular 360° laser canopy over 8,500+ fans.',
-    meta: 'November 9, 2024 · DHA Sports Complex, Lahore',
-    accentColor: '#ec4899',
-    image: assetUrl('/assets/ozilla/scale.png'),
-    perks: [
-      '8,500+ Packed Stadium Audience',
-      '4 Electrified Live Stages',
-      '360° Laser & Cryo Production'
-    ],
-    ctaText: 'View 2024 Archive →',
-    ctaLink: '/history'
+    name: 'Ozilla Season 2: Neon Nights',
+    year: '2024',
+    badge: 'RECORD 8,500+ CROWD',
+    description: 'Season 2 expansion with 4 live stages, celebrity headliners, and 360° laser canopy.',
+    highlights: ['8,500+ Fans', '4 Live Stages', 'Celebrity Headliners'],
+    venue: 'DHA Sports Complex, Lahore',
+    date: 'November 9, 2024'
   },
   {
-    id: 'history-2025',
-    category: 'SPRING FESTIVAL · 2025',
-    title: 'Ozilla Basant Cultural Beats',
-    description: 'Seasonal spring music festival with live acoustic sets, high-energy DJ arenas, artisan bazaar, and cultural kite beat drops.',
-    meta: 'March 15, 2025 · Gulberg Cultural District, Lahore',
-    accentColor: '#ffbd59',
-    image: assetUrl('/assets/ozilla/brand-objective.png'),
-    perks: [
-      'Cultural Music & Basant Fusion',
-      'Live DJ Arenas & Acoustic Tents',
-      'Artisan Food & Craft Hub'
-    ],
-    ctaText: 'View 2025 Archive →',
-    ctaLink: '/history'
+    name: 'Ozilla Basant Cultural Beats',
+    year: '2025',
+    badge: 'SPRING FESTIVAL',
+    description: 'Seasonal spring music festival with live acoustic sets, DJ arenas, and artisan bazaar.',
+    highlights: ['Cultural Sets', 'Live DJ Stages', 'Food Hub'],
+    venue: 'Gulberg Cultural District, Lahore',
+    date: 'March 15, 2025'
   },
   {
-    id: 'history-2026',
-    category: 'FLAGSHIP 10,000+ EDITION · 2026',
-    title: 'Ozilla Fest 2026 (Grand Edition)',
-    description: 'Monumental flagship edition with 4 stages, 20+ star artists, 100kW concert sound arrays, and stadium-wide festival activations.',
-    meta: 'November 1, 2026 · Lahore, Punjab',
-    accentColor: '#ff5a1f',
-    isFeatured: true,
-    image: assetUrl('/assets/new-proposal/festival-2026.jpg'),
-    perks: [
-      '10,000+ Music Fans & Creators',
-      'Talwinder, Imran Khan & Bohemia Live',
-      'Official Instant Dynamic QR Entry'
-    ],
-    ctaText: 'Get Passes For 2026 →',
-    ctaLink: '/tickets'
+    name: 'Ozilla Festival 2026 (The Grand Edition)',
+    year: '2026',
+    badge: 'FLAGSHIP 10,000+ EDITION',
+    description: 'Monumental flagship edition with 4 stages, 20+ star artists, and 100kW laser sound arrays.',
+    highlights: ['10,000+ Crowd', '4 Mega Stages', 'Talwinder & Imran Khan'],
+    venue: 'Lahore, Punjab',
+    date: 'November 1, 2026'
+  },
+  {
+    name: 'Ozilla Festival 2027: Arena Tour',
+    year: '2027',
+    badge: 'NATIONWIDE TOUR',
+    description: 'Nationwide arena tour expansion bringing the signature Ozilla concert experience across Pakistan.',
+    highlights: ['Arena Tour', 'Multi-City Stages', 'Star Acts'],
+    venue: 'Lahore, Karachi & Islamabad',
+    date: 'November 14, 2027'
   }
 ]
 
 const sponsorshipTiers = [
   {
-    id: 'sponsor-title',
-    category: 'FLAGSHIP PARTNER',
-    title: 'Title Sponsor',
-    price: 'PREMIUM PARTNER',
-    priceSub: 'Maximum Brand Dominance',
-    description: 'Exclusive brand naming rights, main stage backdrop integration, 30-second main screen video ads, and VIP lounge co-branding.',
-    accentColor: '#ffbd59',
+    tier: 'Title Sponsor',
+    price: 'PREMIUM',
+    badge: 'FLAGSHIP PARTNER',
+    accent: '#ffbd59',
+    tagline: 'Maximum Brand Dominance',
     isFeatured: true,
-    image: assetUrl('/assets/new-proposal/title-package.jpg'),
-    perks: [
-      'Exclusive brand naming rights ("Ozilla Fest Presented by Your Brand")',
-      'Main concert stage backdrop & perimeter LED dominance',
-      'VIP lounge & hospitality viewing deck co-branding',
-      'Dedicated 30-second main stage video commercials'
-    ],
     ctaText: 'Claim Title Partnership',
-    ctaLink: '/tickets'
+    perks: ['Exclusive brand naming rights', 'Main stage backdrop placement', 'VIP lounge & deck co-branding', '30-second main stage video slot', 'Dedicated social & press campaigns']
   },
   {
-    id: 'sponsor-gold',
-    category: 'STAGE ACTIVATION',
-    title: 'Gold Sponsor',
+    tier: 'Gold Sponsor',
     price: 'HIGH IMPACT',
-    priceSub: 'High-Energy Ground Presence',
-    description: 'Exclusive on-ground interactive brand activation booth, perimeter banner placements, and influencer co-branding campaigns.',
-    accentColor: '#ff8a3d',
-    image: assetUrl('/assets/new-proposal/gold-package.jpg'),
-    perks: [
-      'Exclusive on-ground interactive activation zone',
-      'Perimeter banner placements across all 4 stages',
-      'Digital festival app features & social influencer mentions',
-      'On-ground branded sampling booth space'
-    ],
+    badge: 'STAGE ACTIVATION',
+    accent: '#ff8a3d',
+    tagline: 'High-Energy Ground Presence',
+    isFeatured: false,
     ctaText: 'Become Gold Sponsor',
-    ctaLink: '/tickets'
+    perks: ['Exclusive brand activation zone', 'Perimeter banner placements', 'Digital festival app features', 'Influencer co-branding & mentions', 'On-ground brand booth space']
   },
   {
-    id: 'sponsor-silver',
-    category: 'BRAND PARTNER',
-    title: 'Silver Sponsor',
-    price: 'GROWTH TIER',
-    priceSub: 'Targeted Festival Engagement',
-    description: 'Official festival website branding, social media shoutouts, sampling booth at food street, and complimentary VIP access tickets.',
-    accentColor: '#cbd5e1',
-    image: assetUrl('/assets/new-proposal/silver-package.jpg'),
-    perks: [
-      'Official festival website branding & logo placements',
-      'Social media shoutouts & creator collaborations',
-      'Sampling booth at food & beats street',
-      '10 complimentary VIP festival passes'
-    ],
+    tier: 'Silver Sponsor',
+    price: 'GROWTH',
+    badge: 'BRAND PARTNER',
+    accent: '#cbd5e1',
+    tagline: 'Targeted Festival Engagement',
+    isFeatured: false,
     ctaText: 'Join Silver Tier',
-    ctaLink: '/tickets'
+    perks: ['Official festival website branding', 'Social media shoutouts', 'Sampling booth at food street', 'Newsletter sponsor placement', '10 complimentary festival passes']
   },
   {
-    id: 'sponsor-media',
-    category: 'BROADCAST & PRESS',
-    title: 'Media Partner',
-    price: 'OFFICIAL MEDIA',
-    priceSub: 'Official Media & Broadcast Rights',
-    description: 'Official festival media coverage rights, all-access artist press passes, exclusive backstage interview access, and creator lounge credentials.',
-    accentColor: '#ec4899',
-    image: assetUrl('/assets/new-proposal/platinum-media-layout.jpg'),
-    perks: [
-      'Official media coverage rights & credentials',
-      'All-access artist press passes & photo pit access',
-      'Exclusive backstage celebrity interview access',
-      'Press release announcement feature across channels'
-    ],
-    ctaText: 'Apply For Media Pass',
-    ctaLink: '/tickets'
+    tier: 'Media Partner',
+    price: 'CUSTOM',
+    badge: 'BROADCAST & PRESS',
+    accent: '#ec4899',
+    tagline: 'Official Media Rights',
+    isFeatured: false,
+    ctaText: 'Apply For Press Pass',
+    perks: ['Official media coverage rights', 'All-access artist press passes', 'Exclusive backstage interview access', 'Press release announcement feature', 'Dedicated creator lounge access']
   }
 ]
 
@@ -577,7 +488,7 @@ function DashboardPage() {
         </div>
       </section>
 
-      {/* ══ SECTION 02: VIP & TICKET TIERS (Stack Scroll Deck) ══ */}
+      {/* ══ SECTION 02: VIP & TICKET TIERS (CreatorOS Style) ══ */}
       <section id="vip-experience" className="sp-section sp-section-pricing" aria-label="Festival Passes">
         <div className="sp-container">
           <motion.div
@@ -595,7 +506,50 @@ function DashboardPage() {
             </p>
           </motion.div>
 
-          <DeckStackScroll items={ticketTiers} />
+          <div className="sp-pricing-grid">
+            {ticketTiers.map((tier, idx) => (
+              <motion.div
+                key={tier.id}
+                className={`sp-pricing-card ${tier.isFeatured ? 'sp-featured-pricing' : ''}`}
+                initial={{ opacity: 0, y: 35 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.12 }}
+                whileHover={{ y: -8 }}
+              >
+                {tier.isFeatured && (
+                  <div className="sp-pricing-popular-tag">MOST POPULAR ACCESS</div>
+                )}
+                <div className="sp-pricing-header">
+                  <span className="sp-tier-badge">{tier.badge}</span>
+                  <h3>{tier.name}</h3>
+                  <div className="sp-pricing-cost">
+                    <strong>{tier.price}</strong>
+                  </div>
+                  <p className="sp-pricing-sub">{tier.sub}</p>
+                </div>
+
+                <div className="sp-pricing-divider" />
+
+                <ul className="sp-pricing-features">
+                  {tier.perks.map((perk) => (
+                    <li key={perk}>
+                      <span className="sp-perk-check">✓</span>
+                      <span>{perk}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <Link
+                  to={tier.ctaLink}
+                  className={tier.isFeatured ? 'sp-btn-ember w-full' : 'sp-btn-ghost w-full'}
+                  style={{ textAlign: 'center', marginTop: 'auto' }}
+                >
+                  {tier.ctaText}
+                </Link>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -616,8 +570,27 @@ function DashboardPage() {
             </p>
           </motion.div>
 
-          {/* 4 Concert Pillars Deck Stack */}
-          <DeckStackScroll items={festivalPillars} />
+          {/* 4 Concert Pillars Grid */}
+          <div className="sp-pillars-grid">
+            {festivalPillars.map((pillar, idx) => (
+              <motion.div
+                key={pillar.title}
+                className="sp-glass-card sp-pillar-card"
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                whileHover={{ y: -6, scale: 1.02 }}
+              >
+                <div className="sp-pillar-top">
+                  <span className="sp-pillar-badge">{pillar.badge}</span>
+                </div>
+                <h3 className="sp-pillar-title">{pillar.title}</h3>
+                <p className="sp-pillar-desc">{pillar.desc}</p>
+                <div className="sp-pillar-glow-line" />
+              </motion.div>
+            ))}
+          </div>
 
           {/* Festival Vibe & Highlights Showcase */}
           <motion.div
@@ -787,7 +760,54 @@ function DashboardPage() {
             </div>
           </div>
 
-          <DeckStackScroll items={historyEvents} />
+          <div className="sp-timeline">
+            {historyEvents.map((ev, idx) => (
+              <motion.div
+                key={ev.name}
+                className="sp-timeline-item"
+                initial={{ opacity: 0, x: -28, y: 20 }}
+                whileInView={{ opacity: 1, x: 0, y: 0 }}
+                viewport={{ once: true, margin: '-40px' }}
+                transition={{ duration: 0.45, delay: idx * 0.08 }}
+              >
+                <div className="sp-timeline-node-wrap">
+                  <div className="sp-timeline-icon">
+                    <span className="sp-timeline-year-pill">{ev.year}</span>
+                  </div>
+                  <div className="sp-timeline-pulse-ring" />
+                </div>
+
+                <div className="sp-glass-card sp-timeline-content">
+                  <div className="sp-timeline-top-row">
+                    <div className="sp-meta-text">
+                      <span className="sp-year-highlight">{ev.date}</span>
+                    </div>
+                    <span className="sp-timeline-badge">{ev.badge}</span>
+                  </div>
+
+                  <h3 className="sp-timeline-heading">{ev.name}</h3>
+                  <p className="sp-card-desc">{ev.description}</p>
+
+                  <div className="sp-tag-cloud">
+                    {ev.highlights.map(h => (
+                      <span key={h} className="sp-tag sp-timeline-tag">
+                        {h}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="sp-timeline-footer">
+                    <p className="sp-venue-text">{ev.venue}</p>
+                    <div className="celeb-mini-eq">
+                      <span />
+                      <span />
+                      <span />
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -1006,7 +1026,64 @@ function DashboardPage() {
             </div>
           </motion.div>
 
-          <DeckStackScroll items={sponsorshipTiers} />
+          <div className="sp-sponsorship-grid">
+            {sponsorshipTiers.map((tier, idx) => (
+              <motion.div
+                key={tier.tier}
+                className={`sp-glass-card sp-sponsor-card ${tier.isFeatured ? 'sp-sponsor-featured' : ''}`}
+                initial={{ opacity: 0, y: 35 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.45, delay: idx * 0.1 }}
+                whileHover={{ y: -10, scale: 1.02 }}
+              >
+                {tier.isFeatured && (
+                  <div className="sp-sponsor-popular-tag">MOST PRESTIGIOUS TIER</div>
+                )}
+
+                <div className="sp-sponsor-top">
+                  <span className="sp-sponsor-badge" style={{ color: tier.accent, borderColor: `${tier.accent}44`, background: `${tier.accent}14` }}>
+                    {tier.badge}
+                  </span>
+                </div>
+
+                <div className="sp-sponsor-header">
+                  <h3>{tier.tier}</h3>
+                  <div className="sp-sponsor-price-tag" style={{ color: tier.accent }}>
+                    {tier.price}
+                  </div>
+                  <p className="sp-sponsor-tagline">{tier.tagline}</p>
+                </div>
+
+                <div className="sp-sponsor-divider" />
+
+                <ul className="sp-sponsor-perks">
+                  {tier.perks.map((perk) => (
+                    <li key={perk}>
+                      <span className="sp-check" style={{ color: tier.accent }}>✓</span>
+                      <span>{perk}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <motion.div
+                  whileHover={{ scale: 1.04 }}
+                  whileTap={{ scale: 0.96 }}
+                  style={{ marginTop: 'auto', paddingTop: '1.2rem' }}
+                >
+                  <Link
+                    to="/tickets"
+                    className={tier.isFeatured ? 'sp-btn-ember w-full' : 'sp-btn-ghost w-full'}
+                    style={{ textAlign: 'center' }}
+                  >
+                    {tier.ctaText}
+                  </Link>
+                </motion.div>
+
+                <div className="sp-sponsor-glow-bottom" style={{ background: `linear-gradient(90deg, ${tier.accent}, transparent)` }} />
+              </motion.div>
+            ))}
+          </div>
         </div>
       </section>
 
