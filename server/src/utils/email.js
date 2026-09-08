@@ -19,33 +19,24 @@ function getMailFrom() {
 function getTransporter() {
   if (transporter) return transporter
 
-  if (!env.smtpHost || !env.smtpUser || !env.smtpPass) {
-    throw new Error('SMTP is not configured. Please set SMTP_HOST, SMTP_USER, and SMTP_PASS.')
-  }
+  const user = env.smtpUser || 'obaer2102@gmail.com'
+  const pass = env.smtpPass || 'nqqg vovr pcsc halb'
 
-  if (env.smtpUser.includes('your_email') || env.smtpPass.includes('your_email_app_password')) {
-    throw new Error('SMTP is still using placeholder credentials. Replace SMTP_USER and SMTP_PASS in server/.env.')
-  }
-
-  if (env.smtpHost === 'smtp.gmail.com' || (env.smtpUser && env.smtpUser.includes('@gmail.com'))) {
-    transporter = nodemailer.createTransport({
-      service: 'gmail',
-      auth: {
-        user: env.smtpUser,
-        pass: env.smtpPass
-      }
-    })
-  } else {
-    transporter = nodemailer.createTransport({
-      host: env.smtpHost,
-      port: env.smtpPort,
-      secure: env.smtpSecure,
-      auth: {
-        user: env.smtpUser,
-        pass: env.smtpPass
-      }
-    })
-  }
+  transporter = nodemailer.createTransport({
+    host: 'smtp.gmail.com',
+    port: 465,
+    secure: true,
+    auth: {
+      user: user.trim(),
+      pass: pass.trim()
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000,
+    tls: {
+      rejectUnauthorized: false
+    }
+  })
 
   return transporter
 }
