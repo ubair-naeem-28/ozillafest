@@ -84,28 +84,71 @@ function buildEmailWrapper(title, contentHtml) {
   `
 }
 
+async function sendViaResend({ to, subject, html, text }) {
+  const apiKey = env.resendApiKey || process.env.RESEND_API_KEY
+  if (!apiKey || typeof apiKey !== 'string' || !apiKey.trim()) {
+    return null
+  }
+
+  try {
+    const response = await fetch('https://api.resend.com/emails', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey.trim()}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        from: 'Ozilla Fest <onboarding@resend.dev>',
+        to: Array.isArray(to) ? to : [to],
+        subject,
+        html,
+        text
+      })
+    })
+
+    const data = await response.json()
+    if (response.ok && data?.id) {
+      return data
+    }
+    console.warn('[Resend API Notice]:', data?.message || 'Trying SMTP fallback')
+    return null
+  } catch (err) {
+    console.warn('[Resend API Error]:', err.message)
+    return null
+  }
+}
+
 export async function sendOtpEmail({ to, otpCode }) {
+  const html = buildEmailWrapper(
+    'Your OZILLA FEST Verification Code',
+    `
+      <h2 style="color: #ffffff; margin-top: 0; font-size: 20px;">Email Verification</h2>
+      <p>Use the following 6-digit one-time code to complete your security verification:</p>
+      <div style="margin: 24px 0; text-align: center;">
+        <span style="display: inline-block; font-size: 36px; font-weight: 800; letter-spacing: 10px; color: #ffd700; background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; border-radius: 12px; padding: 14px 28px;">
+          ${otpCode}
+        </span>
+      </div>
+      <p style="font-size: 13px; color: #9ca3af;">This code is valid for <strong>10 minutes</strong>. Do not share this OTP with anyone for your security.</p>
+    `
+  )
+  const subject = `[Ozilla 2026] Verification Code: ${otpCode}`
+  const text = `Your OZILLA FEST OTP code is: ${otpCode}. It expires in 10 minutes.`
+
+  // 1. Try Resend HTTPS API (Instant over Port 443, never blocked on Render)
+  const resendResult = await sendViaResend({ to, subject, html, text })
+  if (resendResult) {
+    return resendResult
+  }
+
+  // 2. Fallback to standard Nodemailer SMTP
   try {
     const client = getTransporter()
-    const html = buildEmailWrapper(
-      'Your OZILLA FEST Verification Code',
-      `
-        <h2 style="color: #ffffff; margin-top: 0; font-size: 20px;">Email Verification</h2>
-        <p>Use the following 6-digit one-time code to complete your security verification:</p>
-        <div style="margin: 24px 0; text-align: center;">
-          <span style="display: inline-block; font-size: 36px; font-weight: 800; letter-spacing: 10px; color: #ffd700; background: rgba(212, 175, 55, 0.1); border: 1px solid #d4af37; border-radius: 12px; padding: 14px 28px;">
-            ${otpCode}
-          </span>
-        </div>
-        <p style="font-size: 13px; color: #9ca3af;">This code is valid for <strong>10 minutes</strong>. Do not share this OTP with anyone for your security.</p>
-      `
-    )
-
     const info = await client.sendMail({
       from: getMailFrom(),
       to,
-      subject: `[Ozilla 2026] Verification Code: ${otpCode}`,
-      text: `Your OZILLA FEST OTP code is: ${otpCode}. It expires in 10 minutes.`,
+      subject,
+      text,
       html
     })
     return info

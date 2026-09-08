@@ -54,6 +54,7 @@ export const env = {
   smtpUser: process.env.SMTP_USER || 'obaer2102@gmail.com',
   smtpPass: process.env.SMTP_PASS || 'nqqg vovr pcsc halb',
   smtpFrom: process.env.SMTP_FROM || 'Ozilla Festival <obaer2102@gmail.com>',
+  resendApiKey: process.env.RESEND_API_KEY || '',
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:8080',
   googleClientId: process.env.GOOGLE_CLIENT_ID || '',
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
