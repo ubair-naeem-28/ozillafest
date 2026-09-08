@@ -208,11 +208,22 @@ function RegisterForm() {
     setOtpLoading(true)
     try {
       const response = await authService.sendOtp(formData.email)
-      setOtpSent(true)
-      setOtpVerified(false)
-      setResendSeconds(60)
-      setOtp('')
-      setMessage(response.message || 'OTP code has been sent to your email. Please check your inbox.')
+      if (
+        response?.emailDelivery === 'failed' ||
+        (typeof response?.message === 'string' && response.message.toLowerCase().includes('delivery failed'))
+      ) {
+        setOtpSent(false)
+        setError(
+          response.emailError ||
+          'Email delivery failed: SMTP credentials (SMTP_USER and SMTP_PASS) are not configured on the backend server.'
+        )
+      } else {
+        setOtpSent(true)
+        setOtpVerified(false)
+        setResendSeconds(60)
+        setOtp('')
+        setMessage(response.message || 'OTP code has been sent to your email. Please check your inbox.')
+      }
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Unable to send OTP.')
     } finally {
