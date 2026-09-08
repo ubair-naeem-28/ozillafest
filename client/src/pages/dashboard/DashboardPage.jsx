@@ -277,13 +277,6 @@ const facilitiesList = [
   }
 ]
 
-const discountItems = [
-  { brand: 'Street Grill Co.',  category: 'Restaurant', discount: '15% OFF', code: 'OZILLA15', desc: 'Festival combo meal with priority queue access.' },
-  { brand: 'Spice District',    category: 'Restaurant', discount: '20% OFF', code: 'SPICE20',  desc: 'Family platter offer for OZilla audience.' },
-  { brand: 'Urban Brew',        category: 'Cafe',       discount: 'Buy 1 Get 1', code: 'BREWBOGO', desc: 'Coffee and dessert pair for creators and attendees.' },
-  { brand: 'Partner Hotels',    category: 'Hotel',      discount: '10% OFF', code: 'OZHOTEL10', desc: 'Exclusive discount on festival weekend stays.' }
-]
-
 const festivalStats = [
   { value: '10,000+', label: 'Music Lovers', sub: 'Packed Live Crowd' },
   { value: '20+',     label: 'Star Performers', sub: 'Celebrity & Indie Acts' },
@@ -889,51 +882,6 @@ function DashboardPage() {
         </div>
       </section>
 
-      {/* ══ SECTION 09: DISCOUNTS & VOUCHERS ══ */}
-      <section id="discounts" className="sp-section sp-section-deals" aria-label="Promo Vouchers">
-        <div className="sp-container">
-          <motion.div
-            className="sp-section-header sp-voucher-header-banner"
-            style={{ position: 'relative', overflow: 'hidden' }}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <NeonBorder color="#ff8a3d" rounded={24} thickness={2.8} borderSize={45} glow={85} />
-            <div style={{ position: 'relative', zIndex: 2 }}>
-              <span className="sp-eyebrow">Exclusive Member Deals</span>
-              <h2 className="sp-section-title">Festival Promo Vouchers</h2>
-            </div>
-          </motion.div>
-
-          <div className="sp-discounts-grid">
-            {discountItems.map((d, idx) => (
-              <motion.div
-                key={d.brand}
-                className="sp-glass-card sp-voucher-card"
-                style={{ position: 'relative', overflow: 'hidden' }}
-                initial={{ opacity: 0, scale: 0.92, y: 20 }}
-                whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.45, delay: idx * 0.08 }}
-                whileHover={{ y: -6, scale: 1.02 }}
-              >
-                <NeonBorder color="#ff9e42" rounded={22} thickness={2.2} borderSize={40} glow={80} />
-                <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', height: '100%' }}>
-                  <span className="sp-eyebrow" style={{ fontSize: '0.75rem', marginBottom: '0.3rem' }}>{d.category}</span>
-                  <h3 style={{ marginTop: '0.2rem', fontSize: '1.3rem' }}>{d.brand}</h3>
-                  <p className="sp-card-desc" style={{ margin: '0.6rem 0 1.2rem' }}>{d.desc}</p>
-                  <div className="sp-discount-footer">
-                    <span className="sp-big-discount">{d.discount}</span>
-                    <code className="sp-code-pill">{d.code}</code>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ══ SECTION 10: VENUE FACILITIES ══ */}
       <section id="facilities" className="sp-section sp-section-facilities" aria-label="Facilities">
