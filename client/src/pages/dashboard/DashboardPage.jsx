@@ -811,57 +811,6 @@ function DashboardPage() {
         </div>
       </section>
 
-      {/* ══ SECTION 07: HOTELS ══ */}
-      <section id="hotels" className="sp-section sp-section-hotels" aria-label="Partner Hotels">
-        <div className="sp-container">
-          <motion.div
-            className="sp-section-header"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <span className="sp-eyebrow">Hospitality Partners</span>
-            <h2 className="sp-section-title">Partner Hotels in Lahore</h2>
-          </motion.div>
-
-          <div className="sp-hotels-grid">
-            {ozillaProfessionalContent.hotels.map((hotel, idx) => (
-              <motion.div
-                key={hotel.name}
-                className={`sp-glass-card sp-hotel-card ${idx === 0 ? 'sp-featured-border' : ''}`}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
-                whileHover={{ y: -6 }}
-              >
-                {hotel.showImage && (
-                  <div className="sp-hotel-img-wrap">
-                    <img src={hotel.image} alt={hotel.name} loading="lazy" decoding="async"
-                      onError={e => { e.currentTarget.src = assetUrl('/assets/prism-auth-visual.jpg') }} />
-                  </div>
-                )}
-                <div className="sp-hotel-body">
-                  <div className="sp-card-header">
-                    <h3>{hotel.name}</h3>
-                    {hotel.rating && <span className="sp-rating-tag">⭐ {hotel.rating}</span>}
-                  </div>
-                  <p className="sp-meta-text">📍 {hotel.location}</p>
-                  <p className="sp-card-desc">{hotel.description}</p>
-                  <div className="sp-tag-cloud">
-                    {hotel.facilities?.map(f => <span key={f} className="sp-tag">{f}</span>)}
-                  </div>
-                  <p className="sp-contact-text">{hotel.contact}</p>
-                  {hotel.website && (
-                    <a href={hotel.website} target="_blank" rel="noopener noreferrer" className="sp-accent-link">Book Room →</a>
-                  )}
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
       {/* ══ SECTION 08: RESTAURANTS ══ */}
       <section id="restaurants" className="sp-section sp-section-dining" aria-label="Dining Hub">
