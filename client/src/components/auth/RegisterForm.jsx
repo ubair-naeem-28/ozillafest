@@ -211,12 +211,8 @@ function RegisterForm() {
       setOtpSent(true)
       setOtpVerified(false)
       setResendSeconds(60)
-      if (response?.devOtp || response?.otpForDevelopment) {
-        setOtp(response.devOtp || response.otpForDevelopment)
-      } else {
-        setOtp('')
-      }
-      setMessage(response.message || 'OTP has been dispatched. Please check your inbox.')
+      setOtp('')
+      setMessage(response.message || 'OTP code has been sent to your email. Please check your inbox.')
     } catch (err) {
       setError(err.response?.data?.message || err.message || 'Unable to send OTP.')
     } finally {
@@ -470,7 +466,7 @@ function RegisterForm() {
               setOtpVerified(false)
             }}
             className="kx-otp-input"
-            placeholder="OTP Code"
+            placeholder="Enter 6-digit OTP"
             inputMode="numeric"
             autoComplete="one-time-code"
             disabled={!otpSent || otpVerified}

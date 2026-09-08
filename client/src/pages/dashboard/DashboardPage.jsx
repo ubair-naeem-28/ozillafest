@@ -103,24 +103,36 @@ const ticketTiers = [
 
 const festivalPillars = [
   {
+    num: '01',
     badge: '100kW SOUND SYSTEM',
     title: '4 Mega Sound Stages',
-    desc: 'Explosive stage arenas for Indie Pop, Punjabi Rap, Desi Hip-Hop, and non-stop EDM beats.'
+    desc: 'Explosive stage arenas for Indie Pop, Punjabi Rap, Desi Hip-Hop, and non-stop EDM beats.',
+    icon: '⚡',
+    highlights: ['4 Live Arenas', '100kW Sound Array', '360° Lasers']
   },
   {
+    num: '02',
     badge: 'HEADLINE CELEBRITIES',
     title: 'Star-Studded Lineup',
-    desc: 'Live stadium sets by Talwinder, Imran Khan, Bohemia, Hassan Raheem, and top artists.'
+    desc: 'Live stadium sets by Talwinder, Imran Khan, Bohemia, Hassan Raheem, and top artists.',
+    icon: '👑',
+    highlights: ['Talwinder', 'Imran Khan', 'Bohemia', 'Hassan Raheem']
   },
   {
+    num: '03',
     badge: 'CULINARY & NIGHT BAZAAR',
     title: 'Food & Beats Street',
-    desc: '50+ curated gourmet food stalls, wood-fired artisan eats, and craft mocktail lounges.'
+    desc: '50+ curated gourmet food stalls, wood-fired artisan eats, and craft mocktail lounges.',
+    icon: '🔥',
+    highlights: ['50+ Food Stalls', 'Artisan Eats', 'Craft Mocktail Lounges']
   },
   {
+    num: '04',
     badge: 'ALL-ACCESS HOSPITALITY',
     title: 'VIP Lounge & Deck Access',
-    desc: 'Elevated front-stage viewing decks, private artist lounges, and fast-track VIP gates.'
+    desc: 'Elevated front-stage viewing decks, private artist lounges, and fast-track VIP gates.',
+    icon: '✨',
+    highlights: ['Elevated Decks', 'Artist Lounge', 'Fast-Track VIP Gates']
   }
 ]
 
@@ -598,18 +610,38 @@ function DashboardPage() {
             {festivalPillars.map((pillar, idx) => (
               <motion.div
                 key={pillar.title}
-                className="sp-glass-card sp-pillar-card"
+                className="sp-pillar-card"
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
-                whileHover={{ y: -6, scale: 1.02 }}
+                whileHover={{ y: -8, scale: 1.02 }}
               >
+                <div className="sp-pillar-watermark">{pillar.num}</div>
+                <div className="sp-pillar-glow-accent" />
+
                 <div className="sp-pillar-top">
-                  <span className="sp-pillar-badge">{pillar.badge}</span>
+                  <div className="sp-pillar-badge-wrap">
+                    <span className="sp-pillar-icon">{pillar.icon}</span>
+                    <span className="sp-pillar-badge">{pillar.badge}</span>
+                  </div>
+                  <span className="sp-pillar-num-pill">{pillar.num}</span>
                 </div>
+
                 <h3 className="sp-pillar-title">{pillar.title}</h3>
                 <p className="sp-pillar-desc">{pillar.desc}</p>
+
+                {pillar.highlights && (
+                  <div className="sp-pillar-chips">
+                    {pillar.highlights.map((h) => (
+                      <span key={h} className="sp-pillar-chip">
+                        <span className="sp-pillar-chip-dot" />
+                        {h}
+                      </span>
+                    ))}
+                  </div>
+                )}
+
                 <div className="sp-pillar-glow-line" />
               </motion.div>
             ))}
@@ -624,9 +656,12 @@ function DashboardPage() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <NeonBorder color="#ff7a29" rounded={24} thickness={2.8} borderSize={45} glow={85} />
+            <NeonBorder color="#ff7a29" rounded={32} thickness={2.8} borderSize={50} glow={85} />
             <div className="sp-vibe-left" style={{ position: 'relative', zIndex: 2 }}>
-              <span className="sp-vibe-eyebrow">FESTIVAL HIGHLIGHTS</span>
+              <span className="sp-vibe-eyebrow">
+                <span className="sp-countdown-pulse" />
+                FESTIVAL HIGHLIGHTS
+              </span>
               <h3>What Makes Ozilla Legendary</h3>
               <p>Non-stop beats from golden hour to midnight, surrounded by festival activations and pure music culture.</p>
               <div className="sp-vibe-actions">
@@ -648,14 +683,14 @@ function DashboardPage() {
 
             <div className="sp-vibe-tags-grid" style={{ position: 'relative', zIndex: 2 }}>
               {[
-                { text: '4 Mega Music Stages', isMain: true },
-                { text: '100kW Laser & Sound', isMain: true },
-                { text: '20+ Star Performers', isMain: true },
-                { text: 'Verified QR Instant Passes', isMain: true },
-                { text: '10,000+ Music Lovers', isMain: false },
-                { text: '50+ Food & Beats Stalls', isMain: false },
-                { text: 'VIP Artist Lounge & Deck', isMain: false },
-                { text: 'Exclusive Partner Discounts', isMain: false }
+                { text: '4 Mega Music Stages', isMain: true, icon: '⚡' },
+                { text: '100kW Laser & Sound', isMain: true, icon: '🔊' },
+                { text: '20+ Star Performers', isMain: true, icon: '👑' },
+                { text: 'Verified QR Instant Passes', isMain: true, icon: '🎟️' },
+                { text: '10,000+ Music Lovers', isMain: false, icon: '👥' },
+                { text: '50+ Food & Beats Stalls', isMain: false, icon: '🍔' },
+                { text: 'VIP Artist Lounge & Deck', isMain: false, icon: '✨' },
+                { text: 'Exclusive Partner Discounts', isMain: false, icon: '🏷️' }
               ].map((tag, tIdx) => (
                 <motion.div
                   key={tag.text}
@@ -664,10 +699,12 @@ function DashboardPage() {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.35, delay: tIdx * 0.05 }}
-                  whileHover={{ scale: 1.04, x: 4 }}
+                  whileHover={{ scale: 1.03, x: 3 }}
                   whileTap={{ scale: 0.98 }}
                 >
-                  {tag.text}
+                  <span className="sp-vibe-tag-icon">{tag.icon}</span>
+                  <span className="sp-vibe-tag-text">{tag.text}</span>
+                  {tag.isMain && <span className="sp-vibe-tag-dot" />}
                 </motion.div>
               ))}
             </div>
@@ -1443,13 +1480,14 @@ function DashboardPage() {
         }
 
         .sp-section-subtitle {
-          max-width: 720px;
-          font-size: 1.1rem;
-          color: rgba(255, 255, 255, 0.92) !important;
-          line-height: 1.75;
+          max-width: 780px;
+          font-size: clamp(1.05rem, 1.8vw, 1.22rem);
+          color: rgba(255, 240, 228, 0.88) !important;
+          line-height: 1.78;
           word-spacing: 0.02em;
-          font-weight: 500;
-          text-shadow: 0 2px 16px rgba(0, 0, 0, 1), 0 1px 6px rgba(0, 0, 0, 0.95);
+          font-weight: 400;
+          letter-spacing: 0.012em;
+          text-shadow: 0 2px 14px rgba(0, 0, 0, 0.9);
         }
 
         /* ── OBSIDIAN GLASS CARD ── */
@@ -1921,63 +1959,176 @@ function DashboardPage() {
         .sp-pillars-grid {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
-          gap: 1.8rem;
-          margin-bottom: 3.5rem;
+          gap: 2rem;
+          margin-bottom: 4rem;
         }
 
         .sp-pillar-card {
           position: relative;
           display: flex;
           flex-direction: column;
-          padding: 2.2rem 2rem !important;
-          border-radius: 24px !important;
+          padding: 2.4rem 2.2rem !important;
+          border-radius: 28px !important;
           overflow: hidden;
-          background: rgba(27, 17, 11, 0.75) !important;
-          border: 1px solid rgba(255, 255, 255, 0.1) !important;
+          background: linear-gradient(145deg, rgba(35, 19, 12, 0.84) 0%, rgba(18, 9, 6, 0.95) 100%) !important;
+          border: 1px solid rgba(255, 189, 89, 0.22) !important;
+          backdrop-filter: blur(24px);
+          -webkit-backdrop-filter: blur(24px);
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.12),
+            0 18px 50px rgba(0, 0, 0, 0.65);
+          transition: transform 300ms cubic-bezier(0.2, 0.8, 0.2, 1), border-color 300ms ease, box-shadow 300ms ease;
         }
 
         .sp-pillar-card:hover {
-          border-color: rgba(255, 90, 31, 0.55) !important;
-          box-shadow: 0 16px 45px rgba(255, 90, 31, 0.25);
+          border-color: rgba(255, 189, 89, 0.6) !important;
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.22),
+            0 24px 60px rgba(255, 90, 31, 0.35);
+        }
+
+        .sp-pillar-watermark {
+          position: absolute;
+          right: 1.5rem;
+          top: 0.5rem;
+          font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', serif);
+          font-size: 5.5rem;
+          font-weight: 900;
+          color: rgba(255, 189, 89, 0.05);
+          line-height: 1;
+          pointer-events: none;
+          user-select: none;
+          transition: color 300ms ease, transform 300ms ease;
+        }
+
+        .sp-pillar-card:hover .sp-pillar-watermark {
+          color: rgba(255, 189, 89, 0.12);
+          transform: translateY(-4px) scale(1.05);
+        }
+
+        .sp-pillar-glow-accent {
+          position: absolute;
+          top: -40px;
+          right: -40px;
+          width: 160px;
+          height: 160px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(255, 90, 31, 0.22) 0%, transparent 70%);
+          pointer-events: none;
+          transition: opacity 300ms ease;
+        }
+
+        .sp-pillar-card:hover .sp-pillar-glow-accent {
+          background: radial-gradient(circle, rgba(255, 189, 89, 0.35) 0%, transparent 70%);
         }
 
         .sp-pillar-top {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          margin-bottom: 1.2rem;
+          margin-bottom: 1.4rem;
+          position: relative;
+          z-index: 2;
+        }
+
+        .sp-pillar-badge-wrap {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.6rem;
+          background: rgba(14, 8, 5, 0.75);
+          border: 1px solid rgba(255, 189, 89, 0.35);
+          padding: 0.4rem 0.95rem;
+          border-radius: 999px;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
 
         .sp-pillar-icon {
-          font-size: 2rem;
-          filter: drop-shadow(0 4px 12px rgba(255, 90, 31, 0.4));
+          font-size: 1rem;
+          filter: drop-shadow(0 0 6px rgba(255, 189, 89, 0.6));
         }
 
         .sp-pillar-badge {
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
           font-size: 0.72rem;
-          font-weight: 900;
+          font-weight: 800;
           color: #ffbd59;
           letter-spacing: 0.12em;
-          background: rgba(255, 189, 89, 0.12);
-          border: 1px solid rgba(255, 189, 89, 0.3);
-          padding: 0.3rem 0.8rem;
-          border-radius: 999px;
+          text-transform: uppercase;
+        }
+
+        .sp-pillar-num-pill {
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-size: 0.76rem;
+          font-weight: 800;
+          color: rgba(255, 255, 255, 0.45);
+          background: rgba(255, 255, 255, 0.05);
+          padding: 0.25rem 0.65rem;
+          border-radius: 8px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .sp-pillar-title {
           font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif);
-          font-size: 1.5rem;
-          font-weight: 800;
+          font-size: clamp(1.45rem, 2.2vw, 1.85rem);
+          font-weight: 900;
           color: #ffffff !important;
-          margin-bottom: 0.75rem;
+          margin-bottom: 0.85rem;
           letter-spacing: -0.01em;
+          position: relative;
+          z-index: 2;
+          text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8);
+          transition: color 250ms ease;
+        }
+
+        .sp-pillar-card:hover .sp-pillar-title {
+          color: #ffd36a !important;
         }
 
         .sp-pillar-desc {
-          font-size: 0.96rem;
-          color: rgba(255, 255, 255, 0.82) !important;
+          font-size: 0.98rem;
+          color: rgba(255, 240, 225, 0.84) !important;
           line-height: 1.7;
-          margin-bottom: 0.5rem;
+          margin-bottom: 1.4rem;
+          position: relative;
+          z-index: 2;
+        }
+
+        .sp-pillar-chips {
+          display: flex;
+          flex-wrap: wrap;
+          gap: 0.5rem;
+          margin-top: auto;
+          position: relative;
+          z-index: 2;
+        }
+
+        .sp-pillar-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.4rem;
+          font-size: 0.75rem;
+          font-weight: 700;
+          color: rgba(255, 255, 255, 0.85);
+          background: rgba(255, 255, 255, 0.06);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          padding: 0.35rem 0.75rem;
+          border-radius: 999px;
+          backdrop-filter: blur(8px);
+          transition: all 200ms ease;
+        }
+
+        .sp-pillar-chip-dot {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: #ffbd59;
+          box-shadow: 0 0 6px #ffbd59;
+        }
+
+        .sp-pillar-card:hover .sp-pillar-chip {
+          background: rgba(255, 189, 89, 0.12);
+          border-color: rgba(255, 189, 89, 0.35);
+          color: #ffd36a;
         }
 
         .sp-pillar-glow-line {
@@ -1985,89 +2136,142 @@ function DashboardPage() {
           bottom: 0;
           left: 0;
           right: 0;
-          height: 2px;
+          height: 3px;
           background: linear-gradient(90deg, transparent, #ff5a1f, #ffbd59, transparent);
-          opacity: 0;
-          transition: opacity 300ms ease;
+          opacity: 0.4;
+          transition: opacity 300ms ease, height 300ms ease;
         }
 
         .sp-pillar-card:hover .sp-pillar-glow-line {
           opacity: 1;
+          height: 4px;
         }
 
         /* ── FESTIVAL VIBE SHOWCASE BANNER ── */
         .sp-festival-vibe-banner {
           display: grid;
-          grid-template-columns: 1fr 1.2fr;
-          gap: 2.5rem;
+          grid-template-columns: 1fr 1.25fr;
+          gap: 3rem;
           align-items: center;
-          background: linear-gradient(135deg, rgba(45, 18, 12, 0.75) 0%, rgba(18, 10, 7, 0.85) 100%) !important;
-          border: 1px solid rgba(255, 90, 31, 0.3) !important;
-          border-radius: 28px;
-          padding: clamp(2rem, 3.5vw, 3rem);
-          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65);
+          background: linear-gradient(135deg, rgba(42, 19, 12, 0.88) 0%, rgba(18, 9, 6, 0.96) 100%) !important;
+          border: 1px solid rgba(255, 189, 89, 0.3) !important;
+          border-radius: 32px;
+          padding: clamp(2.4rem, 4vw, 3.4rem);
+          box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.12),
+            0 24px 70px rgba(0, 0, 0, 0.75);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
         }
 
         .sp-vibe-left {
           display: flex;
           flex-direction: column;
-          gap: 0.9rem;
+          gap: 1rem;
         }
 
         .sp-vibe-eyebrow {
-          font-size: 0.78rem;
+          display: inline-flex;
+          align-items: center;
+          gap: 0.55rem;
+          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+          font-size: 0.8rem;
           font-weight: 800;
           color: #ffbd59;
           letter-spacing: 0.16em;
+          text-transform: uppercase;
+          background: rgba(0, 0, 0, 0.5);
+          border: 1px solid rgba(255, 189, 89, 0.35);
+          padding: 0.35rem 0.9rem;
+          border-radius: 999px;
+          width: fit-content;
         }
 
         .sp-vibe-left h3 {
           font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', 'Cinzel Decorative', 'Playfair Display', Georgia, serif);
-          font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+          font-size: clamp(1.8rem, 2.8vw, 2.5rem);
           font-weight: 900;
           color: #ffffff;
           line-height: 1.15;
           letter-spacing: -0.01em;
+          text-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
         }
 
         .sp-vibe-left p {
-          font-size: 0.98rem;
-          color: rgba(255, 255, 255, 0.8);
-          line-height: 1.65;
+          font-size: 1.05rem;
+          color: rgba(255, 240, 225, 0.86);
+          line-height: 1.7;
           margin-bottom: 0.6rem;
         }
 
         .sp-vibe-actions {
           display: flex;
           align-items: center;
-          gap: 1rem;
+          gap: 1.2rem;
           flex-wrap: wrap;
+          margin-top: 0.4rem;
         }
 
         .sp-vibe-tags-grid {
           display: grid;
           grid-template-columns: repeat(2, 1fr);
-          gap: 0.85rem;
+          gap: 0.95rem;
         }
 
         .sp-vibe-tag {
+          position: relative;
           display: flex;
           align-items: center;
-          gap: 0.5rem;
-          padding: 0.85rem 1.1rem;
-          border-radius: 14px;
-          background: rgba(0, 0, 0, 0.45);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          color: #ffffff;
-          font-size: 0.86rem;
+          gap: 0.75rem;
+          padding: 1rem 1.25rem;
+          border-radius: 18px;
+          font-size: 0.9rem;
           font-weight: 700;
-          transition: transform 200ms ease, border-color 200ms ease, background 200ms ease;
+          transition: transform 220ms ease, border-color 220ms ease, background 220ms ease, box-shadow 220ms ease;
+          cursor: default;
+          backdrop-filter: blur(12px);
+        }
+
+        .sp-vibe-main {
+          background: linear-gradient(135deg, rgba(48, 22, 12, 0.9) 0%, rgba(26, 12, 7, 0.95) 100%);
+          border: 1px solid rgba(255, 189, 89, 0.45);
+          color: #ffd36a;
+          box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 4px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .sp-vibe-secondary {
+          background: rgba(20, 11, 8, 0.75);
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          color: rgba(255, 255, 255, 0.9);
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
         .sp-vibe-tag:hover {
-          transform: translateX(3px);
-          border-color: rgba(255, 189, 89, 0.45);
-          background: rgba(255, 90, 31, 0.15);
+          transform: translateY(-3px) scale(1.02);
+          border-color: #ffbd59 !important;
+          background: linear-gradient(135deg, rgba(65, 28, 15, 0.95) 0%, rgba(35, 15, 8, 0.98) 100%) !important;
+          box-shadow: 0 10px 30px rgba(255, 90, 31, 0.35);
+          color: #ffffff;
+        }
+
+        .sp-vibe-tag-icon {
+          font-size: 1.1rem;
+          flex-shrink: 0;
+          filter: drop-shadow(0 2px 8px rgba(255, 189, 89, 0.4));
+        }
+
+        .sp-vibe-tag-text {
+          flex: 1;
+          letter-spacing: -0.01em;
+        }
+
+        .sp-vibe-tag-dot {
+          width: 6px;
+          height: 6px;
+          border-radius: 50%;
+          background: #ff5a1f;
+          box-shadow: 0 0 8px #ff5a1f, 0 0 3px #ffbd59;
+          flex-shrink: 0;
         }
 
         /* ── PAST EVENTS ── */
@@ -2526,13 +2730,13 @@ function DashboardPage() {
           .sp-hero-content { padding: 4.5rem 1rem 2.5rem; }
           .sp-hero-actions { flex-direction: column; width: 100%; max-width: 290px; gap: 0.85rem; }
           .sp-btn-ember, .sp-btn-ghost { width: 100%; text-align: center; padding: 0.9rem 1.8rem; }
-          .sp-vibe-tag.sp-vibe-secondary { display: none !important; }
-          .sp-vibe-tags-grid { grid-template-columns: repeat(2, 1fr) !important; gap: 0.6rem !important; }
-          .sp-vibe-tag { font-size: 0.76rem !important; padding: 0.6rem 0.4rem !important; text-align: center; justify-content: center; }
-          .sp-section-title { font-size: 1.75rem !important; }
-          .sp-section-subtitle { font-size: 0.84rem !important; line-height: 1.45 !important; margin-bottom: 1.4rem !important; }
-          .sp-card-desc, .sp-pillar-desc { font-size: 0.8rem !important; line-height: 1.4 !important; }
-          .sp-pillar-card { padding: 1.2rem 1rem !important; }
+          .sp-vibe-tag.sp-vibe-secondary { display: flex !important; }
+          .sp-vibe-tags-grid { grid-template-columns: 1fr !important; gap: 0.65rem !important; }
+          .sp-vibe-tag { font-size: 0.82rem !important; padding: 0.75rem 0.9rem !important; text-align: left; justify-content: flex-start; }
+          .sp-section-title { font-size: 1.85rem !important; }
+          .sp-section-subtitle { font-size: 0.94rem !important; line-height: 1.6 !important; margin-bottom: 1.4rem !important; }
+          .sp-card-desc, .sp-pillar-desc { font-size: 0.88rem !important; line-height: 1.55 !important; }
+          .sp-pillar-card { padding: 1.6rem 1.3rem !important; }
           .sp-facility-card { padding: 1.1rem 0.95rem !important; }
           .sp-future-card { padding: 1.2rem 1rem !important; }
           .sp-timeline-content { padding: 1.1rem 1rem !important; }
