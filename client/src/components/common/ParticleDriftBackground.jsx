@@ -293,6 +293,13 @@ export default function ParticleDriftBackground({
     let builtH = 0
 
     const render = (now) => {
+      raf = requestAnimationFrame(render)
+
+      if (typeof document !== 'undefined' && document.hidden) {
+        last = now
+        return
+      }
+
       const dt = Math.min(0.05, (now - last) / 1000)
       last = now
       const v = vRef.current
@@ -487,8 +494,6 @@ export default function ParticleDriftBackground({
         gl.disableVertexAttribArray(aPos)
         gl.disableVertexAttribArray(aLit)
       }
-
-      raf = requestAnimationFrame(render)
     }
 
     const track = (e) => {
