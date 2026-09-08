@@ -837,50 +837,6 @@ function DashboardPage() {
       </section>
 
 
-      {/* ══ SECTION 08: RESTAURANTS ══ */}
-      <section id="restaurants" className="sp-section sp-section-dining" aria-label="Dining Hub">
-        <div className="sp-container">
-          <motion.div
-            className="sp-section-header"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
-            <span className="sp-eyebrow">Food & Drinks</span>
-            <h2 className="sp-section-title">Festival Dining Hub</h2>
-          </motion.div>
-
-          <div className="sp-restaurants-grid">
-            {ozillaProfessionalContent.restaurants.map((r, idx) => (
-              <motion.div
-                key={r.name}
-                className="sp-glass-card sp-restaurant-card"
-                style={{ position: 'relative', overflow: 'hidden' }}
-                initial={{ opacity: 0, y: 25 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.45, delay: idx * 0.1 }}
-                whileHover={{ y: -5, scale: 1.01 }}
-              >
-                <NeonBorder color="#ff8a3d" rounded={22} thickness={2.5} borderSize={40} glow={80} />
-                <div style={{ position: 'relative', zIndex: 2 }}>
-                  <div className="sp-card-header">
-                    <h3>{r.name}</h3>
-                    <span className="sp-discount-pill">{r.discount}</span>
-                  </div>
-                  <p className="sp-meta-text">{r.cuisine} · {r.location}</p>
-                  <p className="sp-card-desc">{r.offer}</p>
-                  <div className="sp-code-box">
-                    <span>Promo Code:</span>
-                    <code>{r.code}</code>
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
 
 
       {/* ══ SECTION 10: VENUE FACILITIES ══ */}
