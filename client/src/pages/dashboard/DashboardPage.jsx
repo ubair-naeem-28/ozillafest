@@ -103,36 +103,24 @@ const ticketTiers = [
 
 const festivalPillars = [
   {
-    num: '01',
     badge: '100kW SOUND SYSTEM',
     title: '4 Mega Sound Stages',
-    desc: 'Explosive stage arenas for Indie Pop, Punjabi Rap, Desi Hip-Hop, and non-stop EDM beats.',
-    icon: '⚡',
-    highlights: ['4 Live Arenas', '100kW Sound Array', '360° Lasers']
+    desc: 'Explosive stage arenas for Indie Pop, Punjabi Rap, Desi Hip-Hop, and non-stop EDM beats.'
   },
   {
-    num: '02',
     badge: 'HEADLINE CELEBRITIES',
     title: 'Star-Studded Lineup',
-    desc: 'Live stadium sets by Talwinder, Imran Khan, Bohemia, Hassan Raheem, and top artists.',
-    icon: '👑',
-    highlights: ['Talwinder', 'Imran Khan', 'Bohemia', 'Hassan Raheem']
+    desc: 'Live stadium sets by Talwinder, Imran Khan, Bohemia, Hassan Raheem, and top artists.'
   },
   {
-    num: '03',
     badge: 'CULINARY & NIGHT BAZAAR',
     title: 'Food & Beats Street',
-    desc: '50+ curated gourmet food stalls, wood-fired artisan eats, and craft mocktail lounges.',
-    icon: '🔥',
-    highlights: ['50+ Food Stalls', 'Artisan Eats', 'Craft Mocktail Lounges']
+    desc: '50+ curated gourmet food stalls, wood-fired artisan eats, and craft mocktail lounges.'
   },
   {
-    num: '04',
     badge: 'ALL-ACCESS HOSPITALITY',
     title: 'VIP Lounge & Deck Access',
-    desc: 'Elevated front-stage viewing decks, private artist lounges, and fast-track VIP gates.',
-    icon: '✨',
-    highlights: ['Elevated Decks', 'Artist Lounge', 'Fast-Track VIP Gates']
+    desc: 'Elevated front-stage viewing decks, private artist lounges, and fast-track VIP gates.'
   }
 ]
 
@@ -617,30 +605,14 @@ function DashboardPage() {
                 transition={{ duration: 0.5, delay: idx * 0.1 }}
                 whileHover={{ y: -8, scale: 1.02 }}
               >
-                <div className="sp-pillar-watermark">{pillar.num}</div>
                 <div className="sp-pillar-glow-accent" />
 
                 <div className="sp-pillar-top">
-                  <div className="sp-pillar-badge-wrap">
-                    <span className="sp-pillar-icon">{pillar.icon}</span>
-                    <span className="sp-pillar-badge">{pillar.badge}</span>
-                  </div>
-                  <span className="sp-pillar-num-pill">{pillar.num}</span>
+                  <span className="sp-pillar-badge">{pillar.badge}</span>
                 </div>
 
                 <h3 className="sp-pillar-title">{pillar.title}</h3>
                 <p className="sp-pillar-desc">{pillar.desc}</p>
-
-                {pillar.highlights && (
-                  <div className="sp-pillar-chips">
-                    {pillar.highlights.map((h) => (
-                      <span key={h} className="sp-pillar-chip">
-                        <span className="sp-pillar-chip-dot" />
-                        {h}
-                      </span>
-                    ))}
-                  </div>
-                )}
 
                 <div className="sp-pillar-glow-line" />
               </motion.div>
@@ -1987,25 +1959,6 @@ function DashboardPage() {
             0 24px 60px rgba(255, 90, 31, 0.35);
         }
 
-        .sp-pillar-watermark {
-          position: absolute;
-          right: 1.5rem;
-          top: 0.5rem;
-          font-family: var(--font-marron, 'Bodoni Moda', 'Italiana', serif);
-          font-size: 5.5rem;
-          font-weight: 900;
-          color: rgba(255, 189, 89, 0.05);
-          line-height: 1;
-          pointer-events: none;
-          user-select: none;
-          transition: color 300ms ease, transform 300ms ease;
-        }
-
-        .sp-pillar-card:hover .sp-pillar-watermark {
-          color: rgba(255, 189, 89, 0.12);
-          transform: translateY(-4px) scale(1.05);
-        }
-
         .sp-pillar-glow-accent {
           position: absolute;
           top: -40px;
@@ -2025,46 +1978,23 @@ function DashboardPage() {
         .sp-pillar-top {
           display: flex;
           align-items: center;
-          justify-content: space-between;
           margin-bottom: 1.4rem;
           position: relative;
           z-index: 2;
         }
 
-        .sp-pillar-badge-wrap {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.6rem;
-          background: rgba(14, 8, 5, 0.75);
-          border: 1px solid rgba(255, 189, 89, 0.35);
-          padding: 0.4rem 0.95rem;
-          border-radius: 999px;
-          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-        }
-
-        .sp-pillar-icon {
-          font-size: 1rem;
-          filter: drop-shadow(0 0 6px rgba(255, 189, 89, 0.6));
-        }
-
         .sp-pillar-badge {
           font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: 0.72rem;
+          font-size: 0.74rem;
           font-weight: 800;
           color: #ffbd59;
           letter-spacing: 0.12em;
           text-transform: uppercase;
-        }
-
-        .sp-pillar-num-pill {
-          font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-          font-size: 0.76rem;
-          font-weight: 800;
-          color: rgba(255, 255, 255, 0.45);
-          background: rgba(255, 255, 255, 0.05);
-          padding: 0.25rem 0.65rem;
-          border-radius: 8px;
-          border: 1px solid rgba(255, 255, 255, 0.08);
+          background: rgba(255, 189, 89, 0.12);
+          border: 1px solid rgba(255, 189, 89, 0.35);
+          padding: 0.42rem 1.1rem;
+          border-radius: 999px;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
         }
 
         .sp-pillar-title {
@@ -2087,48 +2017,10 @@ function DashboardPage() {
         .sp-pillar-desc {
           font-size: 0.98rem;
           color: rgba(255, 240, 225, 0.84) !important;
-          line-height: 1.7;
-          margin-bottom: 1.4rem;
+          line-height: 1.75;
+          margin-bottom: 0.5rem;
           position: relative;
           z-index: 2;
-        }
-
-        .sp-pillar-chips {
-          display: flex;
-          flex-wrap: wrap;
-          gap: 0.5rem;
-          margin-top: auto;
-          position: relative;
-          z-index: 2;
-        }
-
-        .sp-pillar-chip {
-          display: inline-flex;
-          align-items: center;
-          gap: 0.4rem;
-          font-size: 0.75rem;
-          font-weight: 700;
-          color: rgba(255, 255, 255, 0.85);
-          background: rgba(255, 255, 255, 0.06);
-          border: 1px solid rgba(255, 255, 255, 0.1);
-          padding: 0.35rem 0.75rem;
-          border-radius: 999px;
-          backdrop-filter: blur(8px);
-          transition: all 200ms ease;
-        }
-
-        .sp-pillar-chip-dot {
-          width: 5px;
-          height: 5px;
-          border-radius: 50%;
-          background: #ffbd59;
-          box-shadow: 0 0 6px #ffbd59;
-        }
-
-        .sp-pillar-card:hover .sp-pillar-chip {
-          background: rgba(255, 189, 89, 0.12);
-          border-color: rgba(255, 189, 89, 0.35);
-          color: #ffd36a;
         }
 
         .sp-pillar-glow-line {
