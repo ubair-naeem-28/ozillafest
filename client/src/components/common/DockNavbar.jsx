@@ -117,17 +117,16 @@ function DockNavbar() {
     <>
       <header className={`dock-site-header ${scrolled ? 'scrolled' : ''}`}>
         <div className="dock-site-header-inner">
-          <Link to="/" className="dock-site-brand" aria-label="Ozilla Festival home">
+          <Link to="/" className="dock-site-brand" aria-label="Ozilla Fest home">
             <span className="dock-site-brand-logo">
               <img
                 src={assetUrl('/assets/ozilla/logo.png')}
-                alt="Ozilla Festival"
+                alt="Ozilla Fest"
                 onError={(e) => { e.currentTarget.src = assetUrl('/assets/company-logo.jpeg') }}
               />
             </span>
             <div className="dock-site-brand-text">
-              <strong>OZILLA</strong>
-              <small>FESTIVAL '26</small>
+              <strong>OZILLA FEST</strong>
             </div>
           </Link>
 
