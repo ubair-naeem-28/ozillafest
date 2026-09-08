@@ -27,15 +27,25 @@ function getTransporter() {
     throw new Error('SMTP is still using placeholder credentials. Replace SMTP_USER and SMTP_PASS in server/.env.')
   }
 
-  transporter = nodemailer.createTransport({
-    host: env.smtpHost,
-    port: env.smtpPort,
-    secure: env.smtpSecure,
-    auth: {
-      user: env.smtpUser,
-      pass: env.smtpPass
-    }
-  })
+  if (env.smtpHost === 'smtp.gmail.com' || (env.smtpUser && env.smtpUser.includes('@gmail.com'))) {
+    transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: env.smtpUser,
+        pass: env.smtpPass
+      }
+    })
+  } else {
+    transporter = nodemailer.createTransport({
+      host: env.smtpHost,
+      port: env.smtpPort,
+      secure: env.smtpSecure,
+      auth: {
+        user: env.smtpUser,
+        pass: env.smtpPass
+      }
+    })
+  }
 
   return transporter
 }
@@ -100,15 +110,17 @@ export async function sendOtpEmail({ to, otpCode }) {
       `
     )
 
-    await client.sendMail({
+    const info = await client.sendMail({
       from: getMailFrom(),
       to,
       subject: `[Ozilla 2026] Verification Code: ${otpCode}`,
       text: `Your OZILLA FEST OTP code is: ${otpCode}. It expires in 10 minutes.`,
       html
     })
+    return info
   } catch (error) {
     console.warn(`[Email Service] Failed to deliver OTP to ${to}:`, error.message)
+    throw error
   }
 }
 
