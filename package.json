@@ -1,6 +1,11 @@
 {
+  "name": "prism-event-and-tour",
+  "version": "1.0.0",
+  "private": true,
   "scripts": {
-    "dev": "node scripts/dev-all.mjs"
+    "dev": "node scripts/dev-all.mjs",
+    "build": "npm --prefix server install",
+    "start": "node server/src/server.js"
   },
   "dependencies": {
     "pdf-parse": "^2.4.5"
