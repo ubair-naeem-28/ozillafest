@@ -1,14 +1,86 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { GoogleLogin } from '@react-oauth/google'
 import { useAuth } from '../../hooks/useAuth'
 import { authService } from '../../services/authService'
 import { tokenStorage } from '../../utils/tokenStorage.util'
 import { startGooglePopupLogin } from '../../utils/googleAuth.util'
 import { getSafeReturnTo } from '../../utils/navigation.util'
 
-const GOOGLE_LOGO_DATA_URL =
-  'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="%23EA4335" d="M12 10.2v3.9h5.5c-.2 1.2-1.4 3.6-5.5 3.6-3.3 0-6-2.8-6-6.2s2.7-6.2 6-6.2c1.9 0 3.2.8 3.9 1.5l2.7-2.6C16.9 2.5 14.6 1.5 12 1.5 6.9 1.5 2.8 6 2.8 11.5S6.9 21.5 12 21.5c6.9 0 9.2-4.9 9.2-7.4 0-.5 0-.8-.1-1.2H12z"/><path fill="%2334A853" d="M3.9 7.4l3.2 2.4C7.9 7.8 9.8 6.3 12 6.3c1.9 0 3.2.8 3.9 1.5l2.7-2.6C16.9 2.5 14.6 1.5 12 1.5 8.1 1.5 4.8 3.8 3.9 7.4z"/><path fill="%23FBBC05" d="M12 21.5c2.6 0 4.8-.9 6.4-2.6l-3-2.5c-.8.6-1.9 1.1-3.4 1.1-3 0-5.5-2-6.4-4.8l-3.3 2.6c1 3.7 4.3 6.2 9.3 6.2z"/><path fill="%234285F4" d="M21.2 14.1c.1-.4.1-.8.1-1.2s0-.8-.1-1.2H12v3.9h5.5c-.3 1.4-1.1 2.5-2.1 3.2l3 2.5c1.7-1.6 2.8-4 2.8-7.2z"/></svg>'
+function UserIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+      <circle cx="12" cy="7" r="4" />
+    </svg>
+  )
+}
+
+function MailIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <rect x="3" y="5" width="18" height="14" rx="2" />
+      <path d="m4 7 8 6 8-6" />
+    </svg>
+  )
+}
+
+function PhoneIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" />
+    </svg>
+  )
+}
+
+function LockIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <rect x="4" y="10" width="16" height="11" rx="2" />
+      <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+    </svg>
+  )
+}
+
+function EyeIcon({ hidden = false, ...props }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path d="M2.5 12s3.4-6 9.5-6 9.5 6 9.5 6-3.4 6-9.5 6-9.5-6Z" />
+      <circle cx="12" cy="12" r="2.6" />
+      {hidden && <path d="M4 4 20 20" />}
+    </svg>
+  )
+}
+
+function ArrowIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" {...props}>
+      <path d="M5 12h14M13 6l6 6-6 6" />
+    </svg>
+  )
+}
+
+function GoogleIcon(props) {
+  return (
+    <svg viewBox="0 0 24 24" aria-hidden="true" {...props}>
+      <path
+        fill="#4285F4"
+        d="M21.6 12.23c0-.71-.06-1.4-.18-2.06H12v3.9h5.38a4.6 4.6 0 0 1-2 3.01v2.53h3.23c1.9-1.75 2.99-4.32 2.99-7.38Z"
+      />
+      <path
+        fill="#34A853"
+        d="M12 22c2.7 0 4.97-.9 6.62-2.39l-3.23-2.53c-.9.6-2.04.96-3.39.96-2.61 0-4.82-1.76-5.61-4.13H3.05v2.61A10 10 0 0 0 12 22Z"
+      />
+      <path
+        fill="#FBBC05"
+        d="M6.39 13.91A6.02 6.02 0 0 1 6.08 12c0-.66.11-1.3.31-1.91V7.48H3.05A10 10 0 0 0 2 12c0 1.61.39 3.14 1.05 4.52l3.34-2.61Z"
+      />
+      <path
+        fill="#EA4335"
+        d="M12 5.96c1.47 0 2.79.51 3.82 1.5l2.87-2.87A9.63 9.63 0 0 0 12 2a10 10 0 0 0-8.95 5.48l3.34 2.61C7.18 7.72 9.39 5.96 12 5.96Z"
+      />
+    </svg>
+  )
+}
 
 const pauseForTransition = () => new Promise((resolve) => setTimeout(resolve, 450))
 
@@ -26,8 +98,9 @@ function RegisterForm() {
     email: '',
     phone: '',
     password: '',
-    confirmPassword: ''
+    confirmPassword: '',
   })
+  const [focusedField, setFocusedField] = useState(null)
   const [otp, setOtp] = useState('')
   const [otpSent, setOtpSent] = useState(false)
   const [otpVerified, setOtpVerified] = useState(false)
@@ -44,7 +117,7 @@ function RegisterForm() {
     email: false,
     phone: false,
     password: false,
-    confirmPassword: false
+    confirmPassword: false,
   })
 
   const emailValid = /^\S+@\S+\.\S+$/.test(formData.email)
@@ -54,7 +127,7 @@ function RegisterForm() {
     lower: /[a-z]/.test(formData.password),
     number: /\d/.test(formData.password),
     special: /[^A-Za-z0-9]/.test(formData.password),
-    length: formData.password.length >= 8
+    length: formData.password.length >= 8,
   }
   const passwordScore = Object.values(passwordChecks).filter(Boolean).length
   const passwordValid = passwordScore === 5
@@ -74,7 +147,7 @@ function RegisterForm() {
     { key: 'lower', text: 'Lowercase letter', met: passwordChecks.lower },
     { key: 'number', text: 'Number', met: passwordChecks.number },
     { key: 'special', text: 'Special character', met: passwordChecks.special },
-    { key: 'length', text: '8+ characters', met: passwordChecks.length }
+    { key: 'length', text: '8+ characters', met: passwordChecks.length },
   ]
 
   const canSubmit =
@@ -118,6 +191,7 @@ function RegisterForm() {
 
   const handleBlur = (e) => {
     const { name } = e.target
+    setFocusedField(null)
     if (name in touched) {
       setTouched((prev) => ({ ...prev, [name]: true }))
     }
@@ -211,7 +285,7 @@ function RegisterForm() {
         name: `${formData.firstName} ${formData.lastName}`.trim(),
         email: formData.email,
         phone: formData.phone,
-        password: formData.password
+        password: formData.password,
       })
       setMessage('Account created successfully. Preparing your festival workspace...')
       await pauseForTransition()
@@ -230,23 +304,6 @@ function RegisterForm() {
     }
   }
 
-  const handleGoogleSuccess = async (credentialResponse) => {
-    resetFeedback()
-    setGoogleLoading(true)
-    try {
-      const response = await authService.googleAuth(credentialResponse.credential)
-      tokenStorage.setToken(response.token)
-      await checkAuth()
-      setMessage('Google sign-up successful. Preparing your festival workspace...')
-      await pauseForTransition()
-      navigate(safeReturnTo)
-    } catch (err) {
-      setError(err.response?.data?.message || err.message || 'Google sign-up failed')
-    } finally {
-      setGoogleLoading(false)
-    }
-  }
-
   const handleGoogleRegister = async () => {
     resetFeedback()
     setGoogleLoading(true)
@@ -261,14 +318,14 @@ function RegisterForm() {
             setMessage('Google sign-up successful. Preparing your festival workspace...')
             await pauseForTransition()
             navigate(safeReturnTo)
-          }
+          },
         })
       } else {
         const response = await authService.googleAuth('local-dev-token', {
           email: 'ubair1100@gmail.com',
           name: 'Ubair Naeem',
           given_name: 'Ubair',
-          family_name: 'Naeem'
+          family_name: 'Naeem',
         })
         tokenStorage.setToken(response.token)
         await checkAuth()
@@ -287,85 +344,121 @@ function RegisterForm() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="auth-form register-form-premium">
-      {error && <div className="auth-alert auth-alert-error register-alert">{error}</div>}
-      {message && <div className="auth-alert auth-alert-success register-alert">{message}</div>}
+    <form onSubmit={handleSubmit} className="kx-form">
+      {error && (
+        <div className="kx-alert kx-alert-error" role="alert">
+          {error}
+        </div>
+      )}
+      {message && (
+        <div className="kx-alert kx-alert-success" role="alert">
+          {message}
+        </div>
+      )}
 
-      <div className="auth-social-wrap" style={{ display: 'flex', justifyContent: 'center', width: '100%' }}>
-        <button
-          type="button"
-          className="auth-btn auth-btn-google-daraz register-google-btn"
-          onClick={handleGoogleRegister}
-          disabled={googleLoading || loading}
-          style={{
-            width: '100%',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            gap: '12px',
-            backgroundColor: '#ffffff',
-            color: '#1f2937',
-            border: '1px solid #e5e7eb',
-            borderRadius: '9999px',
-            padding: '12px 24px',
-            fontSize: '15px',
-            fontWeight: '600',
-            boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
-            cursor: 'pointer',
-            transition: 'all 0.2s ease'
-          }}
+      {/* Google Sign Up */}
+      <button
+        type="button"
+        className="kx-google"
+        onClick={handleGoogleRegister}
+        disabled={googleLoading || loading}
+      >
+        <GoogleIcon />
+        <span>{googleLoading ? 'Connecting to Google...' : 'Sign up with Google'}</span>
+        <i aria-hidden="true" />
+      </button>
+
+      {/* Divider */}
+      <div className="kx-divider">
+        <span />
+        <em>or register with email</em>
+        <span />
+      </div>
+
+      {/* First & Last Name */}
+      <div className="kx-grid-row">
+        <label
+          className={`kx-field ${focusedField === 'firstName' ? 'kx-focused' : ''}`}
         >
-          <img
-            src={GOOGLE_LOGO_DATA_URL}
-            alt="Google logo"
-            style={{ width: '20px', height: '20px' }}
+          <UserIcon className="kx-field-icon" />
+          <input
+            type="text"
+            name="firstName"
+            value={formData.firstName}
+            placeholder="First Name"
+            autoComplete="given-name"
+            required
+            onChange={handleChange}
+            onFocus={() => setFocusedField('firstName')}
+            onBlur={handleBlur}
           />
-          <span>{googleLoading ? 'Verifying with Google...' : 'Sign up with Google'}</span>
-        </button>
+          <span className="kx-field-light" aria-hidden="true" />
+        </label>
+
+        <label
+          className={`kx-field ${focusedField === 'lastName' ? 'kx-focused' : ''}`}
+        >
+          <UserIcon className="kx-field-icon" />
+          <input
+            type="text"
+            name="lastName"
+            value={formData.lastName}
+            placeholder="Last Name"
+            autoComplete="family-name"
+            required
+            onChange={handleChange}
+            onFocus={() => setFocusedField('lastName')}
+            onBlur={handleBlur}
+          />
+          <span className="kx-field-light" aria-hidden="true" />
+        </label>
       </div>
 
-      <div className="auth-divider">
-        <span>Or create with email</span>
-      </div>
-
-      <div className="auth-row register-name-row">
-        <div className="auth-field register-field-shell">
-          <label className="auth-label" htmlFor="register-first-name">First Name</label>
-          <input id="register-first-name" type="text" name="firstName" value={formData.firstName} onChange={handleChange} className="auth-input" autoComplete="given-name" required />
-        </div>
-        <div className="auth-field register-field-shell">
-          <label className="auth-label" htmlFor="register-last-name">Last Name</label>
-          <input id="register-last-name" type="text" name="lastName" value={formData.lastName} onChange={handleChange} className="auth-input" autoComplete="family-name" required />
-        </div>
-      </div>
-
-      <div className="auth-field register-field-shell">
-        <label className="auth-label" htmlFor="register-email">Email Address</label>
+      {/* Email Address */}
+      <label
+        className={`kx-field ${focusedField === 'email' ? 'kx-focused' : ''} ${
+          touched.email && !emailValid ? 'kx-field-invalid' : ''
+        }`}
+      >
+        <MailIcon className="kx-field-icon" />
         <input
-          id="register-email"
           type="email"
           name="email"
           value={formData.email}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          className={`auth-input ${touched.email && !emailValid ? 'auth-input-invalid' : ''}`}
-          placeholder="you@example.com"
+          placeholder="Email address"
           autoComplete="email"
           required
+          onChange={handleChange}
+          onFocus={() => setFocusedField('email')}
+          onBlur={handleBlur}
         />
-      </div>
-      {touched.email && !emailValid && <p className="auth-field-error">Please enter a valid email address.</p>}
+        <span className="kx-field-light" aria-hidden="true" />
+      </label>
+      {touched.email && !emailValid && (
+        <p className="kx-field-error-msg">Please enter a valid email address.</p>
+      )}
 
-      <div className={`register-otp-card register-otp-card-desktop ${otpVerified ? 'register-otp-verified' : ''}`}>
-        <div>
-          <p className="register-otp-kicker">Email Verification</p>
-          <strong>{otpVerified ? 'Email verified' : otpSent ? 'Enter your OTP' : 'Verify before signup'}</strong>
-          <span className="register-otp-status">
-            {otpVerified ? 'Verified with premium security' : resendSeconds > 0 ? `Resend available in ${resendSeconds}s` : 'One-time code expires in 10 minutes'}
+      {/* Email OTP Verification Block */}
+      <div className={`kx-otp-box ${otpVerified ? 'kx-otp-verified' : ''}`}>
+        <div className="kx-otp-meta">
+          <span className="kx-otp-kicker">Email Verification</span>
+          <strong>{otpVerified ? '✓ Email verified' : otpSent ? 'Enter 6-digit code' : 'Verify email before submit'}</strong>
+          <span className="kx-otp-subtext">
+            {otpVerified
+              ? 'Security verified'
+              : resendSeconds > 0
+              ? `Resend available in ${resendSeconds}s`
+              : 'Code will be sent to your email'}
           </span>
         </div>
-        <div className="register-otp-controls">
-          <button type="button" className="register-mini-btn" onClick={handleSendOtp} disabled={otpLoading || !emailValid || otpVerified || resendSeconds > 0}>
+
+        <div className="kx-otp-controls">
+          <button
+            type="button"
+            className="kx-otp-btn"
+            onClick={handleSendOtp}
+            disabled={otpLoading || !emailValid || otpVerified || resendSeconds > 0}
+          >
             {otpLoading ? 'Sending...' : otpSent ? 'Resend OTP' : 'Send OTP'}
           </button>
           <input
@@ -376,156 +469,169 @@ function RegisterForm() {
               setOtp(event.target.value.replace(/\D/g, '').slice(0, 6))
               setOtpVerified(false)
             }}
-            className="register-otp-input"
-            placeholder="6-digit OTP"
+            className="kx-otp-input"
+            placeholder="OTP Code"
             inputMode="numeric"
             autoComplete="one-time-code"
             disabled={!otpSent || otpVerified}
           />
-          <button type="button" className="register-mini-btn register-mini-btn-dark" onClick={handleVerifyOtp} disabled={!otpSent || otpVerified || otpVerifying}>
+          <button
+            type="button"
+            className="kx-otp-btn kx-otp-btn-accent"
+            onClick={handleVerifyOtp}
+            disabled={!otpSent || otpVerified || otpVerifying}
+          >
             {otpVerifying ? 'Verifying...' : otpVerified ? 'Verified' : 'Verify'}
           </button>
         </div>
-        {otpVerified && <span className="register-success-check" aria-hidden="true">✓</span>}
       </div>
 
-      <div className="auth-field register-field-shell">
-        <label className="auth-label" htmlFor="register-phone">Phone Number</label>
+      {/* Phone Number */}
+      <label
+        className={`kx-field ${focusedField === 'phone' ? 'kx-focused' : ''} ${
+          touched.phone && !phoneValid ? 'kx-field-invalid' : ''
+        }`}
+      >
+        <PhoneIcon className="kx-field-icon" />
         <input
-          id="register-phone"
           type="tel"
           name="phone"
           value={formData.phone}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          className={`auth-input ${touched.phone && !phoneValid ? 'auth-input-invalid' : ''}`}
-          placeholder="+92 3XX XXXXXXX"
+          placeholder="Phone (+92 3XX XXXXXXX)"
           autoComplete="tel"
           required
+          onChange={handleChange}
+          onFocus={() => setFocusedField('phone')}
+          onBlur={handleBlur}
         />
-      </div>
-      {touched.phone && !phoneValid && <p className="auth-field-error">Please enter a valid mobile number.</p>}
+        <span className="kx-field-light" aria-hidden="true" />
+      </label>
+      {touched.phone && !phoneValid && (
+        <p className="kx-field-error-msg">Please enter a valid mobile number.</p>
+      )}
 
-      <div className="auth-field register-field-shell">
-        <label className="auth-label" htmlFor="register-password">Password</label>
-        <div className="auth-input-wrap">
-          <input
-            id="register-password"
-            type={showPassword ? 'text' : 'password'}
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            className={`auth-input auth-input-with-icon ${touched.password && !passwordValid ? 'auth-input-invalid' : ''}`}
-            autoComplete="new-password"
-            required
-          />
-          <button type="button" className="auth-input-icon-btn" onClick={() => setShowPassword((prev) => !prev)} aria-label={showPassword ? 'Hide password' : 'Show password'}>
-            {showPassword ? '\u{1F648}' : '\u{1F441}'}
-          </button>
-        </div>
-      </div>
+      {/* Password */}
+      <label
+        className={`kx-field ${focusedField === 'password' ? 'kx-focused' : ''} ${
+          touched.password && !passwordValid ? 'kx-field-invalid' : ''
+        }`}
+      >
+        <LockIcon className="kx-field-icon" />
+        <input
+          type={showPassword ? 'text' : 'password'}
+          name="password"
+          value={formData.password}
+          placeholder="Create Password"
+          autoComplete="new-password"
+          required
+          onChange={handleChange}
+          onFocus={() => setFocusedField('password')}
+          onBlur={handleBlur}
+        />
+        <button
+          className="kx-password-toggle"
+          type="button"
+          onClick={() => setShowPassword((current) => !current)}
+          aria-label={showPassword ? 'Hide password' : 'Show password'}
+        >
+          <EyeIcon hidden={showPassword} />
+        </button>
+        <span className="kx-field-light" aria-hidden="true" />
+      </label>
 
-      <div className={`register-strength register-strength-${passwordStrength.className}`}>
-        <div className="register-strength-top">
+      {/* Password Strength Meter */}
+      <div className={`kx-strength kx-strength-${passwordStrength.className}`}>
+        <div className="kx-strength-header">
           <span>Password Strength</span>
           <strong>{passwordStrength.label}</strong>
         </div>
-        <div className="register-strength-track">
+        <div className="kx-strength-bar-track">
           <span style={{ width: `${passwordStrength.percent}%` }} />
         </div>
       </div>
 
-      <ul className="auth-password-rules register-password-rules">
+      {/* Password Requirements */}
+      <ul className="kx-pwd-rules">
         {passwordRequirements.map((requirement) => {
-          const stateClass = requirement.met ? 'auth-rule-met' : hasPasswordInput ? 'auth-rule-unmet' : 'auth-rule-neutral'
+          const stateClass = requirement.met
+            ? 'kx-rule-met'
+            : hasPasswordInput
+            ? 'kx-rule-unmet'
+            : 'kx-rule-neutral'
           return (
-            <li key={requirement.key} className={`auth-password-rule-item ${stateClass}`}>
-              <span className="auth-rule-icon" aria-hidden="true">{requirement.met ? '\u2713' : '\u2717'}</span>
+            <li key={requirement.key} className={`kx-pwd-rule ${stateClass}`}>
+              <span className="kx-rule-badge">{requirement.met ? '✓' : '•'}</span>
               <span>{requirement.text}</span>
             </li>
           )
         })}
       </ul>
 
-      <div className="auth-field register-field-shell">
-        <label className="auth-label" htmlFor="register-confirm-password">Confirm Password</label>
-        <div className="auth-input-wrap">
-          <input
-            id="register-confirm-password"
-            type={showConfirmPassword ? 'text' : 'password'}
-            name="confirmPassword"
-            value={formData.confirmPassword}
-            onChange={handleChange}
-            onBlur={handleBlur}
-            className={`auth-input auth-input-with-icon ${touched.confirmPassword && !confirmPasswordValid ? 'auth-input-invalid' : ''}`}
-            autoComplete="new-password"
-            required
-          />
-          <button type="button" className="auth-input-icon-btn" onClick={() => setShowConfirmPassword((prev) => !prev)} aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}>
-            {showConfirmPassword ? '\u{1F648}' : '\u{1F441}'}
-          </button>
-        </div>
-      </div>
-      {touched.confirmPassword && !confirmPasswordValid && <p className="auth-field-error">Passwords do not match.</p>}
+      {/* Confirm Password */}
+      <label
+        className={`kx-field ${focusedField === 'confirmPassword' ? 'kx-focused' : ''} ${
+          touched.confirmPassword && !confirmPasswordValid ? 'kx-field-invalid' : ''
+        }`}
+      >
+        <LockIcon className="kx-field-icon" />
+        <input
+          type={showConfirmPassword ? 'text' : 'password'}
+          name="confirmPassword"
+          value={formData.confirmPassword}
+          placeholder="Confirm Password"
+          autoComplete="new-password"
+          required
+          onChange={handleChange}
+          onFocus={() => setFocusedField('confirmPassword')}
+          onBlur={handleBlur}
+        />
+        <button
+          className="kx-password-toggle"
+          type="button"
+          onClick={() => setShowConfirmPassword((current) => !current)}
+          aria-label={showConfirmPassword ? 'Hide confirm password' : 'Show confirm password'}
+        >
+          <EyeIcon hidden={showConfirmPassword} />
+        </button>
+        <span className="kx-field-light" aria-hidden="true" />
+      </label>
+      {touched.confirmPassword && !confirmPasswordValid && (
+        <p className="kx-field-error-msg">Passwords do not match.</p>
+      )}
 
-      <div className={`register-otp-card register-otp-card-mobile ${otpVerified ? 'register-otp-verified' : ''}`}>
-        <div>
-          <p className="register-otp-kicker">Email Verification</p>
-          <strong>{otpVerified ? 'Email verified' : otpSent ? 'Enter your OTP' : 'Verify before signup'}</strong>
-          <span className="register-otp-status">
-            {otpVerified ? 'Verified with premium security' : resendSeconds > 0 ? `Resend available in ${resendSeconds}s` : 'One-time code expires in 10 minutes'}
-          </span>
-        </div>
-        <div className="register-otp-controls">
-          <button type="button" className="register-mini-btn" onClick={handleSendOtp} disabled={otpLoading || !emailValid || otpVerified || resendSeconds > 0}>
-            {otpLoading ? 'Sending...' : otpSent ? 'Resend OTP' : 'Send OTP'}
-          </button>
-          <input
-            type="text"
-            value={otp}
-            onChange={(event) => {
-              resetFeedback()
-              setOtp(event.target.value.replace(/\D/g, '').slice(0, 6))
-              setOtpVerified(false)
-            }}
-            className="register-otp-input"
-            placeholder="6-digit OTP"
-            inputMode="numeric"
-            autoComplete="one-time-code"
-            aria-label="Email OTP code"
-            disabled={!otpSent || otpVerified}
-          />
-          <button type="button" className="register-mini-btn register-mini-btn-dark" onClick={handleVerifyOtp} disabled={!otpSent || otpVerified || otpVerifying}>
-            {otpVerifying ? 'Verifying...' : otpVerified ? 'Verified' : 'Verify'}
-          </button>
-        </div>
-        {otpVerified && <span className="register-success-check" aria-hidden="true">✓</span>}
-      </div>
+      {/* Submit Button */}
+      <button
+        className="kx-sign-in"
+        type="submit"
+        disabled={!canSubmit}
+      >
+        <span className="kx-button-glow" aria-hidden="true" />
+        <span className="kx-button-sheen" aria-hidden="true" />
 
-      <button type="submit" disabled={!canSubmit} className="auth-btn auth-btn-primary register-create-btn">
         {loading ? (
-          <span className="login-loading-wrap">
-            <span className="login-loading-dot" />
-            Preparing Your Experience...
-          </span>
+          <span className="kx-spinner" aria-label="Creating account..." />
         ) : (
-          <span>Create Account</span>
+          <span className="kx-button-copy">
+            Create Account
+            <ArrowIcon />
+          </span>
         )}
       </button>
 
-      <div className="register-login-line">
-        <span>Already have an account?</span>
+      {/* Switch to Login */}
+      <p className="kx-signup">
+        Already have an account?{' '}
         <Link to={`/login?${new URLSearchParams({ returnTo: safeReturnTo }).toString()}`}>
           Sign In
         </Link>
-      </div>
+      </p>
 
-      <div className="register-trust-grid" aria-label="Registration trust indicators">
-        <span>Secure Registration</span>
-        <span>Instant Verification</span>
-        <span>Protected Account</span>
-        <span>Google Verified</span>
+      {/* Trust Badges */}
+      <div className="kx-trust-grid" aria-label="Security indicators">
+        <span>🔒 Secure Sign Up</span>
+        <span>⚡ Instant Access</span>
+        <span>🛡️ Protected</span>
+        <span>✓ Google Verified</span>
       </div>
     </form>
   )
