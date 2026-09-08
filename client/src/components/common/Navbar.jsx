@@ -124,7 +124,7 @@ function Navbar() {
           <span className="site-brand-logo-shell">
             <img src={assetUrl('/assets/ozilla/logo.png')} alt="" className="site-brand-logo-img" />
           </span>
-          <span className="site-brand-title">Ozilla Festival</span>
+          <span className="site-brand-title">OZILLA FEST</span>
         </Link>
 
         <div className="navbar-repair-links">
@@ -234,7 +234,7 @@ function Navbar() {
         <div className={`site-mobile-menu-drawer navbar-mobile-panel ${mobileOpen ? 'open' : ''}`} onClick={(event) => event.stopPropagation()}>
           <div className="site-mobile-menu-header">
             <div>
-              <p className="site-mobile-menu-kicker">Ozilla Festival</p>
+              <p className="site-mobile-menu-kicker">OZILLA FEST</p>
               <h2 className="site-mobile-menu-title">Menu</h2>
             </div>
             <button type="button" className="site-mobile-menu-close" onClick={() => setMobileOpen(false)} aria-label="Close menu">

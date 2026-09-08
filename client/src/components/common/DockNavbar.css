@@ -68,15 +68,19 @@
 }
 
 .dock-site-brand-text strong {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Outfit', 'Montserrat', 'Inter', system-ui, -apple-system, sans-serif;
   font-weight: 900;
-  font-size: 1.48rem;
-  letter-spacing: 0.04em;
-  color: #ffffff;
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+  letter-spacing: -0.04em;
   line-height: 1;
   white-space: nowrap;
   text-transform: uppercase;
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.8), 0 0 15px rgba(255, 189, 89, 0.35);
+  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 22%, #cbd5e1 52%, #64748b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.95));
+  display: inline-block;
 }
 
 .dock-site-header-actions {
@@ -517,7 +521,8 @@
   }
 
   .dock-site-brand-text strong {
-    font-size: 1.02rem;
+    font-size: 1.12rem;
+    letter-spacing: -0.04em;
   }
 
   .dock-panel.dock-nav {

@@ -100,3 +100,19 @@ img {
   z-index: 1;
 }
 
+.site-brand-title {
+  font-family: 'Outfit', 'Montserrat', 'Inter', system-ui, -apple-system, sans-serif;
+  font-weight: 900;
+  font-size: clamp(1.2rem, 2vw, 1.55rem);
+  letter-spacing: -0.04em;
+  line-height: 1;
+  white-space: nowrap;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 22%, #cbd5e1 52%, #64748b 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.95));
+  display: inline-block;
+}
+
