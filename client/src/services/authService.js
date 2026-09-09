@@ -272,33 +272,28 @@ export const authService = {
       throw localError
     }
 
-    const localPayload = parseLocalToken(token)
-    if (localPayload?.mode === 'local-fallback' || String(token || '').startsWith('local.')) {
-      const users = readLocalUsers()
-      const user = users.find((item) => item.id === localPayload?.sub || normalizeEmail(item.email) === normalizeEmail(localPayload?.email))
-      if (user) {
-        return toPublicUser(user)
-      }
-    }
-
     try {
       const response = await apiClient.get(API_ENDPOINTS.AUTH.ME)
       return response.data
     } catch (error) {
-      const users = readLocalUsers()
-      const user = users.find((item) => item.id === localPayload?.sub || normalizeEmail(item.email) === normalizeEmail(localPayload?.email))
-      if (user) {
-        return toPublicUser(user)
+      const localPayload = parseLocalToken(token)
+      if (localPayload?.mode === 'local-fallback' || String(token || '').startsWith('local.')) {
+        const users = readLocalUsers()
+        const user = users.find((item) => item.id === localPayload?.sub || normalizeEmail(item.email) === normalizeEmail(localPayload?.email))
+        if (user) {
+          return toPublicUser(user)
+        }
       }
+      tokenStorage.removeToken()
       throw error
     }
   },
 
   async logout() {
     tokenStorage.removeToken()
-    if (forceLocalMode) {
-      return { message: 'Logged out successfully' }
-    }
+    try {
+      localStorage.removeItem('ozilla_local_users')
+    } catch (_e) {}
     try {
       const response = await apiClient.post(API_ENDPOINTS.AUTH.LOGOUT)
       return response.data
