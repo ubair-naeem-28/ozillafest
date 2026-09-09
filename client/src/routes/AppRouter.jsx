@@ -11,19 +11,36 @@ import TicketLayout from '../layouts/TicketLayout'
 // Loading & Fallback
 import LoadingSpinner from '../components/common/LoadingSpinner'
 
+// Direct static imports for all public/customer routes (prevents chunk loading failure in mobile browsers)
+import LoginPage from '../pages/auth/LoginPage'
+import RegisterPage from '../pages/auth/RegisterPage'
+import GoogleAuthCallbackPage from '../pages/auth/GoogleAuthCallbackPage'
+import DashboardPage from '../pages/dashboard/DashboardPage'
+import TicketPortalPage from '../pages/tickets/TicketPortalPage'
+import MyTicketsPage from '../pages/tickets/MyTicketsPage'
+import TicketViewPage from '../pages/tickets/TicketViewPage'
+import TicketVerificationPage from '../pages/verification/TicketVerificationPage'
+import HotelsPage from '../pages/hotels/HotelsPage'
+import FestivalSchedulePage from '../pages/schedule/FestivalSchedulePage'
+import LegalPage from '../pages/legal/LegalPage'
+import NotFound from '../components/common/NotFound'
+
 function lazyWithRetry(componentImport) {
   return lazy(async () => {
     try {
       return await componentImport()
     } catch (error) {
+      const msg = String(error?.message || '').toLowerCase()
       const isChunkError =
-        /Failed to fetch dynamically imported module/i.test(error?.message) ||
-        /Loading chunk/i.test(error?.message) ||
-        /Failed to load module script/i.test(error?.message)
+        msg.includes('importing a module script failed') ||
+        msg.includes('failed to fetch dynamically imported module') ||
+        msg.includes('loading chunk') ||
+        msg.includes('failed to load module script') ||
+        msg.includes('error loading dynamically imported module')
 
       if (isChunkError) {
         const lastReload = Number(sessionStorage.getItem('chunk_reload_ts') || 0)
-        if (Date.now() - lastReload > 10000) {
+        if (Date.now() - lastReload > 8000) {
           sessionStorage.setItem('chunk_reload_ts', String(Date.now()))
           window.location.reload()
           return new Promise(() => {}) // keep suspended while page reloads
@@ -34,23 +51,10 @@ function lazyWithRetry(componentImport) {
   })
 }
 
-// Lazy-loaded Pages (Code Splitting for instant first load & low memory footprint)
-// Direct imports for instant auth and core routing (never fails on stale cache)
-import LoginPage from '../pages/auth/LoginPage'
-import RegisterPage from '../pages/auth/RegisterPage'
-import GoogleAuthCallbackPage from '../pages/auth/GoogleAuthCallbackPage'
-import DashboardPage from '../pages/dashboard/DashboardPage'
+// Protected Account & Admin Dashboards
 const UserDashboardPage = lazyWithRetry(() => import('../pages/account/UserDashboardPage'))
-const TicketPortalPage = lazyWithRetry(() => import('../pages/tickets/TicketPortalPage'))
-const MyTicketsPage = lazyWithRetry(() => import('../pages/tickets/MyTicketsPage'))
-const TicketViewPage = lazyWithRetry(() => import('../pages/tickets/TicketViewPage'))
-const TicketVerificationPage = lazyWithRetry(() => import('../pages/verification/TicketVerificationPage'))
 const AdminDashboardPage = lazyWithRetry(() => import('../pages/admin/AdminDashboardPage'))
 const AdminTicketReviewPage = lazyWithRetry(() => import('../pages/admin/AdminTicketReviewPage'))
-const HotelsPage = lazyWithRetry(() => import('../pages/hotels/HotelsPage'))
-const FestivalSchedulePage = lazyWithRetry(() => import('../pages/schedule/FestivalSchedulePage'))
-const LegalPage = lazyWithRetry(() => import('../pages/legal/LegalPage'))
-const NotFound = lazyWithRetry(() => import('../components/common/NotFound'))
 
 function AppRouter() {
   return (
@@ -87,7 +91,7 @@ function AppRouter() {
         <Route path="/terms" element={<MainLayout><LegalPage type="terms" /></MainLayout>} />
         <Route path="/verification/:ticketId" element={<MainLayout><TicketVerificationPage /></MainLayout>} />
         
-        {/* Ticket Portal Pages (Kept Separate as requested) */}
+        {/* Ticket Portal Pages */}
         <Route path="/tickets" element={<TicketLayout><TicketPortalPage /></TicketLayout>} />
 
         {/* Protected Routes */}
@@ -108,4 +112,3 @@ function AppRouter() {
 }
 
 export default AppRouter
-

@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import './LaserFlow.css';
 
@@ -40,13 +40,12 @@ uniform float uFogFallSpeed;
 uniform vec3 uColor;
 uniform float uFade;
 
-// Core beam/flare shaping and dynamics
 #define PI 3.14159265359
 #define TWO_PI 6.28318530718
 #define EPS 1e-6
-#define EDGE_SOFT (DT_LOCAL*4.0)
-#define DT_LOCAL 0.0038
-#define TAP_RADIUS 6
+#define EDGE_SOFT 0.0152
+#define DT_LOCAL 0.0076
+#define TAP_RADIUS 4
 #define R_H 150.0
 #define R_V 150.0
 #define FLARE_HEIGHT 16.0
@@ -57,10 +56,9 @@ uniform float uFade;
 #define FLOW_PERIOD 0.5
 #define FLOW_SHARPNESS 1.5
 
-// Wisps (animated micro-streaks) that travel along the beam
 #define W_BASE_X 1.5
 #define W_LAYER_GAP 0.25
-#define W_LANES 10
+#define W_LANES 6
 #define W_SIDE_DECAY 0.5
 #define W_HALF 0.01
 #define W_AA 0.15
@@ -68,18 +66,13 @@ uniform float uFade;
 #define W_SEG_MIN 0.01
 #define W_SEG_MAX 0.55
 #define W_CURVE_AMOUNT 15.0
-#define W_CURVE_RANGE (FLARE_HEIGHT - 3.0)
+#define W_CURVE_RANGE 13.0
 #define W_BOTTOM_EXP 10.0
 
-// Volumetric fog controls
 #define FOG_ON 1
 #define FOG_CONTRAST 1.2
-#define FOG_SPEED_U 0.1
-#define FOG_SPEED_V -0.1
-#define FOG_OCTAVES 5
+#define FOG_OCTAVES 3
 #define FOG_BOTTOM_BIAS 0.8
-#define FOG_TILT_TO_MOUSE 0.05
-#define FOG_TILT_DEADZONE 0.01
 #define FOG_TILT_MAX_X 0.35
 #define FOG_TILT_SHAPE 1.5
 #define FOG_BEAM_MIN 0.0
@@ -88,14 +81,12 @@ uniform float uFade;
 #define FOG_EXPAND_SHAPE 12.2
 #define FOG_EDGE_MIX 0.5
 
-// Horizontal vignette for the fog volume
 #define HFOG_EDGE_START 0.20
 #define HFOG_EDGE_END 0.98
 #define HFOG_EDGE_GAMMA 1.4
 #define HFOG_Y_RADIUS 25.0
 #define HFOG_Y_SOFT 60.0
 
-// Beam extents and edge masking
 #define EDGE_X0 0.22
 #define EDGE_X1 0.995
 #define EDGE_X_GAMMA 1.25
@@ -103,36 +94,36 @@ uniform float uFade;
 #define EDGE_LUMA_T1 2.0
 #define DITHER_STRENGTH 1.0
 
-    float g(float x){return x<=0.00031308?12.92*x:1.055*pow(x,1.0/2.4)-0.055;}
-    float bs(vec2 p,vec2 q,float powr){
-        float d=distance(p,q),f=powr*uFalloffStart,r=(f*f)/(d*d+EPS);
-        return powr*min(1.0,r);
-    }
-    float bsa(vec2 p,vec2 q,float powr,vec2 s){
-        vec2 d=p-q; float dd=(d.x*d.x)/(s.x*s.x)+(d.y*d.y)/(s.y*s.y),f=powr*uFalloffStart,r=(f*f)/(dd+EPS);
-        return powr*min(1.0,r);
-    }
-    float tri01(float x){float f=fract(x);return 1.0-abs(f*2.0-1.0);}
-    float tauWf(float t,float tmin,float tmax){float a=smoothstep(tmin,tmin+EDGE_SOFT,t),b=1.0-smoothstep(tmax-EDGE_SOFT,tmax,t);return max(0.0,a*b);} 
-    float h21(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+34.123);return fract(p.x*p.y);}
-    float vnoise(vec2 p){
-        vec2 i=floor(p),f=fract(p);
-        float a=h21(i),b=h21(i+vec2(1,0)),c=h21(i+vec2(0,1)),d=h21(i+vec2(1,1));
-        vec2 u=f*f*(3.0-2.0*f);
-        return mix(mix(a,b,u.x),mix(c,d,u.x),u.y);
-    }
-    float fbm2(vec2 p){
-        float v=0.0,amp=0.6; mat2 m=mat2(0.86,0.5,-0.5,0.86);
-        for(int i=0;i<FOG_OCTAVES;++i){v+=amp*vnoise(p); p=m*p*2.03+17.1; amp*=0.52;}
-        return v;
-    }
-    float rGate(float x,float l){float a=smoothstep(0.0,W_AA,x),b=1.0-smoothstep(l,l+W_AA,x);return max(0.0,a*b);}
-    float flareY(float y){float t=clamp(1.0-(clamp(y,0.0,FLARE_HEIGHT)/max(FLARE_HEIGHT,EPS)),0.0,1.0);return pow(t,FLARE_EXP);}
+float g(float x){return x<=0.00031308?12.92*x:1.055*pow(x,1.0/2.4)-0.055;}
+float bs(vec2 p,vec2 q,float powr){
+    float d=distance(p,q),f=powr*uFalloffStart,r=(f*f)/(d*d+EPS);
+    return powr*min(1.0,r);
+}
+float bsa(vec2 p,vec2 q,float powr,vec2 s){
+    vec2 d=p-q; float dd=(d.x*d.x)/(s.x*s.x)+(d.y*d.y)/(s.y*s.y),f=powr*uFalloffStart,r=(f*f)/(dd+EPS);
+    return powr*min(1.0,r);
+}
+float tri01(float x){float f=fract(x);return 1.0-abs(f*2.0-1.0);}
+float tauWf(float t,float tmin,float tmax){float a=smoothstep(tmin,tmin+EDGE_SOFT,t),b=1.0-smoothstep(tmax-EDGE_SOFT,tmax,t);return max(0.0,a*b);} 
+float h21(vec2 p){p=fract(p*vec2(123.34,456.21));p+=dot(p,p+34.123);return fract(p.x*p.y);}
+float vnoise(vec2 p){
+    vec2 i=floor(p),f=fract(p);
+    float a=h21(i),b=h21(i+vec2(1,0)),c=h21(i+vec2(0,1)),d=h21(i+vec2(1,1));
+    vec2 u=f*f*(3.0-2.0*f);
+    return mix(mix(a,b,u.x),mix(c,d,u.x),u.y);
+}
+float fbm2(vec2 p){
+    float v=0.0,amp=0.6; mat2 m=mat2(0.86,0.5,-0.5,0.86);
+    for(int i=0;i<FOG_OCTAVES;++i){v+=amp*vnoise(p); p=m*p*2.03+17.1; amp*=0.52;}
+    return v;
+}
+float rGate(float x,float l){float a=smoothstep(0.0,W_AA,x),b=1.0-smoothstep(l,l+W_AA,x);return max(0.0,a*b);}
+float flareY(float y){float t=clamp(1.0-(clamp(y,0.0,FLARE_HEIGHT)/max(FLARE_HEIGHT,EPS)),0.0,1.0);return pow(t,FLARE_EXP);}
 
-    float vWisps(vec2 uv,float topF){
+float vWisps(vec2 uv,float topF){
     float y=uv.y,yf=(y+uFlowTime*uWSpeed)/W_CELL;
     float dRaw=clamp(uWispDensity,0.0,2.0),d=dRaw<=0.0?1.0:dRaw;
-    float lanesF=floor(float(W_LANES)*min(d,1.0)+0.5); // WebGL1-safe
+    float lanesF=floor(float(W_LANES)*min(d,1.0)+0.5);
     int lanes=int(max(1.0,lanesF));
     float sp=min(d,1.0),ep=max(d-1.0,0.0);
     float fm=flareY(max(y,0.0)),rm=clamp(1.0-(y/max(W_CURVE_RANGE,EPS)),0.0,1.0),cm=fm*rm;
@@ -198,7 +189,7 @@ void mainImage(out vec4 fc,in vec2 frag){
     fuv+=uFogTime*uFogFallSpeed*dir;
     vec2 prp=vec2(-dir.y,dir.x);
     fuv+=prp*(0.08*sin(dot(uvc,prp)*0.08+uFogTime*0.9));
-    float n=fbm2(fuv+vec2(fbm2(fuv+vec2(7.3,2.1)),fbm2(fuv+vec2(-3.7,5.9)))*0.6);
+    float n=fbm2(fuv)*0.9;
     n=pow(clamp(n,0.0,1.0),FOG_CONTRAST);
     float pixW = 1.0 / max(iResolution.y, 1.0);
 #ifdef GL_OES_standard_derivatives
@@ -212,11 +203,9 @@ void mainImage(out vec4 fc,in vec2 frag){
     float nxF=abs((frag.x-C.x)*invW),hE=1.0-smoothstep(HFOG_EDGE_START,HFOG_EDGE_END,nxF); hE=pow(clamp(hE,0.0,1.0),HFOG_EDGE_GAMMA);
     float hW=mix(1.0,hE,clamp(yP,0.0,1.0));
     float bBias=mix(1.0,1.0-sPix,FOG_BOTTOM_BIAS);
-    float browserFogIntensity = uFogIntensity;
-    browserFogIntensity *= 1.8;
+    float browserFogIntensity = uFogIntensity * 1.5;
     float radialFade = 1.0 - smoothstep(0.0, 0.7, length(uvc) / 120.0);
-    float safariFog = n * browserFogIntensity * bBias * bm * hW * radialFade;
-    fog = safariFog;
+    fog = n * browserFogIntensity * bBias * bm * hW * radialFade;
 #endif
     float LF=L+fog;
     float dith=(h21(frag)-0.5)*(DITHER_STRENGTH/255.0);
@@ -268,11 +257,9 @@ export const LaserFlow = ({
   const baseDprRef = useRef(1);
   const currentDprRef = useRef(1);
   const lastSizeRef = useRef({ width: 0, height: 0, dpr: 0 });
-  const fpsSamplesRef = useRef([]);
-  const lastFpsCheckRef = useRef(performance.now());
-  const emaDtRef = useRef(16.7);
   const pausedRef = useRef(false);
-  const inViewRef = useRef(true);
+  const inViewRef = useRef(false); // start false until observer activates
+  const [hasError, setHasError] = useState(false);
 
   const hexToRGB = hex => {
     let c = (hex || '#FFFFFF').trim();
@@ -290,256 +277,229 @@ export const LaserFlow = ({
     const mount = mountRef.current;
     if (!mount) return;
 
-    const renderer = new THREE.WebGLRenderer({
-      antialias: false,
-      alpha: true,
-      depth: false,
-      stencil: false,
-      powerPreference: 'high-performance',
-      premultipliedAlpha: false,
-      preserveDrawingBuffer: false,
-      failIfMajorPerformanceCaveat: false,
-      logarithmicDepthBuffer: false
-    });
-    rendererRef.current = renderer;
-
-    baseDprRef.current = Math.min(dpr ?? (window.devicePixelRatio || 1), 2);
-    currentDprRef.current = baseDprRef.current;
-
-    renderer.setPixelRatio(currentDprRef.current);
-    renderer.shadowMap.enabled = false;
-    renderer.outputColorSpace = THREE.SRGBColorSpace;
-    renderer.setClearColor(0x000000, 0);
-    const canvas = renderer.domElement;
-    canvas.style.width = '100%';
-    canvas.style.height = '100%';
-    canvas.style.display = 'block';
-    mount.appendChild(canvas);
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-
-    const geometry = new THREE.BufferGeometry();
-    geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array([-1, -1, 0, 3, -1, 0, -1, 3, 0]), 3));
-
-    const initialColor = hexToRGB(color || '#FF79C6');
-    const uniforms = {
-      iTime: { value: 0 },
-      iResolution: { value: new THREE.Vector3(1, 1, 1) },
-      iMouse: { value: new THREE.Vector4(0, 0, 0, 0) },
-      uWispDensity: { value: wispDensity },
-      uTiltScale: { value: mouseTiltStrength },
-      uFlowTime: { value: 0 },
-      uFogTime: { value: 0 },
-      uBeamXFrac: { value: horizontalBeamOffset },
-      uBeamYFrac: { value: verticalBeamOffset },
-      uFlowSpeed: { value: flowSpeed },
-      uVLenFactor: { value: verticalSizing },
-      uHLenFactor: { value: horizontalSizing },
-      uFogIntensity: { value: fogIntensity },
-      uFogScale: { value: fogScale },
-      uWSpeed: { value: wispSpeed },
-      uWIntensity: { value: wispIntensity },
-      uFlowStrength: { value: flowStrength },
-      uDecay: { value: decay },
-      uFalloffStart: { value: falloffStart },
-      uFogFallSpeed: { value: fogFallSpeed },
-      uColor: { value: new THREE.Vector3(initialColor.r, initialColor.g, initialColor.b) },
-      uFade: { value: hasFadedRef.current ? 1 : 0 }
-    };
-    uniformsRef.current = uniforms;
-
-    const material = new THREE.RawShaderMaterial({
-      vertexShader: VERT,
-      fragmentShader: FRAG,
-      uniforms,
-      transparent: true,
-      depthTest: false,
-      depthWrite: false,
-      blending: THREE.NormalBlending
-    });
-
-    const mesh = new THREE.Mesh(geometry, material);
-    mesh.frustumCulled = false;
-    scene.add(mesh);
-
-    const clock = new THREE.Clock();
-    let prevTime = 0;
-    let fade = hasFadedRef.current ? 1 : 0;
-
-    const mouseTarget = new THREE.Vector2(0, 0);
-    const mouseSmooth = new THREE.Vector2(0, 0);
-
-    const setSizeNow = () => {
-      if (!mount) return;
-      const w = mount.clientWidth || 1;
-      const h = mount.clientHeight || 1;
-      const pr = currentDprRef.current;
-
-      const last = lastSizeRef.current;
-      const sizeChanged = Math.abs(w - last.width) > 0.5 || Math.abs(h - last.height) > 0.5;
-      const dprChanged = Math.abs(pr - last.dpr) > 0.01;
-      if (!sizeChanged && !dprChanged) {
-        return;
-      }
-
-      lastSizeRef.current = { width: w, height: h, dpr: pr };
-      renderer.setPixelRatio(pr);
-      renderer.setSize(w, h, false);
-      uniforms.iResolution.value.set(w * pr, h * pr, pr);
-      rectRef.current = canvas.getBoundingClientRect();
-
-      if (!pausedRef.current) {
-        renderer.render(scene, camera);
-      }
-    };
-
-    let resizeRaf = 0;
-    const scheduleResize = () => {
-      if (resizeRaf) cancelAnimationFrame(resizeRaf);
-      resizeRaf = requestAnimationFrame(setSizeNow);
-    };
-
-    setSizeNow();
-    const ro = new ResizeObserver(scheduleResize);
-    ro.observe(mount);
-
-    const io = new IntersectionObserver(
-      entries => {
-        inViewRef.current = entries[0]?.isIntersecting ?? true;
-      },
-      { root: null, threshold: 0 }
-    );
-    io.observe(mount);
-
-    const onVis = () => {
-      pausedRef.current = document.hidden;
-    };
-    document.addEventListener('visibilitychange', onVis, { passive: true });
-
-    const updateMouse = (clientX, clientY) => {
-      const rect = rectRef.current || canvas.getBoundingClientRect();
-      if (!rect) return;
-      const x = clientX - rect.left;
-      const y = clientY - rect.top;
-      const ratio = currentDprRef.current;
-      const hb = rect.height * ratio;
-      mouseTarget.set(x * ratio, hb - y * ratio);
-    };
-    const onMove = ev => updateMouse(ev.clientX, ev.clientY);
-    const onLeave = () => mouseTarget.set(0, 0);
-
-    const listenerTarget = mount.parentElement || window;
-    listenerTarget.addEventListener('pointermove', onMove, { passive: true });
-    listenerTarget.addEventListener('pointerdown', onMove, { passive: true });
-    listenerTarget.addEventListener('pointerenter', onMove, { passive: true });
-    listenerTarget.addEventListener('pointerleave', onLeave, { passive: true });
-
-    const onCtxLost = e => {
-      e.preventDefault();
-      pausedRef.current = true;
-    };
-    const onCtxRestored = () => {
-      pausedRef.current = false;
-      scheduleResize();
-    };
-    canvas.addEventListener('webglcontextlost', onCtxLost, false);
-    canvas.addEventListener('webglcontextrestored', onCtxRestored, false);
-
+    let renderer = null;
+    let scene = null;
+    let camera = null;
+    let geometry = null;
+    let material = null;
+    let mesh = null;
+    let clock = null;
     let raf = 0;
+    let ro = null;
+    let io = null;
 
-    const clamp = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
-    const dprFloor = 0.6;
-    const lowerThresh = 50;
-    const upperThresh = 58;
-    let lastDprChangeRef = 0;
-    const dprChangeCooldown = 2000;
+    try {
+      const isMobile = typeof window !== 'undefined' && (window.innerWidth < 768 || /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent));
+      const targetDpr = isMobile ? 0.75 : Math.min(dpr ?? (window.devicePixelRatio || 1), 1.0);
+      baseDprRef.current = targetDpr;
+      currentDprRef.current = targetDpr;
 
-    const adjustDprIfNeeded = now => {
-      const elapsed = now - lastFpsCheckRef.current;
-      if (elapsed < 750) return;
+      renderer = new THREE.WebGLRenderer({
+        antialias: false,
+        alpha: true,
+        depth: false,
+        stencil: false,
+        powerPreference: isMobile ? 'low-power' : 'default',
+        premultipliedAlpha: false,
+        preserveDrawingBuffer: false,
+        failIfMajorPerformanceCaveat: false,
+        logarithmicDepthBuffer: false
+      });
+      rendererRef.current = renderer;
 
-      const samples = fpsSamplesRef.current;
-      if (samples.length === 0) {
-        lastFpsCheckRef.current = now;
-        return;
-      }
-      const avgFps = samples.reduce((a, b) => a + b, 0) / samples.length;
+      renderer.setPixelRatio(currentDprRef.current);
+      renderer.shadowMap.enabled = false;
+      renderer.outputColorSpace = THREE.SRGBColorSpace;
+      renderer.setClearColor(0x000000, 0);
 
-      let next = currentDprRef.current;
-      const base = baseDprRef.current;
+      const canvas = renderer.domElement;
+      canvas.style.width = '100%';
+      canvas.style.height = '100%';
+      canvas.style.display = 'block';
+      mount.appendChild(canvas);
 
-      if (avgFps < lowerThresh) {
-        next = clamp(currentDprRef.current * 0.85, dprFloor, base);
-      } else if (avgFps > upperThresh && currentDprRef.current < base) {
-        next = clamp(currentDprRef.current * 1.1, dprFloor, base);
-      }
+      scene = new THREE.Scene();
+      camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
 
-      if (Math.abs(next - currentDprRef.current) > 0.01 && now - lastDprChangeRef > dprChangeCooldown) {
-        currentDprRef.current = next;
-        lastDprChangeRef = now;
-        setSizeNow();
-      }
+      geometry = new THREE.BufferGeometry();
+      geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array([-1, -1, 0, 3, -1, 0, -1, 3, 0]), 3));
 
-      fpsSamplesRef.current = [];
-      lastFpsCheckRef.current = now;
-    };
+      const initialColor = hexToRGB(color || '#FF79C6');
+      const uniforms = {
+        iTime: { value: 0 },
+        iResolution: { value: new THREE.Vector3(1, 1, 1) },
+        iMouse: { value: new THREE.Vector4(0, 0, 0, 0) },
+        uWispDensity: { value: wispDensity },
+        uTiltScale: { value: mouseTiltStrength },
+        uFlowTime: { value: 0 },
+        uFogTime: { value: 0 },
+        uBeamXFrac: { value: horizontalBeamOffset },
+        uBeamYFrac: { value: verticalBeamOffset },
+        uFlowSpeed: { value: flowSpeed },
+        uVLenFactor: { value: verticalSizing },
+        uHLenFactor: { value: horizontalSizing },
+        uFogIntensity: { value: fogIntensity },
+        uFogScale: { value: fogScale },
+        uWSpeed: { value: wispSpeed },
+        uWIntensity: { value: wispIntensity },
+        uFlowStrength: { value: flowStrength },
+        uDecay: { value: decay },
+        uFalloffStart: { value: falloffStart },
+        uFogFallSpeed: { value: fogFallSpeed },
+        uColor: { value: new THREE.Vector3(initialColor.r, initialColor.g, initialColor.b) },
+        uFade: { value: hasFadedRef.current ? 1 : 0 }
+      };
+      uniformsRef.current = uniforms;
 
-    const animate = () => {
-      raf = requestAnimationFrame(animate);
-      if (pausedRef.current || !inViewRef.current) return;
+      material = new THREE.RawShaderMaterial({
+        vertexShader: VERT,
+        fragmentShader: FRAG,
+        uniforms,
+        transparent: true,
+        depthTest: false,
+        depthWrite: false,
+        blending: THREE.NormalBlending
+      });
 
-      const t = clock.getElapsedTime();
-      const dt = Math.max(0, t - prevTime);
-      prevTime = t;
+      mesh = new THREE.Mesh(geometry, material);
+      mesh.frustumCulled = false;
+      scene.add(mesh);
 
-      const dtMs = dt * 1000;
-      emaDtRef.current = emaDtRef.current * 0.9 + dtMs * 0.1;
-      const instFps = 1000 / Math.max(1, emaDtRef.current);
-      fpsSamplesRef.current.push(instFps);
+      clock = new THREE.Clock();
+      let prevTime = 0;
+      let fade = hasFadedRef.current ? 1 : 0;
 
-      uniforms.iTime.value = t;
+      const mouseTarget = new THREE.Vector2(0, 0);
+      const mouseSmooth = new THREE.Vector2(0, 0);
 
-      const cdt = Math.min(0.033, Math.max(0.001, dt));
-      uniforms.uFlowTime.value += cdt;
-      uniforms.uFogTime.value += cdt;
+      const setSizeNow = () => {
+        if (!mount || !renderer) return;
+        const w = mount.clientWidth || 1;
+        const h = mount.clientHeight || 1;
+        const pr = currentDprRef.current;
 
-      if (!hasFadedRef.current) {
-        const fadeDur = 1.0;
-        fade = Math.min(1, fade + cdt / fadeDur);
-        uniforms.uFade.value = fade;
-        if (fade >= 1) hasFadedRef.current = true;
-      }
+        const last = lastSizeRef.current;
+        const sizeChanged = Math.abs(w - last.width) > 1 || Math.abs(h - last.height) > 1;
+        const dprChanged = Math.abs(pr - last.dpr) > 0.01;
+        if (!sizeChanged && !dprChanged) return;
 
-      const tau = Math.max(1e-3, mouseSmoothTime);
-      const alpha = 1 - Math.exp(-cdt / tau);
-      mouseSmooth.lerp(mouseTarget, alpha);
-      uniforms.iMouse.value.set(mouseSmooth.x, mouseSmooth.y, 0, 0);
+        lastSizeRef.current = { width: w, height: h, dpr: pr };
+        renderer.setPixelRatio(pr);
+        renderer.setSize(w, h, false);
+        uniforms.iResolution.value.set(w * pr, h * pr, pr);
+        rectRef.current = canvas.getBoundingClientRect();
 
-      renderer.render(scene, camera);
+        if (!pausedRef.current && inViewRef.current) {
+          renderer.render(scene, camera);
+        }
+      };
 
-      adjustDprIfNeeded(performance.now());
-    };
+      let resizeRaf = 0;
+      const scheduleResize = () => {
+        if (resizeRaf) cancelAnimationFrame(resizeRaf);
+        resizeRaf = requestAnimationFrame(setSizeNow);
+      };
 
-    animate();
+      setSizeNow();
+      ro = new ResizeObserver(scheduleResize);
+      ro.observe(mount);
 
-    return () => {
-      cancelAnimationFrame(raf);
-      ro.disconnect();
-      io.disconnect();
-      document.removeEventListener('visibilitychange', onVis);
-      listenerTarget.removeEventListener('pointermove', onMove);
-      listenerTarget.removeEventListener('pointerdown', onMove);
-      listenerTarget.removeEventListener('pointerenter', onMove);
-      listenerTarget.removeEventListener('pointerleave', onLeave);
-      canvas.removeEventListener('webglcontextlost', onCtxLost);
-      canvas.removeEventListener('webglcontextrestored', onCtxRestored);
-      geometry.dispose();
-      material.dispose();
-      renderer.dispose();
-      renderer.forceContextLoss();
-      if (mount.contains(canvas)) mount.removeChild(canvas);
-    };
+      io = new IntersectionObserver(
+        entries => {
+          inViewRef.current = entries[0]?.isIntersecting ?? false;
+        },
+        { root: null, threshold: 0.05, rootMargin: '50px' }
+      );
+      io.observe(mount);
+
+      const onVis = () => {
+        pausedRef.current = document.hidden;
+      };
+      document.addEventListener('visibilitychange', onVis, { passive: true });
+
+      const updateMouse = (clientX, clientY) => {
+        const rect = rectRef.current || canvas.getBoundingClientRect();
+        if (!rect) return;
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+        const ratio = currentDprRef.current;
+        const hb = rect.height * ratio;
+        mouseTarget.set(x * ratio, hb - y * ratio);
+      };
+      const onMove = ev => updateMouse(ev.clientX, ev.clientY);
+      const onLeave = () => mouseTarget.set(0, 0);
+
+      const listenerTarget = mount.parentElement || window;
+      listenerTarget.addEventListener('pointermove', onMove, { passive: true });
+      listenerTarget.addEventListener('pointerdown', onMove, { passive: true });
+      listenerTarget.addEventListener('pointerenter', onMove, { passive: true });
+      listenerTarget.addEventListener('pointerleave', onLeave, { passive: true });
+
+      const onCtxLost = e => {
+        e.preventDefault();
+        pausedRef.current = true;
+      };
+      const onCtxRestored = () => {
+        pausedRef.current = false;
+        scheduleResize();
+      };
+      canvas.addEventListener('webglcontextlost', onCtxLost, false);
+      canvas.addEventListener('webglcontextrestored', onCtxRestored, false);
+
+      const animate = () => {
+        raf = requestAnimationFrame(animate);
+        if (pausedRef.current || !inViewRef.current || !renderer) return;
+
+        const t = clock.getElapsedTime();
+        const dt = Math.max(0, Math.min(t - prevTime, 0.05));
+        prevTime = t;
+
+        uniforms.iTime.value = t;
+        const cdt = Math.min(0.033, Math.max(0.001, dt));
+        uniforms.uFlowTime.value += cdt;
+        uniforms.uFogTime.value += cdt;
+
+        if (!hasFadedRef.current) {
+          fade = Math.min(1, fade + cdt);
+          uniforms.uFade.value = fade;
+          if (fade >= 1) hasFadedRef.current = true;
+        }
+
+        const tau = Math.max(1e-3, mouseSmoothTime);
+        const alpha = 1 - Math.exp(-cdt / tau);
+        mouseSmooth.lerp(mouseTarget, alpha);
+        uniforms.iMouse.value.set(mouseSmooth.x, mouseSmooth.y, 0, 0);
+
+        renderer.render(scene, camera);
+      };
+
+      animate();
+
+      return () => {
+        cancelAnimationFrame(raf);
+        if (ro) ro.disconnect();
+        if (io) io.disconnect();
+        document.removeEventListener('visibilitychange', onVis);
+        listenerTarget.removeEventListener('pointermove', onMove);
+        listenerTarget.removeEventListener('pointerdown', onMove);
+        listenerTarget.removeEventListener('pointerenter', onMove);
+        listenerTarget.removeEventListener('pointerleave', onLeave);
+        if (canvas) {
+          canvas.removeEventListener('webglcontextlost', onCtxLost);
+          canvas.removeEventListener('webglcontextrestored', onCtxRestored);
+        }
+        if (geometry) geometry.dispose();
+        if (material) material.dispose();
+        if (renderer) {
+          renderer.dispose();
+          renderer.forceContextLoss();
+        }
+        if (canvas && mount.contains(canvas)) mount.removeChild(canvas);
+      };
+    } catch (err) {
+      console.warn('LaserFlow WebGL fallback activated:', err);
+      setHasError(true);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dpr]);
 
@@ -583,6 +543,10 @@ export const LaserFlow = ({
     fogFallSpeed,
     color
   ]);
+
+  if (hasError) {
+    return <div className={`laser-flow-fallback ${className || ''}`} style={style} />;
+  }
 
   return <div ref={mountRef} className={`laser-flow-container ${className || ''}`} style={style} />;
 };

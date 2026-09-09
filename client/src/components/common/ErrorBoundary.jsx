@@ -1,6 +1,17 @@
-import React from 'react'
+import React, { Component } from 'react'
 
-import { Component } from 'react'
+const isModuleOrChunkError = (message = '') => {
+  const msg = String(message).toLowerCase()
+  return (
+    msg.includes('importing a module script failed') ||
+    msg.includes('failed to fetch dynamically imported module') ||
+    msg.includes('loading chunk') ||
+    msg.includes('failed to load module script') ||
+    msg.includes('error loading dynamically imported module') ||
+    msg.includes('mime type') ||
+    msg.includes('dynamically imported')
+  )
+}
 
 class ErrorBoundary extends Component {
   constructor(props) {
@@ -13,15 +24,10 @@ class ErrorBoundary extends Component {
   }
 
   componentDidCatch(error, info) {
-    console.error('Application render failed:', error, info)
-    const isChunkError =
-      /Failed to fetch dynamically imported module/i.test(error?.message) ||
-      /Loading chunk/i.test(error?.message) ||
-      /Failed to load module script/i.test(error?.message)
-
-    if (isChunkError) {
+    console.error('Application render error:', error, info)
+    if (isModuleOrChunkError(error?.message)) {
       const lastReload = Number(sessionStorage.getItem('chunk_reload_ts') || 0)
-      if (Date.now() - lastReload > 10000) {
+      if (Date.now() - lastReload > 8000) {
         sessionStorage.setItem('chunk_reload_ts', String(Date.now()))
         window.location.reload()
       }
@@ -35,51 +41,49 @@ class ErrorBoundary extends Component {
 
   render() {
     if (this.state.error) {
-      const isChunkError =
-        /Failed to fetch dynamically imported module/i.test(this.state.error?.message) ||
-        /Loading chunk/i.test(this.state.error?.message)
+      const isChunk = isModuleOrChunkError(this.state.error?.message)
 
       return (
-        <main style={{ padding: '32px', fontFamily: 'Arial, sans-serif', maxWidth: '600px', margin: '40px auto', textAlign: 'center' }}>
-          <h1 style={{ color: '#7c2d12', marginBottom: '12px' }}>
-            {isChunkError ? 'New Update Available' : 'OZILLA FEST could not render'}
-          </h1>
-          <p style={{ color: '#444', marginBottom: '16px' }}>
-            {isChunkError
-              ? 'A new version of the website was published. Please refresh to load the latest version.'
-              : 'Check the browser console for the full error details.'}
+        <main
+          style={{
+            padding: '32px 20px',
+            fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+            maxWidth: '540px',
+            margin: '60px auto',
+            textAlign: 'center',
+            backgroundColor: '#121118',
+            color: '#f3f4f6',
+            borderRadius: '16px',
+            border: '1px solid rgba(255,255,255,0.1)',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.5)'
+          }}
+        >
+          <h2 style={{ color: '#f97316', marginBottom: '12px', fontSize: '1.4rem' }}>
+            {isChunk ? 'New Update Available' : 'Ozilla Festival could not render'}
+          </h2>
+          <p style={{ color: '#9ca3af', marginBottom: '20px', fontSize: '0.95rem', lineHeight: '1.5' }}>
+            {isChunk
+              ? 'A fresh update has been deployed. Please tap refresh to load the latest version.'
+              : 'Please refresh the page to reload the application.'}
           </p>
           <button
             type="button"
             onClick={this.handleReload}
             style={{
-              padding: '10px 20px',
+              padding: '12px 28px',
               backgroundColor: '#ea580c',
-              color: '#fff',
+              color: '#ffffff',
               border: 'none',
-              borderRadius: '6px',
+              borderRadius: '999px',
               cursor: 'pointer',
-              fontWeight: 'bold',
-              marginBottom: '16px'
+              fontWeight: '700',
+              fontSize: '1rem',
+              boxShadow: '0 4px 14px rgba(234, 88, 12, 0.4)',
+              transition: 'transform 0.15s ease'
             }}
           >
-            Refresh Page
+            Refresh Website
           </button>
-          {!isChunkError && (
-            <pre
-              style={{
-                whiteSpace: 'pre-wrap',
-                background: '#fff7ed',
-                border: '1px solid #fed7aa',
-                padding: '16px',
-                borderRadius: '6px',
-                color: '#7c2d12',
-                textAlign: 'left'
-              }}
-            >
-              {this.state.error.message}
-            </pre>
-          )}
         </main>
       )
     }

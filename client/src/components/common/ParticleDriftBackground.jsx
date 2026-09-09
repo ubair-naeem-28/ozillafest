@@ -1,8 +1,8 @@
 // Particle Drift — Originkit (Adapted for React/WebGL full-site background)
 import React, { useEffect, useRef } from 'react'
 
-const MAX_DPR = 2
-const MAX_LINES = 8000
+const MAX_DPR = typeof window !== 'undefined' && window.innerWidth < 768 ? 0.85 : 1.2
+const MAX_LINES = 2500
 const EDGE = 20 // px a particle must clear before it re-enters on the far side
 
 const LINE_VERT = `
