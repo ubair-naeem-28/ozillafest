@@ -5,10 +5,8 @@
 }
 
 html {
-  scroll-behavior: smooth;
   color-scheme: dark;
   -webkit-overflow-scrolling: touch;
-  overscroll-behavior-y: none;
 }
 
 body {
@@ -24,16 +22,17 @@ body {
   overflow-x: hidden;
 }
 
-/* GPU Hardware Acceleration & Smooth 60/120fps Rendering */
-.sp-celeb-card,
+/* GPU Composite Layers */
 .sp-glass-card,
+.sp-pillar-card,
 .sp-pricing-card,
 .stat-card,
 .sp-timeline-item,
 .sp-festival-vibe-banner {
-  transform: translateZ(0);
+  transform: translate3d(0, 0, 0);
+  -webkit-transform: translate3d(0, 0, 0);
   backface-visibility: hidden;
-  will-change: transform, opacity;
+  -webkit-backface-visibility: hidden;
 }
 
 h1,

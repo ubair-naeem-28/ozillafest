@@ -191,12 +191,18 @@ export default function SmoothScrollSlider({
     return () => clearInterval(timer)
   }, [autoPlay, isHovered, slides.length, step, autoPlayInterval])
 
-  // Animation Loop with smooth Lerp physics
+  // Animation Loop with smooth Lerp physics and viewport pausing
   useEffect(() => {
     let raf = 0
     let last = 0
+    let isVisible = true
+    let io = null
 
     const tick = (now) => {
+      if (!isVisible) {
+        raf = 0
+        return
+      }
       raf = requestAnimationFrame(tick)
       const c = frame.current
       const delta = last ? Math.min((now - last) / 1000, 0.1) : 1 / 60
@@ -242,15 +248,45 @@ export default function SmoothScrollSlider({
 
         if (c.dim > 0 && scale < 1) {
           const t = (1 - scale) / Math.max(0.001, 1 - c.minScale)
-          node.style.filter = `brightness(${Math.max(0.35, 1 - t * c.dim)})`
+          node.style.opacity = String(Math.max(0.45, 1 - t * c.dim * 0.6))
         } else {
-          node.style.filter = 'none'
+          node.style.opacity = '1'
         }
       }
     }
 
-    raf = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(raf)
+    const startTick = () => {
+      if (raf) return
+      last = performance.now()
+      raf = requestAnimationFrame(tick)
+    }
+
+    const stopTick = () => {
+      if (raf) {
+        cancelAnimationFrame(raf)
+        raf = 0
+      }
+    }
+
+    if (typeof IntersectionObserver !== 'undefined' && containerRef.current) {
+      io = new IntersectionObserver(
+        (entries) => {
+          if (entries[0]) {
+            isVisible = entries[0].isIntersecting
+            if (isVisible) startTick()
+            else stopTick()
+          }
+        },
+        { rootMargin: '80px' }
+      )
+      io.observe(containerRef.current)
+    }
+
+    startTick()
+    return () => {
+      stopTick()
+      if (io) io.disconnect()
+    }
   }, [])
 
   // Wheel / Trackpad listener

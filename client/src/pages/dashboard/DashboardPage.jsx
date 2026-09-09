@@ -419,10 +419,6 @@ function DashboardPage() {
               <motion.div
                 key={st.label}
                 className="stat-card"
-                initial={{ opacity: 0, y: 25 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: i * 0.08 }}
                 whileHover={{ y: -5, scale: 1.02 }}
               >
                 <strong className="stat-val">{st.value}</strong>
@@ -437,26 +433,16 @@ function DashboardPage() {
       {/* ══ SECTION 01: CELEBRITIES & LINEUP ══ */}
       <section id="celebrities" className="sp-section sp-section-celebrities" aria-label="Celebrities Lineup">
         <div className="sp-container">
-          <motion.div
-            className="sp-section-header"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
+          <div className="sp-section-header">
             <span className="sp-eyebrow">Live on the Ozilla Stage</span>
             <h2 className="sp-section-title">Celebrity Singers & Performers</h2>
             <p className="sp-section-subtitle">
               Four powerhouse headline performers, one premium Lahore festival atmosphere, and an amphitheatre built for unforgettable crowd moments.
             </p>
-          </motion.div>
+          </div>
 
-          <motion.div
+          <div
             className="sp-celebrity-slider-wrap"
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-40px' }}
-            transition={{ duration: 0.6 }}
             style={{ margin: '1rem 0 3.5rem 0' }}
           >
             <SmoothScrollSlider
@@ -470,16 +456,10 @@ function DashboardPage() {
               autoPlay={true}
               autoPlaySpeed={1.2}
             />
-          </motion.div>
+          </div>
 
           {/* Countdown to Festival */}
-          <motion.div
-            className="sp-countdown-banner"
-            initial={{ opacity: 0, y: 25 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.55 }}
-          >
+          <div className="sp-countdown-banner">
             <div className="sp-countdown-header">
               <span className="sp-countdown-eyebrow">
                 <span className="sp-countdown-pulse" />
@@ -500,37 +480,29 @@ function DashboardPage() {
                 </motion.div>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* ══ SECTION 02: VIP & TICKET TIERS (CreatorOS Style) ══ */}
       <section id="vip-experience" className="sp-section sp-section-pricing" aria-label="Festival Passes">
         <div className="sp-container">
-          <motion.div
+          <div
             className="sp-section-header"
             style={{ textAlign: 'center' }}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
           >
             <span className="sp-eyebrow">CHOOSE YOUR ACCESS</span>
             <h2 className="sp-section-title">Festival Passes & VIP Tiers</h2>
             <p className="sp-section-subtitle" style={{ margin: '0 auto' }}>
               Select your festival experience tier. Instant dynamic QR pass generated upon reservation with guaranteed fast-track admission.
             </p>
-          </motion.div>
+          </div>
 
           <div className="sp-pricing-grid">
-            {ticketTiers.map((tier, idx) => (
+            {ticketTiers.map((tier) => (
               <motion.div
                 key={tier.id}
                 className={`sp-pricing-card ${tier.isFeatured ? 'sp-featured-pricing' : ''}`}
-                initial={{ opacity: 0, y: 35 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.12 }}
                 whileHover={{ y: -8 }}
               >
                 {tier.isFeatured && (
@@ -572,30 +544,20 @@ function DashboardPage() {
       {/* ══ SECTION 03: FESTIVAL EXPERIENCE & ATMOSPHERE ══ */}
       <section id="about" className="sp-section sp-section-about" aria-label="About Ozilla">
         <div className="sp-container">
-          <motion.div
-            className="sp-section-header"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
+          <div className="sp-section-header">
             <span className="sp-eyebrow">⚡ THE ULTIMATE LIVE EXPERIENCE</span>
             <h2 className="sp-section-title">The Ozilla Fest Atmosphere</h2>
             <p className="sp-section-subtitle">
               Pakistan's flagship open-air music & cultural festival. 4 electrified stages, 100kW concert sound, headline celebrity acts, gourmet food street, and unmatched crowd energy under the Lahore night sky.
             </p>
-          </motion.div>
+          </div>
 
           {/* 4 Concert Pillars Grid */}
           <div className="sp-pillars-grid">
-            {festivalPillars.map((pillar, idx) => (
+            {festivalPillars.map((pillar) => (
               <motion.div
                 key={pillar.title}
                 className="sp-pillar-card"
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
                 whileHover={{ y: -8, scale: 1.02 }}
               >
                 <div className="sp-pillar-glow-accent" />
@@ -613,13 +575,9 @@ function DashboardPage() {
           </div>
 
           {/* Festival Vibe & Highlights Showcase */}
-          <motion.div
+          <div
             className="sp-festival-vibe-banner"
             style={{ position: 'relative', overflow: 'hidden' }}
-            initial={{ opacity: 0, y: 35 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
           >
             <NeonBorder color="#ff7a29" rounded={32} thickness={2.8} borderSize={50} glow={85} />
             <div className="sp-vibe-left" style={{ position: 'relative', zIndex: 2 }}>
@@ -656,14 +614,10 @@ function DashboardPage() {
                 { text: '50+ Food & Beats Stalls', isMain: false, icon: '🍔' },
                 { text: 'VIP Artist Lounge & Deck', isMain: false, icon: '✨' },
                 { text: 'Exclusive Partner Discounts', isMain: false, icon: '🏷️' }
-              ].map((tag, tIdx) => (
+              ].map((tag) => (
                 <motion.div
                   key={tag.text}
                   className={`sp-vibe-tag ${tag.isMain ? 'sp-vibe-main' : 'sp-vibe-secondary'}`}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 0.35, delay: tIdx * 0.05 }}
                   whileHover={{ scale: 1.03, x: 3 }}
                   whileTap={{ scale: 0.98 }}
                 >
@@ -673,37 +627,27 @@ function DashboardPage() {
                 </motion.div>
               ))}
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
       {/* ══ SECTION 04: PAST FESTIVAL EDITIONS ══ */}
       <section id="events" className="sp-section sp-section-events" aria-label="Past Events">
         <div className="sp-container">
-          <motion.div
-            className="sp-section-header"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
+          <div className="sp-section-header">
             <span className="sp-eyebrow">Previous Editions</span>
             <h2 className="sp-section-title">Past Festival Milestones</h2>
             <p className="sp-section-subtitle">
               A legacy of sold-out stadium energy, breakthrough artist sets, and unforgettable Lahore nights.
             </p>
-          </motion.div>
+          </div>
 
           <div className="sp-events-grid">
-            {pastEvents.map((event, idx) => (
+            {pastEvents.map((event) => (
               <motion.div
                 key={event.name}
                 className="sp-glass-card sp-past-event-card"
                 style={{ position: 'relative', overflow: 'hidden' }}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.12 }}
                 whileHover={{ y: -6 }}
               >
                 <NeonBorder color="#ff8a3d" rounded={22} thickness={2.5} borderSize={40} glow={80} />
@@ -731,30 +675,20 @@ function DashboardPage() {
       {/* ══ SECTION 05: UPCOMING FESTIVAL ROADMAP ══ */}
       <section id="future-events" className="sp-section sp-section-future" aria-label="Upcoming Events">
         <div className="sp-container">
-          <motion.div
-            className="sp-section-header"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-          >
+          <div className="sp-section-header">
             <span className="sp-eyebrow">Upcoming Concert Tour</span>
             <h2 className="sp-section-title">Future Festival Editions</h2>
             <p className="sp-section-subtitle">
               Mark your calendar for upcoming major festival editions, celebrity concert nights, and arena dates.
             </p>
-          </motion.div>
+          </div>
 
           <div className="sp-future-grid">
-            {futureEvents.map((ev, idx) => (
+            {futureEvents.map((ev) => (
               <motion.div
                 key={ev.name}
                 className="sp-glass-card sp-future-card"
                 style={{ position: 'relative', overflow: 'hidden' }}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.12 }}
                 whileHover={{ y: -6 }}
               >
                 <NeonBorder color="#ff9e42" rounded={22} thickness={2.5} borderSize={40} glow={80} />
@@ -786,14 +720,10 @@ function DashboardPage() {
           </div>
 
           <div className="sp-timeline">
-            {historyEvents.map((ev, idx) => (
-              <motion.div
+            {historyEvents.map((ev) => (
+              <div
                 key={ev.name}
                 className="sp-timeline-item"
-                initial={{ opacity: 0, x: -28, y: 20 }}
-                whileInView={{ opacity: 1, x: 0, y: 0 }}
-                viewport={{ once: true, margin: '-40px' }}
-                transition={{ duration: 0.45, delay: idx * 0.08 }}
               >
                 <div className="sp-timeline-node-wrap">
                   <div className="sp-timeline-icon">
@@ -830,7 +760,7 @@ function DashboardPage() {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>
@@ -842,13 +772,9 @@ function DashboardPage() {
       {/* ══ SECTION 10: VENUE FACILITIES ══ */}
       <section id="facilities" className="sp-section sp-section-facilities" aria-label="Facilities">
         <div className="sp-container">
-          <motion.div
+          <div
             className="sp-section-header sp-facilities-header-banner"
             style={{ position: 'relative', overflow: 'hidden' }}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
           >
             <NeonBorder color="#ff8a3d" rounded={24} thickness={2.8} borderSize={45} glow={85} />
             <div style={{ position: 'relative', zIndex: 2 }}>
@@ -858,18 +784,14 @@ function DashboardPage() {
                 Built for a seamless 10,000+ attendee experience with concert-grade sound, medical support, VIP hospitality, and creator amenities.
               </p>
             </div>
-          </motion.div>
+          </div>
 
           <div className="sp-facilities-grid">
-            {facilitiesList.map((f, idx) => (
+            {facilitiesList.map((f) => (
               <motion.div
                 key={f.title}
                 className="sp-glass-card sp-facility-card"
                 style={{ position: 'relative', overflow: 'hidden' }}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.45, delay: idx * 0.07 }}
                 whileHover={{ y: -8, scale: 1.02 }}
               >
                 <NeonBorder color={f.accent || '#ff8a3d'} rounded={20} thickness={2.2} borderSize={40} glow={80} />
@@ -893,13 +815,9 @@ function DashboardPage() {
       {/* ══ SECTION 11: SPONSORSHIPS ══ */}
       <section id="sponsorship" className="sp-section sp-section-sponsorship" aria-label="Sponsorships">
         <div className="sp-container">
-          <motion.div
+          <div
             className="sp-section-header sp-sponsorship-header-banner"
             style={{ position: 'relative', overflow: 'hidden', textAlign: 'center' }}
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
           >
             <NeonBorder color="#ff8a3d" rounded={24} thickness={2.8} borderSize={45} glow={85} />
             <div style={{ position: 'relative', zIndex: 2 }}>
@@ -909,17 +827,13 @@ function DashboardPage() {
                 Partner with Pakistan's biggest live music festival. Gain unparalleled on-ground brand presence, digital engagement, and VIP hospitality.
               </p>
             </div>
-          </motion.div>
+          </div>
 
           <div className="sp-sponsorship-grid">
-            {sponsorshipTiers.map((tier, idx) => (
+            {sponsorshipTiers.map((tier) => (
               <motion.div
                 key={tier.tier}
                 className={`sp-glass-card sp-sponsor-card ${tier.isFeatured ? 'sp-sponsor-featured' : ''}`}
-                initial={{ opacity: 0, y: 35 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.45, delay: idx * 0.1 }}
                 whileHover={{ y: -10, scale: 1.02 }}
               >
                 {tier.isFeatured && (

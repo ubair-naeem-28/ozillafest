@@ -321,9 +321,13 @@ export default function NeonBorder({
       }}
     >
       {amount > 0 &&
-        GLOW_LAYERS.map((l, i) =>
-          glowLayer(`glow-${i}`, ringAt(l.reach), l.blur, l.opacity)
-        )}
+        ((size.w > 0 && size.w < 600)
+          ? [GLOW_LAYERS[0]].map((l, i) =>
+              glowLayer(`glow-${i}`, ringAt(l.reach), l.blur * 0.7, l.opacity * 1.2)
+            )
+          : GLOW_LAYERS.map((l, i) =>
+              glowLayer(`glow-${i}`, ringAt(l.reach), l.blur, l.opacity)
+            ))}
       {Array.from({ length: EDGE_COPIES }).map((_, i) => (
         <div
           key={`edge-${i}`}

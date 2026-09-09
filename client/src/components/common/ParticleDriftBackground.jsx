@@ -305,9 +305,10 @@ export default function ParticleDriftBackground({
       const v = vRef.current
       const sp = v.speed
 
-      const dpr = Math.min(window.devicePixelRatio || 1, MAX_DPR)
-      const cw = sizeRef.current.w || canvas.clientWidth || window.innerWidth || 1200
-      const ch = sizeRef.current.h || canvas.clientHeight || window.innerHeight || 800
+      const isMobile = cw < 768
+      const isTablet = cw >= 768 && cw < 1024
+
+      const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 0.75 : MAX_DPR)
       const bw = Math.max(1, Math.round(cw * dpr))
       const bh = Math.max(1, Math.round(ch * dpr))
       if (canvas.width !== bw || canvas.height !== bh) {
@@ -316,22 +317,19 @@ export default function ParticleDriftBackground({
       }
       gl.viewport(0, 0, bw, bh)
 
-      const isMobile = cw < 768
-      const isTablet = cw >= 768 && cw < 1024
-
-      // Adaptive density & sizing: Mobile is kept at a balanced aesthetic level
+      // Adaptive density & sizing: Mobile is kept at a light, silky-smooth aesthetic
       let targetDensity = v.density
       let targetLinkD = v.linkDistance
       let targetDotSize = v.dotSize
 
       if (isMobile) {
-        targetDensity = Math.max(60, Math.min(Math.round(v.density * 0.38), 90))
-        targetLinkD = Math.min(v.linkDistance, 135)
-        targetDotSize = Math.min(v.dotSize, 8.5)
+        targetDensity = 42
+        targetLinkD = 95
+        targetDotSize = Math.min(v.dotSize, 7)
       } else if (isTablet) {
-        targetDensity = Math.max(90, Math.min(Math.round(v.density * 0.6), 145))
-        targetLinkD = Math.min(v.linkDistance, 165)
-        targetDotSize = Math.min(v.dotSize, 11)
+        targetDensity = Math.max(80, Math.min(Math.round(v.density * 0.5), 110))
+        targetLinkD = Math.min(v.linkDistance, 145)
+        targetDotSize = Math.min(v.dotSize, 10)
       }
 
       if (targetDensity !== builtN) {
