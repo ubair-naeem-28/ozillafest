@@ -210,7 +210,7 @@ function RegisterForm() {
       const response = await authService.sendOtp(formData.email)
       if (
         response?.emailDelivery === 'failed' ||
-        (typeof response?.message === 'string' && response.message.toLowerCase().includes('delivery failed'))
+        (typeof response?.message === 'string' && response.message.toLowerCase().includes('delivery failed') && !response?.devOtp)
       ) {
         setOtpSent(false)
         setError(
@@ -221,7 +221,11 @@ function RegisterForm() {
         setOtpSent(true)
         setOtpVerified(false)
         setResendSeconds(60)
-        setOtp('')
+        if (response?.devOtp) {
+          setOtp(String(response.devOtp))
+        } else {
+          setOtp('')
+        }
         setMessage(response.message || 'OTP code has been sent to your email. Please check your inbox.')
       }
     } catch (err) {

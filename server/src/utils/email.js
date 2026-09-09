@@ -23,16 +23,16 @@ function getTransporter() {
   const pass = env.smtpPass || 'nqqg vovr pcsc halb'
 
   transporter = nodemailer.createTransport({
-    host: 'smtp.gmail.com',
-    port: 465,
-    secure: true,
+    host: env.smtpHost || 'smtp.gmail.com',
+    port: env.smtpPort || 465,
+    secure: env.smtpPort === 465,
     auth: {
       user: user.trim(),
       pass: pass.trim()
     },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 15000,
+    connectionTimeout: 3500,
+    greetingTimeout: 3500,
+    socketTimeout: 5000,
     tls: {
       rejectUnauthorized: false
     }
@@ -84,6 +84,77 @@ function buildEmailWrapper(title, contentHtml) {
   `
 }
 
+async function sendViaBrevo({ to, subject, html, text }) {
+  const apiKey = env.brevoApiKey || process.env.BREVO_API_KEY
+  if (!apiKey || typeof apiKey !== 'string' || !apiKey.trim()) return null
+
+  try {
+    const fromEmail = env.smtpUser || 'obaer2102@gmail.com'
+    const response = await fetch('https://api.brevo.com/v3/smtp/email', {
+      method: 'POST',
+      headers: {
+        'api-key': apiKey.trim(),
+        'Content-Type': 'application/json',
+        Accept: 'application/json'
+      },
+      body: JSON.stringify({
+        sender: { name: 'OZILLA FEST', email: fromEmail },
+        to: (Array.isArray(to) ? to : [to]).map(e => ({ email: e })),
+        subject,
+        htmlContent: html,
+        textContent: text
+      })
+    })
+
+    const data = await response.json()
+    if (response.ok && (data?.messageId || data?.id)) {
+      console.log(`[Email Service] Delivered via Brevo HTTPS API: ${data.messageId || data.id}`)
+      return data
+    }
+    console.warn('[Brevo API Notice]:', data?.message || data)
+    return null
+  } catch (err) {
+    console.warn('[Brevo API Error]:', err.message)
+    return null
+  }
+}
+
+async function sendViaSendGrid({ to, subject, html, text }) {
+  const apiKey = env.sendgridApiKey || process.env.SENDGRID_API_KEY
+  if (!apiKey || typeof apiKey !== 'string' || !apiKey.trim()) return null
+
+  try {
+    const fromEmail = env.smtpUser || 'obaer2102@gmail.com'
+    const response = await fetch('https://api.sendgrid.com/v3/mail/send', {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${apiKey.trim()}`,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        personalizations: [{ to: (Array.isArray(to) ? to : [to]).map(e => ({ email: e })) }],
+        from: { email: fromEmail, name: 'OZILLA FEST' },
+        subject,
+        content: [
+          ...(text ? [{ type: 'text/plain', value: text }] : []),
+          ...(html ? [{ type: 'text/html', value: html }] : [])
+        ]
+      })
+    })
+
+    if (response.ok || response.status === 202) {
+      console.log(`[Email Service] Delivered via SendGrid HTTPS API`)
+      return { success: true }
+    }
+    const data = await response.text()
+    console.warn('[SendGrid API Notice]:', data)
+    return null
+  } catch (err) {
+    console.warn('[SendGrid API Error]:', err.message)
+    return null
+  }
+}
+
 async function sendViaResend({ to, subject, html, text }) {
   const apiKey = env.resendApiKey || process.env.RESEND_API_KEY
   if (!apiKey || typeof apiKey !== 'string' || !apiKey.trim()) {
@@ -108,14 +179,53 @@ async function sendViaResend({ to, subject, html, text }) {
 
     const data = await response.json()
     if (response.ok && data?.id) {
+      console.log(`[Email Service] Delivered via Resend HTTPS API: ${data.id}`)
       return data
     }
-    console.warn('[Resend API Notice]:', data?.message || 'Trying SMTP fallback')
+    console.warn('[Resend API Notice]:', data?.message || 'Trying other methods')
     return null
   } catch (err) {
     console.warn('[Resend API Error]:', err.message)
     return null
   }
+}
+
+async function sendViaSmtp({ to, subject, html, text }) {
+  try {
+    const client = getTransporter()
+    const info = await client.sendMail({
+      from: getMailFrom(),
+      to,
+      subject,
+      text,
+      html
+    })
+    console.log(`[Email Service] Delivered via SMTP: ${info.messageId}`)
+    return info
+  } catch (err) {
+    console.warn(`[Email Service] SMTP attempt failed (${err.message})`)
+    return null
+  }
+}
+
+export async function deliverEmail({ to, subject, html, text }) {
+  // 1. Try Brevo HTTPS API
+  const brevoRes = await sendViaBrevo({ to, subject, html, text })
+  if (brevoRes) return brevoRes
+
+  // 2. Try SendGrid HTTPS API
+  const sendgridRes = await sendViaSendGrid({ to, subject, html, text })
+  if (sendgridRes) return sendgridRes
+
+  // 3. Try Resend HTTPS API
+  const resendRes = await sendViaResend({ to, subject, html, text })
+  if (resendRes) return resendRes
+
+  // 4. Try Direct SMTP (port 465 / 587)
+  const smtpRes = await sendViaSmtp({ to, subject, html, text })
+  if (smtpRes) return smtpRes
+
+  throw new Error('Outbound email delivery unavailable on current hosting environment (SMTP ports blocked & no HTTP Email API configured).')
 }
 
 export async function sendOtpEmail({ to, otpCode }) {
@@ -135,34 +245,11 @@ export async function sendOtpEmail({ to, otpCode }) {
   const subject = `[Ozilla 2026] Verification Code: ${otpCode}`
   const text = `Your OZILLA FEST OTP code is: ${otpCode}. It expires in 10 minutes.`
 
-  // 1. Direct Gmail SMTP (delivers reliably to any inbox worldwide)
-  try {
-    const client = getTransporter()
-    const info = await client.sendMail({
-      from: getMailFrom(),
-      to,
-      subject,
-      text,
-      html
-    })
-    console.log(`[Email Service] OTP successfully delivered to ${to} via Gmail SMTP (msgId: ${info.messageId})`)
-    return info
-  } catch (smtpError) {
-    console.warn(`[Email Service] Gmail SMTP failed for ${to} (${smtpError.message}), trying Resend fallback...`)
-    
-    // 2. Fallback to Resend API if SMTP has connection issues
-    const resendResult = await sendViaResend({ to, subject, html, text })
-    if (resendResult) {
-      return resendResult
-    }
-    
-    throw smtpError
-  }
+  return deliverEmail({ to, subject, html, text })
 }
 
 export async function sendPasswordResetEmail({ to, resetUrl }) {
   try {
-    const client = getTransporter()
     const html = buildEmailWrapper(
       'Reset Your OZILLA FEST Password',
       `
@@ -177,8 +264,7 @@ export async function sendPasswordResetEmail({ to, resetUrl }) {
       `
     )
 
-    await client.sendMail({
-      from: getMailFrom(),
+    await deliverEmail({
       to,
       subject: '[Ozilla 2026] Password Reset Instructions',
       text: `Reset your password at: ${resetUrl} (Link expires in 30 minutes)`,
@@ -191,7 +277,6 @@ export async function sendPasswordResetEmail({ to, resetUrl }) {
 
 export async function sendWelcomeEmail({ to, name }) {
   try {
-    const client = getTransporter()
     const html = buildEmailWrapper(
       'Welcome to OZILLA FEST 2026',
       `
@@ -215,8 +300,7 @@ export async function sendWelcomeEmail({ to, name }) {
       `
     )
 
-    await client.sendMail({
-      from: getMailFrom(),
+    await deliverEmail({
       to,
       subject: '🌟 Welcome to OZILLA FEST 2026',
       text: `Welcome to OZILLA FEST 2026, ${name || 'Guest'}! Log in to view your tickets at: ${env.frontendUrl}/tickets`,
@@ -229,7 +313,6 @@ export async function sendWelcomeEmail({ to, name }) {
 
 export async function sendPaymentReceivedEmail({ to, name, ticketId, tierName, amount, paymentMethod }) {
   try {
-    const client = getTransporter()
     const html = buildEmailWrapper(
       'Payment Received - OZILLA FEST 2026',
       `
@@ -264,8 +347,7 @@ export async function sendPaymentReceivedEmail({ to, name, ticketId, tierName, a
       `
     )
 
-    await client.sendMail({
-      from: getMailFrom(),
+    await deliverEmail({
       to,
       subject: `[Ozilla 2026] Payment Received for Pass #${ticketId}`,
       text: `Payment of PKR ${Number(amount || 0).toLocaleString()} received for ticket ${ticketId}. View your pass at ${env.frontendUrl}/tickets`,
@@ -278,7 +360,6 @@ export async function sendPaymentReceivedEmail({ to, name, ticketId, tierName, a
 
 export async function sendTicketApprovedEmail({ to, name, ticketId, tierName, verificationUrl, eventName, eventDate, quantity }) {
   try {
-    const client = getTransporter()
     const verifyLink = verificationUrl || `${env.frontendUrl}/verification/${ticketId}`
     const html = buildEmailWrapper(
       'Your Ticket is Ready - OZILLA FEST 2026',
@@ -311,8 +392,7 @@ export async function sendTicketApprovedEmail({ to, name, ticketId, tierName, ve
       `
     )
 
-    await client.sendMail({
-      from: getMailFrom(),
+    await deliverEmail({
       to,
       subject: `🎉 [Confirmed] Your OZILLA FEST 2026 Pass (${ticketId})`,
       text: `Your ticket ${ticketId} is ready! View your QR pass here: ${verifyLink}`,
@@ -325,7 +405,6 @@ export async function sendTicketApprovedEmail({ to, name, ticketId, tierName, ve
 
 export async function sendTicketRejectedEmail({ to, name, ticketId, reason }) {
   try {
-    const client = getTransporter()
     const html = buildEmailWrapper(
       'Ticket Status Update - OZILLA FEST 2026',
       `
@@ -348,8 +427,7 @@ export async function sendTicketRejectedEmail({ to, name, ticketId, reason }) {
       `
     )
 
-    await client.sendMail({
-      from: getMailFrom(),
+    await deliverEmail({
       to,
       subject: `[Action Required] OZILLA FEST Ticket #${ticketId} Payment Status`,
       text: `Your payment for ticket ${ticketId} could not be verified. Reason: ${reason || 'Invalid payment receipt'}. Please log in at ${env.frontendUrl}/tickets to update.`,

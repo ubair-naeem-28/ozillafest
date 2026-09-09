@@ -55,6 +55,8 @@ export const env = {
   smtpPass: process.env.SMTP_PASS || 'nqqg vovr pcsc halb',
   smtpFrom: process.env.SMTP_FROM || 'Ozilla Festival <obaer2102@gmail.com>',
   resendApiKey: process.env.RESEND_API_KEY || '',
+  brevoApiKey: process.env.BREVO_API_KEY || '',
+  sendgridApiKey: process.env.SENDGRID_API_KEY || '',
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:8080',
   googleClientId: process.env.GOOGLE_CLIENT_ID || '',
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
