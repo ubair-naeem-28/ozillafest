@@ -576,8 +576,4 @@ export function getGoogleConfig(_req, res) {
   })
 }
 
-export function logout(_req, res) {
-  return res.status(200).json({ success: true, message: 'Logged out successfully' })
-}
-
 
