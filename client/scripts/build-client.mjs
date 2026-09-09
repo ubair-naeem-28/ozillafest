@@ -22,7 +22,7 @@ await build({
   plugins: [react()],
   define: {
     'import.meta.env.VITE_API_BASE_URL': JSON.stringify(process.env.VITE_API_BASE_URL || 'https://ozillafest.onrender.com/api'),
-    'import.meta.env.VITE_GOOGLE_CLIENT_ID': JSON.stringify(process.env.VITE_GOOGLE_CLIENT_ID || '')
+    'import.meta.env.VITE_GOOGLE_CLIENT_ID': JSON.stringify(process.env.VITE_GOOGLE_CLIENT_ID || '231763775562-gc86oo86thvcfrnlt9u4i3m4emdaga7e.apps.googleusercontent.com')
   },
   build: {
     outDir: distDir,

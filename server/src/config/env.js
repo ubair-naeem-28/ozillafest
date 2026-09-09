@@ -58,7 +58,7 @@ export const env = {
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:8080',
   googleClientId: process.env.GOOGLE_CLIENT_ID || '',
   googleClientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
-  googleRedirectUri: process.env.GOOGLE_REDIRECT_URI || 'http://localhost:5000/api/auth/google/callback'
+  googleRedirectUri: process.env.GOOGLE_REDIRECT_URI || 'https://ozillafest.onrender.com/api/auth/google/callback'
 }
 
 export function validateEnv() {
