@@ -295,17 +295,15 @@ export const authService = {
   },
 
   async logout() {
+    tokenStorage.removeToken()
     if (forceLocalMode) {
       return { message: 'Logged out successfully' }
     }
     try {
       const response = await apiClient.post(API_ENDPOINTS.AUTH.LOGOUT)
       return response.data
-    } catch (error) {
-      if (markLocalMode(error)) {
-        return { message: 'Logged out successfully' }
-      }
-      throw error
+    } catch (_error) {
+      return { message: 'Logged out successfully' }
     }
   },
 
@@ -319,10 +317,21 @@ export const authService = {
     return response.data
   },
 
+  async getGoogleConfig() {
+    try {
+      const response = await apiClient.get(API_ENDPOINTS.AUTH.GOOGLE_CONFIG)
+      return response.data?.clientId || null
+    } catch (_error) {
+      return null
+    }
+  },
+
   async googleAuth(token, profile) {
     if (forceLocalMode) {
-      const p = profile || { email: 'ubair1100@gmail.com', firstName: 'Ubair', lastName: 'Naeem' }
-      const localUser = buildLocalUser(p)
+      if (!profile?.email) {
+        throw new Error('Google account email is required')
+      }
+      const localUser = buildLocalUser(profile)
       const users = readLocalUsers()
       if (!users.some((u) => u.email === localUser.email)) {
         writeLocalUsers([localUser, ...users])
@@ -333,9 +342,8 @@ export const authService = {
       const response = await apiClient.post(API_ENDPOINTS.AUTH.GOOGLE, { token, profile })
       return response.data
     } catch (error) {
-      if (markLocalMode(error)) {
-        const p = profile || { email: 'ubair1100@gmail.com', firstName: 'Ubair', lastName: 'Naeem' }
-        const localUser = buildLocalUser(p)
+      if (markLocalMode(error) && profile?.email) {
+        const localUser = buildLocalUser(profile)
         return createLocalAuthResponse(localUser)
       }
       throw error
@@ -344,8 +352,10 @@ export const authService = {
 
   async googleCodeLogin(code, redirectUri = 'postmessage', profile) {
     if (forceLocalMode) {
-      const p = profile || { email: 'ubair1100@gmail.com', firstName: 'Ubair', lastName: 'Naeem' }
-      const localUser = buildLocalUser(p)
+      if (!profile?.email) {
+        throw new Error('Google account email is required')
+      }
+      const localUser = buildLocalUser(profile)
       const users = readLocalUsers()
       if (!users.some((u) => u.email === localUser.email)) {
         writeLocalUsers([localUser, ...users])
@@ -356,9 +366,8 @@ export const authService = {
       const response = await apiClient.post(API_ENDPOINTS.AUTH.GOOGLE_CODE_LOGIN, { code, redirectUri, profile })
       return response.data
     } catch (error) {
-      if (markLocalMode(error)) {
-        const p = profile || { email: 'ubair1100@gmail.com', firstName: 'Ubair', lastName: 'Naeem' }
-        const localUser = buildLocalUser(p)
+      if (markLocalMode(error) && profile?.email) {
+        const localUser = buildLocalUser(profile)
         return createLocalAuthResponse(localUser)
       }
       throw error

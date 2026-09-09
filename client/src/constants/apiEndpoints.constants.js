@@ -11,6 +11,7 @@ export const API_ENDPOINTS = {
     GOOGLE: '/auth/google',
     GOOGLE_CODE_LOGIN: '/auth/google/code-login',
     GOOGLE_TOKEN_LOGIN: '/auth/google/token-login',
+    GOOGLE_CONFIG: '/auth/google/config',
     ME: '/auth/me',
     PROFILE: '/auth/profile'
   },

@@ -57,7 +57,7 @@ export async function initGoogleOneTap({ clientId, onCredential, onError }) {
 
     window.google.accounts.id.prompt((notification) => {
       if (notification.isNotDisplayed()) {
-        // Notification wasn't displayed (e.g. suppressed by browser/FedCM/cooldown)
+        // Notification wasn't displayed
       } else if (notification.isSkippedMoment()) {
         // Notification was skipped
       } else if (notification.isDismissedMoment()) {
@@ -70,42 +70,71 @@ export async function initGoogleOneTap({ clientId, onCredential, onError }) {
 }
 
 /**
- * Initiates Google OAuth popup code login
+ * Fetches user profile from Google UserInfo API using OAuth Access Token
  */
-export async function startGooglePopupLogin({ clientId, onCode }) {
-  if (!clientId) {
-    throw new Error('Google Client ID is not configured. Please set VITE_GOOGLE_CLIENT_ID in client/.env')
+export async function fetchGoogleUserProfile(accessToken) {
+  const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+    headers: { Authorization: `Bearer ${accessToken}` }
+  })
+  if (!res.ok) {
+    throw new Error('Failed to fetch Google profile')
+  }
+  return res.json()
+}
+
+/**
+ * Initiates Google OAuth popup with Account Chooser ('select_account')
+ * Displays all accounts on user's device.
+ */
+export async function startGooglePopupLogin({ clientId, onProfile, onError }) {
+  if (!clientId || clientId.includes('placeholder') || clientId.includes('your_google')) {
+    throw new Error('Google Client ID is not configured. Please add GOOGLE_CLIENT_ID in Render or VITE_GOOGLE_CLIENT_ID in client/.env')
   }
 
   await loadGoogleScript()
 
-  if (!window.google?.accounts?.oauth2?.initCodeClient) {
-    throw new Error('Google Identity Services is unavailable')
+  if (!window.google?.accounts?.oauth2?.initTokenClient) {
+    throw new Error('Google Identity Services library is unavailable')
   }
 
   return new Promise((resolve, reject) => {
-    const codeClient = window.google.accounts.oauth2.initCodeClient({
+    const tokenClient = window.google.accounts.oauth2.initTokenClient({
       client_id: clientId,
       scope: 'openid email profile',
-      ux_mode: 'popup',
       prompt: 'select_account',
-      callback: async (response) => {
+      callback: async (tokenResponse) => {
         try {
-          if (!response?.code) {
-            throw new Error('Google login was cancelled')
+          if (tokenResponse?.error) {
+            if (tokenResponse.error === 'popup_closed_by_user') {
+              throw new Error('Google sign-in was cancelled')
+            }
+            throw new Error(tokenResponse.error_description || tokenResponse.error || 'Google login failed')
           }
-          await onCode(response.code)
-          resolve()
-        } catch (error) {
-          reject(error)
+          if (!tokenResponse?.access_token) {
+            throw new Error('Google sign-in was cancelled')
+          }
+
+          const profile = await fetchGoogleUserProfile(tokenResponse.access_token)
+          if (!profile?.email) {
+            throw new Error('Could not retrieve email from selected Google account')
+          }
+
+          if (onProfile) {
+            await onProfile(profile, tokenResponse.access_token)
+          }
+          resolve(profile)
+        } catch (err) {
+          if (onError) onError(err)
+          reject(err)
         }
       },
       error_callback: (error) => {
-        reject(new Error(error?.message || 'Google login failed'))
+        const err = new Error(error?.message || 'Google account chooser popup failed')
+        if (onError) onError(err)
+        reject(err)
       }
     })
 
-    codeClient.requestCode()
+    tokenClient.requestAccessToken({ prompt: 'select_account' })
   })
 }
-

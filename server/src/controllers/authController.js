@@ -477,26 +477,19 @@ export async function googleAuthCallback(req, res) {
 export async function googleCodeLogin(req, res) {
   const { code, redirectUri, profile: clientProfile } = req.body
   if (!code && !clientProfile) {
-    return res.status(400).json({ message: 'Google authorization code is required' })
-  }
-
-  if (!env.googleClientId || !env.googleClientSecret || code === 'local-dev-google-login') {
-    const profile = clientProfile || {
-      email: 'ubair1100@gmail.com',
-      name: 'Ubair Naeem',
-      given_name: 'Ubair',
-      family_name: 'Naeem'
-    }
-    const user = await upsertUserFromGoogleProfile({ profile })
-    const token = signAuthToken(user._id.toString())
-    return res.json({
-      token,
-      user: user.toJSON()
-    })
+    return res.status(400).json({ message: 'Google authorization code or profile is required' })
   }
 
   try {
-    const profile = await exchangeGoogleCodeForProfile(code, redirectUri || 'postmessage')
+    let profile = null
+    if (code && env.googleClientId && env.googleClientSecret) {
+      profile = await exchangeGoogleCodeForProfile(code, redirectUri || 'postmessage')
+    } else if (clientProfile && clientProfile.email) {
+      profile = clientProfile
+    } else {
+      return res.status(400).json({ message: 'Google authentication requires a verified email profile' })
+    }
+
     const user = await upsertUserFromGoogleProfile({ profile })
     const token = signAuthToken(user._id.toString())
 
@@ -514,27 +507,14 @@ export async function googleAuth(req, res) {
   const clientProfile = req.body.profile
 
   if (!token && !clientProfile) {
-    return res.status(400).json({ message: 'Google token is required' })
-  }
-
-  if ((!env.googleClientId && clientProfile) || token === 'local-dev-token') {
-    const profile = clientProfile || {
-      email: 'ubair1100@gmail.com',
-      name: 'Ubair Naeem',
-      given_name: 'Ubair',
-      family_name: 'Naeem'
-    }
-    const user = await upsertUserFromGoogleProfile({ profile })
-    const appToken = signAuthToken(user._id.toString())
-    return res.status(200).json({
-      token: appToken,
-      user: user.toJSON()
-    })
+    return res.status(400).json({ message: 'Google token or profile is required' })
   }
 
   try {
-    let profile = clientProfile
-    if (!profile && token) {
+    let profile = null
+    if (clientProfile && clientProfile.email) {
+      profile = clientProfile
+    } else if (token) {
       if (env.googleClientId) {
         const ticket = await googleOAuthClient.verifyIdToken({
           idToken: String(token),
@@ -554,6 +534,10 @@ export async function googleAuth(req, res) {
       }
     }
 
+    if (!profile || !profile.email) {
+      return res.status(400).json({ message: 'Valid Google email account was not provided' })
+    }
+
     const user = await upsertUserFromGoogleProfile({ profile })
     const appToken = signAuthToken(user._id.toString())
 
@@ -562,7 +546,7 @@ export async function googleAuth(req, res) {
       user: user.toJSON()
     })
   } catch (error) {
-    if (clientProfile) {
+    if (clientProfile && clientProfile.email) {
       const user = await upsertUserFromGoogleProfile({ profile: clientProfile })
       const appToken = signAuthToken(user._id.toString())
       return res.status(200).json({ token: appToken, user: user.toJSON() })
@@ -575,4 +559,15 @@ export async function googleAuth(req, res) {
 }
 
 export const googleTokenLogin = googleAuth
+
+export function getGoogleConfig(_req, res) {
+  return res.json({
+    clientId: env.googleClientId || null
+  })
+}
+
+export function logout(_req, res) {
+  return res.status(200).json({ success: true, message: 'Logged out successfully' })
+}
+
 

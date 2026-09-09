@@ -315,34 +315,29 @@ function RegisterForm() {
     resetFeedback()
     setGoogleLoading(true)
     try {
-      if (googleClientId && !googleClientId.includes('placeholder') && !googleClientId.includes('your_google')) {
-        await startGooglePopupLogin({
-          clientId: googleClientId,
-          onCode: async (code) => {
-            const response = await authService.googleCodeLogin(code, 'postmessage')
-            tokenStorage.setToken(response.token)
-            await checkAuth()
-            setMessage('Google sign-up successful. Preparing your festival workspace...')
-            await pauseForTransition()
-            navigate(safeReturnTo)
-          },
-        })
-      } else {
-        const response = await authService.googleAuth('local-dev-token', {
-          email: 'ubair1100@gmail.com',
-          name: 'Ubair Naeem',
-          given_name: 'Ubair',
-          family_name: 'Naeem',
-        })
-        tokenStorage.setToken(response.token)
-        await checkAuth()
-        setMessage('Google sign-up verified. Welcome to OZILLA FEST!')
-        await pauseForTransition()
-        navigate(safeReturnTo)
+      let activeClientId = googleClientId
+      if (!activeClientId || activeClientId.includes('placeholder') || activeClientId.includes('your_google')) {
+        activeClientId = await authService.getGoogleConfig()
       }
+
+      if (!activeClientId || activeClientId.includes('placeholder') || activeClientId.includes('your_google')) {
+        throw new Error('Google OAuth is not configured on the server. Please add GOOGLE_CLIENT_ID to Render or client/.env')
+      }
+
+      await startGooglePopupLogin({
+        clientId: activeClientId,
+        onProfile: async (profile, accessToken) => {
+          const response = await authService.googleAuth(accessToken, profile)
+          tokenStorage.setToken(response.token)
+          await checkAuth()
+          setMessage(`Google sign-up verified as ${profile.email}. Welcome to OZILLA FEST!`)
+          await pauseForTransition()
+          navigate(safeReturnTo)
+        },
+      })
     } catch (err) {
       const message = err.response?.data?.message || err.message || 'Google sign-up failed'
-      if (!message.toLowerCase().includes('cancel')) {
+      if (!message.toLowerCase().includes('cancel') && !message.toLowerCase().includes('closed')) {
         setError(message)
       }
     } finally {

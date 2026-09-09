@@ -5,6 +5,7 @@ import { useAuth } from '../../hooks/useAuth'
 import AlertMessage from '../../components/common/AlertMessage'
 import PageHeader from '../../components/common/PageHeader'
 import { Link } from 'react-router-dom'
+import { API_ORIGIN } from '../../services/apiClient'
 
 function AdminTicketReviewPage() {
   const { isAdmin } = useAuth()
@@ -121,7 +122,7 @@ function AdminTicketReviewPage() {
                 <div className="mb-6 bg-white/5 p-4 rounded-xl border border-white/10">
                   <p className="text-xs font-bold text-white/70 uppercase tracking-wide mb-2">Attached Payment Proof</p>
                   <a
-                    href={`${import.meta.env.VITE_API_BASE_URL?.replace('/api', '') || 'http://localhost:5000'}/${ticket.paymentProofPath}`}
+                    href={`${API_ORIGIN}/${ticket.paymentProofPath}`}
                     target="_blank"
                     rel="noreferrer"
                     className="inline-flex items-center gap-2 text-sm font-bold text-[#ffbd59] hover:underline"

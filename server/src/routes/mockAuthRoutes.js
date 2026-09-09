@@ -167,19 +167,41 @@ router.get('/google/start', (_req, res) => {
   res.status(503).json({ message: 'Google OAuth requires database and Google credentials.', mode: 'no-db' })
 })
 
+router.get('/google/config', (_req, res) => {
+  res.json({ clientId: null, mode: 'no-db' })
+})
+
 router.get('/google/callback', (_req, res) => {
   res.redirect('/api/health')
 })
 
-router.post('/google/code-login', (_req, res) => {
-  const user = createUser({ firstName: 'Google', lastName: 'User', email: `google-${Date.now()}@ozillafestival.com` })
-  users.set(user.id, user)
+router.post(['/google', '/google/token-login'], (req, res) => {
+  const profile = req.body?.profile || {}
+  const firstName = profile.given_name || (profile.name ? profile.name.split(' ')[0] : 'Google')
+  const lastName = profile.family_name || (profile.name ? profile.name.split(' ').slice(1).join(' ') : 'User')
+  const email = normalizeEmail(profile.email || `google-${Date.now()}@ozillafestival.com`)
+  const phone = normalizePhone(profile.phone || '+923000000000')
+
+  let user = [...users.values()].find((u) => u.email === email)
+  if (!user) {
+    user = createUser({ firstName, lastName, email, phone })
+    users.set(user.id, user)
+  }
   res.json({ token: signAuthToken(user.id), user: toPublicUser(user), mode: 'no-db' })
 })
 
-router.post('/google/token-login', (_req, res) => {
-  const user = createUser({ firstName: 'Google', lastName: 'User', email: `google-${Date.now()}@ozillafestival.com` })
-  users.set(user.id, user)
+router.post('/google/code-login', (req, res) => {
+  const profile = req.body?.profile || {}
+  const firstName = profile.given_name || (profile.name ? profile.name.split(' ')[0] : 'Google')
+  const lastName = profile.family_name || (profile.name ? profile.name.split(' ').slice(1).join(' ') : 'User')
+  const email = normalizeEmail(profile.email || `google-${Date.now()}@ozillafestival.com`)
+  const phone = normalizePhone(profile.phone || '+923000000000')
+
+  let user = [...users.values()].find((u) => u.email === email)
+  if (!user) {
+    user = createUser({ firstName, lastName, email, phone })
+    users.set(user.id, user)
+  }
   res.json({ token: signAuthToken(user.id), user: toPublicUser(user), mode: 'no-db' })
 })
 
