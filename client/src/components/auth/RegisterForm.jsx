@@ -88,7 +88,7 @@ function RegisterForm() {
   const navigate = useNavigate()
   const location = useLocation()
   const { register, checkAuth } = useAuth()
-  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || ''
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '231763775562-gc86oo86thvcfrnlt9u4i3m4emdaga7e.apps.googleusercontent.com'
   const returnToFromQuery = new URLSearchParams(location.search).get('returnTo')
   const safeReturnTo = getSafeReturnTo(returnToFromQuery, '/dashboard')
 
@@ -315,14 +315,7 @@ function RegisterForm() {
     resetFeedback()
     setGoogleLoading(true)
     try {
-      let activeClientId = googleClientId
-      if (!activeClientId || activeClientId.includes('placeholder') || activeClientId.includes('your_google')) {
-        activeClientId = await authService.getGoogleConfig()
-      }
-
-      if (!activeClientId || activeClientId.includes('placeholder') || activeClientId.includes('your_google')) {
-        throw new Error('Google OAuth is not configured on the server. Please add GOOGLE_CLIENT_ID to Render or client/.env')
-      }
+      const activeClientId = googleClientId || '231763775562-gc86oo86thvcfrnlt9u4i3m4emdaga7e.apps.googleusercontent.com'
 
       await startGooglePopupLogin({
         clientId: activeClientId,

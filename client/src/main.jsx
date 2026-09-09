@@ -30,7 +30,7 @@ if (typeof window !== 'undefined') {
   window.addEventListener('unhandledrejection', handleScriptError)
 }
 
-const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || ''
+const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID || '231763775562-gc86oo86thvcfrnlt9u4i3m4emdaga7e.apps.googleusercontent.com'
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
