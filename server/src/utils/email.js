@@ -135,13 +135,7 @@ export async function sendOtpEmail({ to, otpCode }) {
   const subject = `[Ozilla 2026] Verification Code: ${otpCode}`
   const text = `Your OZILLA FEST OTP code is: ${otpCode}. It expires in 10 minutes.`
 
-  // 1. Try Resend HTTPS API (Instant over Port 443, never blocked on Render)
-  const resendResult = await sendViaResend({ to, subject, html, text })
-  if (resendResult) {
-    return resendResult
-  }
-
-  // 2. Fallback to standard Nodemailer SMTP
+  // 1. Direct Gmail SMTP (delivers reliably to any inbox worldwide)
   try {
     const client = getTransporter()
     const info = await client.sendMail({
@@ -151,10 +145,18 @@ export async function sendOtpEmail({ to, otpCode }) {
       text,
       html
     })
+    console.log(`[Email Service] OTP successfully delivered to ${to} via Gmail SMTP (msgId: ${info.messageId})`)
     return info
-  } catch (error) {
-    console.warn(`[Email Service] Failed to deliver OTP to ${to}:`, error.message)
-    throw error
+  } catch (smtpError) {
+    console.warn(`[Email Service] Gmail SMTP failed for ${to} (${smtpError.message}), trying Resend fallback...`)
+    
+    // 2. Fallback to Resend API if SMTP has connection issues
+    const resendResult = await sendViaResend({ to, subject, html, text })
+    if (resendResult) {
+      return resendResult
+    }
+    
+    throw smtpError
   }
 }
 
