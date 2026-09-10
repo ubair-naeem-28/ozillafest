@@ -367,23 +367,31 @@ function DashboardPage() {
             transition={{ duration: 0.6, delay: 0.4 }}
           >
             <div className="sp-hero-meta-pill">
-              <span className="sp-meta-dot" />
-              <span className="sp-meta-label">DATE</span>
+              <span className="sp-meta-header">
+                <span className="sp-meta-dot" />
+                <span className="sp-meta-label">DATE</span>
+              </span>
               <strong>NOV 01, 2026</strong>
             </div>
             <div className="sp-hero-meta-pill">
-              <span className="sp-meta-dot" />
-              <span className="sp-meta-label">CITY</span>
+              <span className="sp-meta-header">
+                <span className="sp-meta-dot" />
+                <span className="sp-meta-label">CITY</span>
+              </span>
               <strong>LAHORE, PK</strong>
             </div>
             <div className="sp-hero-meta-pill">
-              <span className="sp-meta-dot" />
-              <span className="sp-meta-label">PRODUCTION</span>
+              <span className="sp-meta-header">
+                <span className="sp-meta-dot" />
+                <span className="sp-meta-label">PRODUCTION</span>
+              </span>
               <strong>4 MEGA STAGES</strong>
             </div>
             <div className="sp-hero-meta-pill sp-meta-featured">
-              <span className="sp-meta-dot sp-dot-gold" />
-              <span className="sp-meta-label">PASSES</span>
+              <span className="sp-meta-header">
+                <span className="sp-meta-dot sp-dot-gold" />
+                <span className="sp-meta-label">PASSES</span>
+              </span>
               <strong>INSTANT QR PASS</strong>
             </div>
           </motion.div>
@@ -1050,6 +1058,12 @@ function DashboardPage() {
           transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
         }
 
+        .sp-meta-header {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.45rem;
+        }
+
         .sp-hero-meta-pill:hover {
           transform: translateY(-2px);
           border-color: rgba(255, 189, 89, 0.65) !important;
@@ -1062,6 +1076,7 @@ function DashboardPage() {
           border-radius: 50%;
           background: #ff5a1f;
           box-shadow: 0 0 10px #ff5a1f, 0 0 4px #ffbd59;
+          flex-shrink: 0;
         }
 
         .sp-dot-gold {
@@ -1090,29 +1105,6 @@ function DashboardPage() {
           border-color: rgba(255, 189, 89, 0.55) !important;
           background: rgba(35, 18, 10, 0.82) !important;
           box-shadow: 0 8px 30px rgba(255, 90, 31, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.2);
-        }
-
-        @media (max-width: 640px) {
-          .sp-hero-meta-strip {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.65rem;
-            width: 100%;
-            max-width: 380px;
-            margin: 0 auto 2.4rem;
-          }
-          .sp-hero-meta-pill {
-            padding: 0.5rem 0.65rem;
-            justify-content: center;
-            gap: 0.45rem;
-          }
-          .sp-hero-meta-pill strong {
-            font-size: 0.78rem;
-            white-space: nowrap;
-          }
-          .sp-meta-label {
-            font-size: 0.62rem;
-          }
         }
 
         .sp-hero-actions {
@@ -2431,15 +2423,110 @@ function DashboardPage() {
         }
 
         @media (max-width: 640px) {
-          .sp-section { padding: 4.5rem 0; }
-          .sp-container { width: min(100%, calc(100% - 1.5rem)); }
+          .sp-section { padding: 4rem 0; }
+          .sp-container { width: min(100%, calc(100% - 1.2rem)); }
+          
+          /* Hero Mobile Alignment & Safe Padding (Clears Fixed Navbar) */
+          .sp-hero {
+            padding: calc(75px + 1.2rem) 1rem 2.8rem !important;
+            min-height: auto !important;
+            display: flex !important;
+            align-items: flex-start !important;
+          }
+          .sp-hero-content {
+            padding: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .sp-hero-badge {
+            font-size: 0.72rem !important;
+            padding: 0.35rem 0.85rem !important;
+            margin-bottom: 0.9rem !important;
+            letter-spacing: 0.08em !important;
+            max-width: 95% !important;
+          }
+          .sp-hero-title {
+            font-size: clamp(2.2rem, 10vw, 3.1rem) !important;
+            line-height: 1.05 !important;
+            margin-bottom: 1rem !important;
+            letter-spacing: 0.02em !important;
+            word-break: break-word !important;
+          }
+          .sp-hero-subtitle {
+            font-size: 0.88rem !important;
+            line-height: 1.55 !important;
+            margin-bottom: 1.4rem !important;
+            max-width: 100% !important;
+            padding: 0 0.25rem !important;
+          }
+          .sp-hero-sub-highlight {
+            font-size: 1.0rem !important;
+            line-height: 1.35 !important;
+          }
+          .sp-hero-sub-detail {
+            font-size: 0.82rem !important;
+            line-height: 1.45 !important;
+          }
+          .sp-hero-meta-strip {
+            display: grid !important;
+            grid-template-columns: repeat(2, 1fr) !important;
+            gap: 0.5rem !important;
+            width: 100% !important;
+            max-width: 340px !important;
+            margin: 0 auto 1.8rem !important;
+          }
+          .sp-hero-meta-pill {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 0.5rem 0.4rem !important;
+            border-radius: 12px !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            gap: 0.2rem !important;
+            box-sizing: border-box !important;
+          }
+          .sp-meta-header {
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.35rem !important;
+          }
+          .sp-hero-meta-pill strong {
+            font-size: 0.74rem !important;
+            letter-spacing: 0.01em !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            max-width: 100% !important;
+            text-align: center !important;
+          }
+          .sp-meta-label {
+            font-size: 0.58rem !important;
+            letter-spacing: 0.08em !important;
+          }
+          .sp-hero-actions {
+            display: flex !important;
+            flex-direction: column !important;
+            width: 100% !important;
+            max-width: 290px !important;
+            gap: 0.75rem !important;
+            margin: 0 auto !important;
+          }
+          .sp-hero-actions > * {
+            width: 100% !important;
+          }
+          .sp-btn-ember, .sp-btn-ghost {
+            width: 100% !important;
+            text-align: center !important;
+            padding: 0.85rem 1.4rem !important;
+            font-size: 0.94rem !important;
+            justify-content: center !important;
+          }
+
           .stats-inner-grid { grid-template-columns: repeat(2, 1fr); gap: 0.85rem; }
           .stat-card { padding: 1.2rem 0.9rem; }
           .stat-val { font-size: 1.8rem; }
-          .sp-hero-title { font-size: 2.9rem; }
-          .sp-hero-content { padding: 4.5rem 1rem 2.5rem; }
-          .sp-hero-actions { flex-direction: column; width: 100%; max-width: 290px; gap: 0.85rem; }
-          .sp-btn-ember, .sp-btn-ghost { width: 100%; text-align: center; padding: 0.9rem 1.8rem; }
           .sp-vibe-tag.sp-vibe-secondary { display: flex !important; }
           .sp-vibe-tags-grid { grid-template-columns: 1fr !important; gap: 0.65rem !important; }
           .sp-vibe-tag { font-size: 0.82rem !important; padding: 0.75rem 0.9rem !important; text-align: left; justify-content: flex-start; }
