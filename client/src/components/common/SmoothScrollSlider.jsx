@@ -84,13 +84,14 @@ export default function SmoothScrollSlider({
   slideHeight = 440,
   spacing = 2.4,
   direction = 'right',
-  smoothness = 8.5,
+  smoothness = 3.0,
   radius = 24,
   dim = 5,
   background = 'transparent',
-  sensitivity = 5,
+  sensitivity = 8.0,
   autoPlay = false,
-  autoPlayInterval = 3500,
+  autoPlayInterval = 2800,
+  autoPlaySpeed = 1,
   style,
   onItemClick
 }) {
@@ -125,11 +126,13 @@ export default function SmoothScrollSlider({
   const responsiveHeight = containerWidth > 0 && containerWidth < 640 ? Math.round(responsiveWidth * 1.36) : slideHeight
 
   const step = responsiveWidth + clamp(spacing, 0, 10) * 18
-  const ease = 0.15 - (clamp(smoothness, 0, 10) / 10) * 0.11
+  const ease = 0.24 - (clamp(smoothness, 0, 10) / 10) * 0.10
   const dimAmount = (clamp(dim, 0, 10) / 10) * 0.75
-  const wheelMultiplier = 0.4 + (clamp(sensitivity, 0, 10) / 10) * 1.1
-  const dragMultiplier = 0.6 + (clamp(sensitivity, 0, 10) / 10) * 1.6
+  const wheelMultiplier = 0.8 + (clamp(sensitivity, 0, 10) / 10) * 1.6
+  const dragMultiplier = 0.9 + (clamp(sensitivity, 0, 10) / 10) * 1.8
   const flip = direction === 'left'
+
+  const actualInterval = autoPlaySpeed > 0 ? Math.round(autoPlayInterval / autoPlaySpeed) : autoPlayInterval
 
   const frame = useRef({
     count: slides.length,
@@ -186,10 +189,10 @@ export default function SmoothScrollSlider({
         target.current = next * step
         return next
       })
-    }, autoPlayInterval)
+    }, actualInterval)
 
     return () => clearInterval(timer)
-  }, [autoPlay, isHovered, slides.length, step, autoPlayInterval])
+  }, [autoPlay, isHovered, slides.length, step, actualInterval])
 
   // Animation Loop with smooth Lerp physics and viewport pausing
   useEffect(() => {

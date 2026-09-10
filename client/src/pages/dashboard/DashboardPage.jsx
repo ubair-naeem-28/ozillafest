@@ -458,11 +458,11 @@ function DashboardPage() {
               slideWidth={320}
               slideHeight={440}
               spacing={2.6}
-              smoothness={8.5}
+              smoothness={2.5}
               dim={6}
-              sensitivity={5}
+              sensitivity={8.5}
               autoPlay={true}
-              autoPlaySpeed={1.2}
+              autoPlaySpeed={1.4}
             />
           </div>
 
