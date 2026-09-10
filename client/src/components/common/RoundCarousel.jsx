@@ -3,14 +3,15 @@ import { assetUrl } from '../../utils/assetUrl.util'
 
 const DEFAULT_SINGERS = [
   {
-    name: 'TALWINDER',
+    name: 'MYSTERY HEADLINER',
     isHeadliner: true,
-    genre: 'Indie Pop / Punjabi Fusion',
+    isMystery: true,
+    genre: 'Secret Headline Act',
     stage: 'Main Prism Stage',
-    bpm: '128 BPM',
-    vibe: 'Euphoric Night',
-    src: assetUrl('/assets/ozilla/talwinder.jpg'),
-    image: assetUrl('/assets/ozilla/talwinder.jpg')
+    bpm: '??? BPM',
+    vibe: 'Revealing Soon',
+    src: assetUrl('/assets/ozilla/singer-talwinder.png'),
+    image: assetUrl('/assets/ozilla/singer-talwinder.png')
   },
   {
     name: 'IMRAN KHAN',
@@ -241,12 +242,20 @@ export default function RoundCarousel({
           }}
         >
           {displayItems.map((item, i) => {
-            const imgSrc = item?.image || item?.src || (typeof item === 'string' ? item : '')
-            const name = item?.name || `Artist ${i + 1}`
-            const genre = item?.genre || 'Headline Act'
+            const isMystery = Boolean(
+              item?.isMystery ||
+              item?.name?.toUpperCase().includes('MYSTERY') ||
+              item?.name?.toUpperCase().includes('SECRET') ||
+              item?.name?.toUpperCase().includes('TALWINDER') ||
+              item?.name === '???'
+            )
+            const rawImg = item?.image || item?.src || (typeof item === 'string' ? item : '')
+            const imgSrc = isMystery ? (rawImg?.includes('.png') ? rawImg : assetUrl('/assets/ozilla/singer-talwinder.png')) : rawImg
+            const name = isMystery ? 'MYSTERY HEADLINER' : (item?.name || `Artist ${i + 1}`)
+            const genre = isMystery ? 'Secret Headline Act' : (item?.genre || 'Headline Act')
             const stage = item?.stage || 'Main Arena'
-            const bpm = item?.bpm || '128 BPM'
-            const vibe = item?.vibe || 'Festival Energy'
+            const bpm = isMystery ? '??? BPM' : (item?.bpm || '128 BPM')
+            const vibe = isMystery ? 'Revealing Soon' : (item?.vibe || 'Festival Energy')
             const isHeadliner = Boolean(item?.isHeadliner)
 
             return (
@@ -265,7 +274,10 @@ export default function RoundCarousel({
                   className="round-carousel-card-front"
                   style={{
                     ...faceBase,
-                    backgroundColor: '#130c0a',
+                    backgroundColor: isMystery ? '#0d0605' : '#130c0a',
+                    background: isMystery
+                      ? 'radial-gradient(ellipse at 50% 45%, rgba(255, 90, 31, 0.42) 0%, rgba(26, 8, 4, 0.95) 60%, #0c0605 100%)'
+                      : '#130c0a',
                     border: isHeadliner
                       ? '1.5px solid rgba(255, 138, 61, 0.75)'
                       : '1px solid rgba(255, 255, 255, 0.14)',
@@ -274,22 +286,39 @@ export default function RoundCarousel({
                       : '0 20px 50px rgba(0,0,0,0.8)',
                   }}
                 >
-                  {/* Singer Image */}
+                  {/* Singer Image / Silhouette Shadow */}
                   {imgSrc ? (
-                    <img
-                      src={imgSrc}
-                      alt={name}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'cover',
-                        objectPosition: 'center top',
-                        display: 'block',
-                      }}
-                      onError={(e) => {
-                        e.currentTarget.src = assetUrl('/assets/prism-auth-visual.jpg')
-                      }}
-                    />
+                    <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+                      {isMystery && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            inset: 0,
+                            background: 'radial-gradient(circle at 50% 38%, rgba(255, 110, 40, 0.35) 0%, transparent 68%)',
+                            zIndex: 1,
+                            pointerEvents: 'none',
+                          }}
+                        />
+                      )}
+                      <img
+                        src={imgSrc}
+                        alt={name}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: isMystery ? 'contain' : 'cover',
+                          objectPosition: isMystery ? '50% 65%' : 'center top',
+                          filter: isMystery
+                            ? 'brightness(0) drop-shadow(0 0 16px rgba(255, 90, 31, 0.95)) drop-shadow(0 0 36px rgba(255, 140, 50, 0.55))'
+                            : 'none',
+                          transform: isMystery ? 'scale(0.92) translateY(12px)' : 'none',
+                          display: 'block',
+                        }}
+                        onError={(e) => {
+                          e.currentTarget.src = assetUrl('/assets/prism-auth-visual.jpg')
+                        }}
+                      />
+                    </div>
                   ) : (
                     <div style={{ width: '100%', height: '100%', backgroundColor: '#222' }} />
                   )}
@@ -307,7 +336,26 @@ export default function RoundCarousel({
                       zIndex: 3,
                     }}
                   >
-                    {isHeadliner ? (
+                    {isMystery ? (
+                      <span
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '4px',
+                          padding: '4px 10px',
+                          borderRadius: '999px',
+                          background: 'linear-gradient(135deg, #ff5a1f, #c23300)',
+                          color: '#fff',
+                          fontSize: '0.68rem',
+                          fontWeight: '900',
+                          letterSpacing: '0.06em',
+                          textTransform: 'uppercase',
+                          boxShadow: '0 4px 14px rgba(255, 90, 31, 0.55)',
+                        }}
+                      >
+                        🔒 SECRET HEADLINER
+                      </span>
+                    ) : isHeadliner ? (
                       <span
                         style={{
                           display: 'inline-flex',

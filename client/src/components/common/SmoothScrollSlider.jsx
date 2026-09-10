@@ -3,14 +3,15 @@ import { assetUrl } from '../../utils/assetUrl.util'
 
 const DEFAULT_SINGERS = [
   {
-    name: 'TALWINDER',
+    name: 'MYSTERY HEADLINER',
     isHeadliner: true,
-    genre: 'Indie Pop / Punjabi Fusion',
+    isMystery: true,
+    genre: 'Secret Headline Act',
     stage: 'Main Prism Stage',
-    bpm: '128 BPM',
-    vibe: 'Euphoric Night',
-    src: assetUrl('/assets/ozilla/talwinder.jpg'),
-    image: assetUrl('/assets/ozilla/talwinder.jpg'),
+    bpm: '??? BPM',
+    vibe: 'Revealing Soon',
+    src: assetUrl('/assets/ozilla/singer-talwinder.png'),
+    image: assetUrl('/assets/ozilla/singer-talwinder.png'),
     offsetY: 0
   },
   {
@@ -106,19 +107,29 @@ export default function SmoothScrollSlider({
   // Use rawList: each singer appears exactly ONCE (no repeats)
   const rawList = items && items.length > 0 ? items : (images && images.length > 0 ? images : DEFAULT_SINGERS)
 
-  // Slides array has each singer ONLY once
+  // Slides array has each singer ONLY once with mystery headliner support
   const slides = useMemo(() => {
-    return rawList.map((item, idx) => ({
-      ...item,
-      src: imageOf(item),
-      offsetY: offsetOf(item),
-      name: item.name || `Artist ${idx + 1}`,
-      genre: item.genre || 'Live Performer',
-      stage: item.stage || 'Ozilla Arena',
-      bpm: item.bpm || '128 BPM',
-      vibe: item.vibe || 'Festival Energy',
-      isHeadliner: Boolean(item.isHeadliner)
-    }))
+    return rawList.map((item, idx) => {
+      const isMystery = Boolean(
+        item.isMystery ||
+        item.name?.toUpperCase().includes('MYSTERY') ||
+        item.name?.toUpperCase().includes('SECRET') ||
+        item.name?.toUpperCase().includes('TALWINDER') ||
+        item.name === '???'
+      )
+      return {
+        ...item,
+        src: isMystery ? (resolveSrc(item.src || item.image)?.includes('.png') ? resolveSrc(item.src || item.image) : assetUrl('/assets/ozilla/singer-talwinder.png')) : imageOf(item),
+        offsetY: offsetOf(item),
+        name: isMystery ? 'MYSTERY HEADLINER' : (item.name || `Artist ${idx + 1}`),
+        genre: isMystery ? 'Secret Headline Act' : (item.genre || 'Live Performer'),
+        stage: item.stage || 'Ozilla Arena',
+        bpm: isMystery ? '??? BPM' : (item.bpm || '128 BPM'),
+        vibe: isMystery ? 'Revealing Soon' : (item.vibe || 'Festival Energy'),
+        isHeadliner: Boolean(item.isHeadliner),
+        isMystery
+      }
+    })
   }, [rawList])
 
   // Responsive dimensions
@@ -450,7 +461,9 @@ export default function SmoothScrollSlider({
                 height: `${responsiveHeight}px`,
                 borderRadius: `${radius}px`,
                 overflow: 'hidden',
-                background: '#130c0a',
+                background: slide.isMystery
+                  ? 'radial-gradient(ellipse at 50% 45%, rgba(255, 90, 31, 0.42) 0%, rgba(26, 8, 4, 0.95) 60%, #0c0605 100%)'
+                  : '#130c0a',
                 border: isCurrentActive
                   ? '1.5px solid rgba(255, 138, 61, 0.85)'
                   : isHeadliner
@@ -465,24 +478,41 @@ export default function SmoothScrollSlider({
                 transition: 'border-color 250ms ease, box-shadow 250ms ease',
               }}
             >
-              {/* Singer Portrait Image */}
+              {/* Singer Portrait Image / Mystery Silhouette Shadow */}
               {slide.src ? (
-                <img
-                  src={slide.src}
-                  alt={slide.name}
-                  draggable={false}
-                  onError={(e) => {
-                    e.currentTarget.src = assetUrl('/assets/prism-auth-visual.jpg')
-                  }}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    objectPosition: `50% calc(50% + ${slide.offsetY}px)`,
-                    display: 'block',
-                    userSelect: 'none',
-                  }}
-                />
+                <div style={{ position: 'relative', width: '100%', height: '100%', overflow: 'hidden' }}>
+                  {slide.isMystery && (
+                    <div
+                      style={{
+                        position: 'absolute',
+                        inset: 0,
+                        background: 'radial-gradient(circle at 50% 38%, rgba(255, 110, 40, 0.35) 0%, transparent 68%)',
+                        zIndex: 1,
+                        pointerEvents: 'none',
+                      }}
+                    />
+                  )}
+                  <img
+                    src={slide.src}
+                    alt={slide.name}
+                    draggable={false}
+                    onError={(e) => {
+                      e.currentTarget.src = assetUrl('/assets/prism-auth-visual.jpg')
+                    }}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: slide.isMystery ? 'contain' : 'cover',
+                      objectPosition: slide.isMystery ? '50% 65%' : `50% calc(50% + ${slide.offsetY}px)`,
+                      filter: slide.isMystery
+                        ? 'brightness(0) drop-shadow(0 0 18px rgba(255, 90, 31, 0.95)) drop-shadow(0 0 38px rgba(255, 140, 50, 0.55))'
+                        : 'none',
+                      transform: slide.isMystery ? 'scale(0.92) translateY(12px)' : 'none',
+                      display: 'block',
+                      userSelect: 'none',
+                    }}
+                  />
+                </div>
               ) : null}
 
               {/* Top Badges */}
@@ -498,7 +528,26 @@ export default function SmoothScrollSlider({
                   zIndex: 3,
                 }}
               >
-                {isHeadliner ? (
+                {slide.isMystery ? (
+                  <span
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      padding: '4px 10px',
+                      borderRadius: '999px',
+                      background: 'linear-gradient(135deg, #ff5a1f, #c23300)',
+                      color: '#fff',
+                      fontSize: '0.68rem',
+                      fontWeight: '900',
+                      letterSpacing: '0.06em',
+                      textTransform: 'uppercase',
+                      boxShadow: '0 4px 14px rgba(255, 90, 31, 0.55)',
+                    }}
+                  >
+                    🔒 SECRET HEADLINER
+                  </span>
+                ) : isHeadliner ? (
                   <span
                     style={{
                       display: 'inline-flex',

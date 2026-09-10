@@ -5,10 +5,11 @@ import SmoothScrollSlider from '../../components/common/SmoothScrollSlider'
 
 const performers = [
   {
-    name: 'TALWINDER',
+    name: 'MYSTERY HEADLINER',
     isHeadliner: true,
-    genre: 'Indie Pop / Punjabi Fusion',
-    image: assetUrl('/assets/ozilla/talwinder.jpg')
+    isMystery: true,
+    genre: 'Secret Headline Act',
+    image: assetUrl('/assets/ozilla/singer-talwinder.png')
   },
   {
     name: 'IMRAN KHAN',

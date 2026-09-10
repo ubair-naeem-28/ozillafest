@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 const FESTIVAL_TRACKS = [
-  { id: 1, artist: 'TALWINDER', title: 'Gallan 4 / Dhundhala', genre: 'Indie Fusion', bpm: 128, vibe: 'Euphoric Night', color: '#EC4899' },
+  { id: 1, artist: 'MYSTERY HEADLINER', title: 'Special Festival VIP Set', genre: 'Secret Headliner', bpm: 128, vibe: 'Euphoric Suspense', color: '#ff5a1f' },
   { id: 2, artist: 'IMRAN KHAN', title: 'Amplifier · Festival VIP Mix', genre: 'Urban Punjabi', bpm: 132, vibe: 'High Energy', color: '#cf5704' },
   { id: 3, artist: 'BOHEMIA', title: 'Rooh · Live Concert Edit', genre: 'Desi Hip Hop', bpm: 95, vibe: 'Underground Bass', color: '#ba5916' },
   { id: 4, artist: 'HASSAN RAHEEM', title: 'Aisay Kaisay · Acoustic Sunset', genre: 'Indie R&B', bpm: 115, vibe: 'Golden Hour', color: '#EC4899' }

@@ -11,13 +11,14 @@ import VortexDustFall from '../../components/common/VortexDustFall'
 // ── Performer Data with Stage & BPM ────────────────────────────────────
 const performers = [
   {
-    name: 'TALWINDER',
+    name: 'MYSTERY HEADLINER',
     isHeadliner: true,
-    genre: 'Indie Pop / Punjabi Fusion',
+    isMystery: true,
+    genre: 'Secret Headline Act',
     stage: 'Main Prism Stage',
-    bpm: '128 BPM',
-    vibe: 'Euphoric Night',
-    image: assetUrl('/assets/ozilla/talwinder.jpg')
+    bpm: '??? BPM',
+    vibe: 'Revealing Soon',
+    image: assetUrl('/assets/ozilla/singer-talwinder.png')
   },
   {
     name: 'IMRAN KHAN',
@@ -110,7 +111,7 @@ const festivalPillars = [
   {
     badge: 'HEADLINE CELEBRITIES',
     title: 'Star-Studded Lineup',
-    desc: 'Live stadium sets by Talwinder, Imran Khan, Bohemia, Hassan Raheem, and top artists.'
+    desc: 'Live stadium sets by Mystery Headliner, Imran Khan, Bohemia, Hassan Raheem, and top artists.'
   },
   {
     badge: 'CULINARY & NIGHT BAZAAR',
@@ -168,7 +169,7 @@ const historyEvents = [
     year: '2026',
     badge: 'FLAGSHIP 10,000+ EDITION',
     description: 'Monumental flagship edition with 4 stages, 20+ star artists, and 100kW laser sound arrays.',
-    highlights: ['10,000+ Crowd', '4 Mega Stages', 'Talwinder & Imran Khan'],
+    highlights: ['10,000+ Crowd', '4 Mega Stages', 'Secret Headliner & Imran Khan'],
     venue: 'Lahore, Punjab',
     date: 'November 1, 2026'
   },
