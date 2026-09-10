@@ -964,6 +964,8 @@ function DashboardPage() {
           text-align: center;
           max-width: 940px;
           width: 100%;
+          padding: 0 1rem;
+          box-sizing: border-box;
           background: transparent !important;
         }
 
@@ -1036,17 +1038,19 @@ function DashboardPage() {
           display: flex;
           align-items: center;
           justify-content: center;
-          gap: 0.9rem;
+          gap: 0.8rem;
           flex-wrap: wrap;
-          margin: 0 auto 2.8rem;
-          max-width: 880px;
+          margin: 0 auto 2.6rem;
+          width: 100%;
+          max-width: 860px;
+          box-sizing: border-box;
         }
 
         .sp-hero-meta-pill {
           display: inline-flex;
           align-items: center;
-          gap: 0.65rem;
-          padding: 0.55rem 1.3rem;
+          gap: 0.6rem;
+          padding: 0.55rem 1.15rem;
           border-radius: 999px;
           background: rgba(18, 10, 6, 0.75) !important;
           border: 1px solid rgba(255, 189, 89, 0.3) !important;
@@ -1056,12 +1060,15 @@ function DashboardPage() {
             0 8px 30px rgba(0, 0, 0, 0.6),
             inset 0 1px 0 rgba(255, 255, 255, 0.15);
           transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+          box-sizing: border-box;
+          max-width: 100%;
         }
 
         .sp-meta-header {
           display: inline-flex;
           align-items: center;
           gap: 0.45rem;
+          flex-shrink: 0;
         }
 
         .sp-hero-meta-pill:hover {
@@ -1099,6 +1106,7 @@ function DashboardPage() {
           letter-spacing: 0.04em;
           color: #ffffff;
           font-family: 'Plus Jakarta Sans', sans-serif;
+          white-space: nowrap;
         }
 
         .sp-meta-featured {
@@ -2420,6 +2428,66 @@ function DashboardPage() {
           .sp-featured-pricing { transform: none; }
           .sp-featured-pricing:hover { transform: translateY(-4px); }
           .sp-countdown-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 900px) {
+          .sp-hero {
+            padding: calc(75px + 1.2rem) 1rem 3rem !important;
+            min-height: auto !important;
+            display: flex !important;
+            align-items: flex-start !important;
+          }
+          .sp-hero-content {
+            padding: 0 !important;
+            width: 100% !important;
+            max-width: 100% !important;
+          }
+          .sp-hero-meta-strip {
+            display: grid !important;
+            grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+            gap: 0.55rem !important;
+            width: 100% !important;
+            max-width: 360px !important;
+            margin: 0 auto 1.8rem !important;
+            padding: 0 !important;
+            box-sizing: border-box !important;
+          }
+          .sp-hero-meta-pill {
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important;
+            justify-content: center !important;
+            padding: 0.55rem 0.45rem !important;
+            border-radius: 12px !important;
+            width: 100% !important;
+            min-width: 0 !important;
+            gap: 0.2rem !important;
+            box-sizing: border-box !important;
+          }
+          .sp-meta-header {
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 0.35rem !important;
+          }
+          .sp-meta-dot {
+            width: 6px !important;
+            height: 6px !important;
+            flex-shrink: 0 !important;
+          }
+          .sp-meta-label {
+            font-size: 0.6rem !important;
+            letter-spacing: 0.08em !important;
+          }
+          .sp-hero-meta-pill strong {
+            font-size: 0.76rem !important;
+            letter-spacing: 0.01em !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            max-width: 100% !important;
+            text-align: center !important;
+          }
         }
 
         @media (max-width: 640px) {
