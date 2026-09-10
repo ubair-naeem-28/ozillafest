@@ -305,6 +305,9 @@ export default function ParticleDriftBackground({
       const v = vRef.current
       const sp = v.speed
 
+      const cw = sizeRef.current.w || canvas.clientWidth || (typeof window !== 'undefined' ? window.innerWidth : 1200)
+      const ch = sizeRef.current.h || canvas.clientHeight || (typeof window !== 'undefined' ? window.innerHeight : 800)
+
       const isMobile = cw < 768
       const isTablet = cw >= 768 && cw < 1024
 

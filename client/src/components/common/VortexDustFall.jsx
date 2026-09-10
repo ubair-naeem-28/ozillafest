@@ -404,35 +404,14 @@ export default function VortexDustFall({
 
     let isVisible = true
     let io = null
-    let raf = 0
-    let last = performance.now()
-
-    const startLoop = () => {
-      if (raf) return
-      last = performance.now()
-      raf = requestAnimationFrame(frame)
-    }
-
-    const stopLoop = () => {
-      if (raf) {
-        cancelAnimationFrame(raf)
-        raf = 0
-      }
-    }
-
     if (typeof IntersectionObserver !== 'undefined' && host) {
       io = new IntersectionObserver(
         (entries) => {
           if (entries[0]) {
             isVisible = entries[0].isIntersecting
-            if (isVisible) {
-              startLoop()
-            } else {
-              stopLoop()
-            }
           }
         },
-        { rootMargin: '80px' }
+        { rootMargin: '100px' }
       )
       io.observe(host)
     }
@@ -441,7 +420,7 @@ export default function VortexDustFall({
     let lastKnownW = 0
     const resize = () => {
       const isMob = (typeof window !== 'undefined' && window.innerWidth < 768)
-      dpr = Math.min(window.devicePixelRatio || 1, isMob ? 0.9 : DPR_CAP)
+      dpr = Math.min(window.devicePixelRatio || 1, isMob ? 0.85 : DPR_CAP)
       const cssW = canvas.clientWidth || host.clientWidth || 1
       const cssH = canvas.clientHeight || host.clientHeight || 1
       const w = Math.max(1, Math.round(cssW * dpr))
@@ -461,16 +440,19 @@ export default function VortexDustFall({
     ro.observe(canvas)
 
     let phase = 0
+    let last = performance.now()
+    let raf = 0
     let hoverX = 0
     let hoverY = 0
     let hoverAmt = 0
 
     const frame = (now) => {
+      raf = requestAnimationFrame(frame)
+
       if (!isVisible || (typeof document !== 'undefined' && document.hidden)) {
-        raf = 0
+        last = now
         return
       }
-      raf = requestAnimationFrame(frame)
 
       const dt = Math.min((now - last) / 1000, 0.05)
       last = now

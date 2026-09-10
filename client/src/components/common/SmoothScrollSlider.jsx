@@ -199,11 +199,13 @@ export default function SmoothScrollSlider({
     let io = null
 
     const tick = (now) => {
+      raf = requestAnimationFrame(tick)
+
       if (!isVisible) {
-        raf = 0
+        last = now
         return
       }
-      raf = requestAnimationFrame(tick)
+
       const c = frame.current
       const delta = last ? Math.min((now - last) / 1000, 0.1) : 1 / 60
       last = now
@@ -255,36 +257,21 @@ export default function SmoothScrollSlider({
       }
     }
 
-    const startTick = () => {
-      if (raf) return
-      last = performance.now()
-      raf = requestAnimationFrame(tick)
-    }
-
-    const stopTick = () => {
-      if (raf) {
-        cancelAnimationFrame(raf)
-        raf = 0
-      }
-    }
-
     if (typeof IntersectionObserver !== 'undefined' && containerRef.current) {
       io = new IntersectionObserver(
         (entries) => {
           if (entries[0]) {
             isVisible = entries[0].isIntersecting
-            if (isVisible) startTick()
-            else stopTick()
           }
         },
-        { rootMargin: '80px' }
+        { rootMargin: '100px' }
       )
       io.observe(containerRef.current)
     }
 
-    startTick()
+    raf = requestAnimationFrame(tick)
     return () => {
-      stopTick()
+      cancelAnimationFrame(raf)
       if (io) io.disconnect()
     }
   }, [])
