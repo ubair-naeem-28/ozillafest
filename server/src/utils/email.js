@@ -85,33 +85,40 @@ function buildEmailWrapper(title, contentHtml) {
 }
 
 async function sendViaBrevo({ to, subject, html, text }) {
-  const apiKey = env.brevoApiKey || process.env.BREVO_API_KEY
-  if (!apiKey || typeof apiKey !== 'string' || !apiKey.trim()) return null
+  const apiKey = (env.brevoApiKey || process.env.BREVO_API_KEY || '').trim()
+  if (!apiKey) {
+    return null
+  }
 
   try {
-    const fromEmail = env.smtpUser || 'obaer2102@gmail.com'
+    const fromEmail = (env.smtpUser || 'obaer2102@gmail.com').trim()
+    const payload = {
+      sender: { name: 'OZILLA FEST', email: fromEmail },
+      to: (Array.isArray(to) ? to : [to]).map(e => ({ email: String(e).trim() })),
+      subject,
+      htmlContent: html,
+      textContent: text
+    }
+
+    console.log(`[Brevo API] Attempting to send email to ${JSON.stringify(to)} from ${fromEmail}...`)
     const response = await fetch('https://api.brevo.com/v3/smtp/email', {
       method: 'POST',
       headers: {
-        'api-key': apiKey.trim(),
+        'api-key': apiKey,
         'Content-Type': 'application/json',
         Accept: 'application/json'
       },
-      body: JSON.stringify({
-        sender: { name: 'OZILLA FEST', email: fromEmail },
-        to: (Array.isArray(to) ? to : [to]).map(e => ({ email: e })),
-        subject,
-        htmlContent: html,
-        textContent: text
-      })
+      body: JSON.stringify(payload)
     })
 
-    const data = await response.json()
+    const data = await response.json().catch(() => ({}))
+    console.log(`[Brevo API Response Status]: ${response.status}`, data)
+
     if (response.ok && (data?.messageId || data?.id)) {
       console.log(`[Email Service] Delivered via Brevo HTTPS API: ${data.messageId || data.id}`)
       return data
     }
-    console.warn('[Brevo API Notice]:', data?.message || data)
+    console.warn('[Brevo API Notice]:', data?.message || data?.code || data)
     return null
   } catch (err) {
     console.warn('[Brevo API Error]:', err.message)
